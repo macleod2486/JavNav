@@ -1,0 +1,90 @@
+
+<resources>
+
+    <string name="app_name">JavNav</string>
+    <string name="action_settings">Settings</string>
+    <string name="hello_world">Hello world!</string>
+	<string name="prompt">Name of Building</string>
+	<string name="find">Find</string>
+	
+	<string name="back">Back</string>
+	<string name="forward">Forward</string>
+	<string name="refresh">Refresh</string>
+	
+	<string name="blank"></string>
+	<string name="update">Press to update</string>
+	<string-array name="userType" >
+	    <item>Faculty</item>
+	    <item>Student</item>
+	    <item>ITech</item>
+	</string-array>
+	
+	<string-array name="selection">
+	    <item>1</item>
+	    <item>2</item>
+	    <item>3</item>
+	</string-array>
+	
+	<string-array name="MapType">
+	    <item>Hybrid</item>
+	    <item>Street</item>
+	    <item>Satellite/Terrain</item>
+	</string-array>
+    
+    <string-array name="listOfBuildings">
+		<item>AL Gross Hall</item>
+		<item>Al Kleberg Hall</item>
+		<item>Athletic Offices</item>
+		<item>Bailey Arts</item>
+		<item>Baseball Field</item>
+		<item>Bellamah Music</item>
+		<item>Biology-Earth Science</item>
+		<item>Business Administration</item>
+		<item>Center for Young Children</item>
+		<item>Clement</item>
+		<item>College Hall</item>
+		<item>College of Pharmacy</item>
+		<item>Conner Museum</item>
+		<item>Cousins Hall</item>
+		<item>Dotterweich Engineering</item>
+		<item>Drama/Arts Building</item>
+		<item>Eckhardt Hall</item>
+		<item>Engineering Complex</item>
+		<item>Health And Recreation</item>
+		<item>Hill Hall</item>
+		<item>Human Sciences</item>
+		<item>Intramural Fields</item>
+		<item>J.C. Martin Hall</item>
+		<item>JW Howe AG</item>
+		<item>James Jernigan</item>
+		<item>Javelina Dining</item>
+		<item>Javelina House</item>
+		<item>Javelina Stadium</item>
+		<item>John Lynch Hall</item>
+		<item>Jones Auditorium</item>
+		<item>Karr Veterans</item>
+		<item>Kleberg AG</item>
+		<item>Lewis Hall</item>
+		<item>Life Services</item>
+		<item>Manning Hall</item>
+		<item>McCulley Hall</item>
+		<item>McNeil Engineering</item>
+		<item>Memorial SUB</item>
+		<item>Mesquite Grove</item>
+		<item>Mesquite Village</item>
+		<item>Nierman Science</item>
+		<item>Physical Plant</item>
+		<item>Poteet Hall</item>
+		<item>Presidents Home</item>
+		<item>Recreation Center</item>
+		<item>Rhode Hall</item>
+		<item>Sam Fore Hall</item>
+		<item>Seale Hall</item>
+		<item>Speech Building</item>
+		<item>Steike Physical ED</item>
+		<item>Support Services</item>
+		<item>Turner-Bishop Hall</item>
+		<item>University Village</item>
+    </string-array>
+    
+</resources>
