@@ -1,5 +1,10 @@
 JavNav 1.4.5
 
+JavNav is an Android application for general use for both students, faculty,
+and visitors.  It provides access to updated news about events on campus, a
+map with all the locations of every building on campus, along with access to
+two essentials websites.
+
 Contributors
 -David Lira
 -Manuel Gonzales
