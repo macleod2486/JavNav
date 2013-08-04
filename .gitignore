@@ -3,3 +3,5 @@
 /gen
 /.classpath
 /.project
+/.gradle
+/build
