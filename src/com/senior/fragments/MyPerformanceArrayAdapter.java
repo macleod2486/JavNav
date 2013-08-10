@@ -30,53 +30,64 @@ import android.widget.BaseAdapter;
 import android.widget.ImageView;
 import android.widget.TextView;
 
-public class MyPerformanceArrayAdapter extends BaseAdapter{
+public class MyPerformanceArrayAdapter extends BaseAdapter
+{
 	Context mContext;
 	private LayoutInflater mInflater;
 	private final String[] title;
 	public static String TitleChosen = "Calendar of Events";
 	int layoutResourceId;
 	
-	static class ViewHolder{
-	static TextView title;
-	ImageView icon;
+	static class ViewHolder
+	{
+		static TextView title;
+		ImageView icon;
 	}
-	public MyPerformanceArrayAdapter(Context context2, String[] title){
+	public MyPerformanceArrayAdapter(Context context2, String[] title)
+	{
 		//super(context2, R.layout.listview_item_row, title);
 		mContext = context2;
 		mInflater = LayoutInflater.from(context2);
 		//this.context=context2;
 		this.title=title;
 	}
-	public int getCount() {
+	public int getCount() 
+	{
 		return title.length;
 	} 
-	public Object getItem(int position) {
+	public Object getItem(int position) 
+	{
 		// TODO Auto-generated method stub
 		return position;
 	}
-	public long getItemId(int position) {
+	public long getItemId(int position) 
+	{
 		return position;
 	} 
 	
 	@SuppressWarnings("static-access")
-	public View getView(int position, View convertView, ViewGroup parent){
-	try {
-	//ViewHolder holder = null;
-		if (convertView == null) {
-			convertView = mInflater.inflate(R.layout.listview_item_row, parent, false);
-		}
-		ViewHolder holder = new ViewHolder();
-			holder.title = (TextView) convertView.findViewById(R.id.txtTitle);  
-			//if (position == 0) {
-				//convertView.setTag(holder);
-		
-			holder.title.setText(title[position]);
-		} catch (Exception e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
+	public View getView(int position, View convertView, ViewGroup parent)
+	{
+		try 
+		{
+		//ViewHolder holder = null;
+			if (convertView == null) 
+			{
+				convertView = mInflater.inflate(R.layout.listview_item_row, parent, false);
+			}
+			ViewHolder holder = new ViewHolder();
+				holder.title = (TextView) convertView.findViewById(R.id.txtTitle);  
+				//if (position == 0) {
+					//convertView.setTag(holder);
+			
+				holder.title.setText(title[position]);
 		} 
-		return convertView;
+		catch (Exception e) 
+		{
+				// TODO Auto-generated catch block
+				e.printStackTrace();
+		} 
+			return convertView;
 	}
 	
 
