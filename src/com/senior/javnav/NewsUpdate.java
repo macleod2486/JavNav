@@ -20,8 +20,10 @@
 *
 */
 package com.senior.javnav;
-
-
+//Java Imports
+import java.io.File;
+import java.io.FileWriter;
+import java.util.Scanner;
 //JSoup imports
 import org.jsoup.Jsoup;
 import org.jsoup.nodes.Document;
@@ -29,84 +31,222 @@ import org.jsoup.nodes.Element;
 import org.jsoup.select.Elements;
 //Android imports
 import android.app.IntentService;
+import android.app.Notification;
+import android.app.NotificationManager;
+import android.app.PendingIntent;
+import android.content.Context;
 import android.content.Intent;
 import android.os.AsyncTask;
 import android.util.Log;
 import android.widget.Toast;
 
-
 public class NewsUpdate extends IntentService 
 {
+	
+	public NewsUpdate() 
+	{
+		super("NewsUpdate");
+	}
 
-	String titles[] = new String[30];
-	boolean firstRun=false;
-	
-	public NewsUpdate(String name) 
-	{
-		super(name);
-	}
-	
-	@Override
-	public int onStartCommand(Intent intent, int flags, int startId)
-	{
-		
-		return super.onStartCommand(intent, flags, startId);
-	}
 	
 	@Override
 	protected void onHandleIntent(Intent intent) 
 	{
-		Update checkForNew = new Update();
-		checkForNew.execute(1);
+		Update checkNew = new Update();
+		checkNew.execute(1);
+		
+		Log.i("Service","It works!");
 	}
-	
-	//Checks for any changes within the website
+
+	//Async task that checks for the update
 	private class Update extends AsyncTask<Integer, Void, Void>
 	{
 		int pointer = 0;
 		boolean different;
 		String Sync[]=new String[30];
-		Toast notification = Toast.makeText(getApplicationContext(), "New", Toast.LENGTH_SHORT);
+		
+		//Two 
+		Notification notifi;
+		NotificationManager notifiManage = (NotificationManager)getSystemService(Context.NOTIFICATION_SERVICE);
+		
+		//Will read from the file that is created
+		File filePath = getBaseContext().getCacheDir();
+		String path = filePath.toString();
+		File data = new File(path+"/news.txt");
+		Toast notification;
+		
+		boolean created = false;
+		boolean updated = false;
+		
+		
+		//Executes the following in the background
 		@Override
 		protected Void doInBackground(Integer...go)
 		{
+			Log.i("Service","Checking for updates");
+			//checks to see if the temp file needs to be created
+			boolean isFileEmpty;
+			
+			
+			isFileEmpty=isFileNull();
+			
+			Log.i("String","File path "+path);
+			
+			if(isFileEmpty)
+			{
+				Log.i("Service","File was empty");
+				createFile();
+			}
+			else
+			{
+				Log.i("Service","File exists");
+				getUpdate();
+			}
+		
+			return null;
+		}
+		
+		
+		@SuppressWarnings("deprecation")
+		//After the async task completes the execution 
+		@Override
+		protected void onPostExecute(Void go)
+		{
+			if(created)
+			{
+				Intent homeIntent = new Intent(getBaseContext(),MainActivity.class);
+				PendingIntent homePending = PendingIntent.getActivity(getBaseContext(), 0,homeIntent, 0);
+				notifi= new Notification(R.drawable.ic_launcher,"JavNav",System.currentTimeMillis());
+				notifi.setLatestEventInfo(getApplicationContext(), "JavNav", "New Events!", homePending);
+				notifiManage.notify(0,notifi);				
 				
+				notification = Toast.makeText(getApplicationContext(), "File created", Toast.LENGTH_SHORT);
+				notification.show();
+				
+			}
+			else if(updated)
+			{
+				Intent homeIntent = new Intent(getBaseContext(),MainActivity.class);
+				PendingIntent homePending = PendingIntent.getActivity(getBaseContext(), 0,homeIntent, 0);
+				notifi= new Notification(R.drawable.ic_launcher,"JavNav",System.currentTimeMillis());
+				notifi.setLatestEventInfo(getApplicationContext(), "JavNav", "New Events!", homePending);
+				notifiManage.notify(0,notifi);				
+				
+				notification = Toast.makeText(getApplicationContext(), "File updated", Toast.LENGTH_SHORT);
+				notification.show();
+			}
+		}
+		
+		//Creates the file if the file is found to be empty
+		private void createFile()
+		{
+			
 			try
 			{
-				while(!isCancelled())	
-				{	
-					Document document = Jsoup.connect("http://www.tamuk.edu").get();
-					Elements newsDiv =document.select("div#newsbody");
-					Elements newContent = newsDiv.select("div#newscontent");
-					
-					for(Element Division :newContent)
-					{
-						if(!titles[pointer].equals(Division.toString()))
-							different=true;
-						Sync[pointer]=Division.toString();
-						pointer++;
-					}
-					
-					if(different)
-					{
-						for(int start=0; start<pointer; start++)
-						{
-							titles[start]=Sync[start];
-						}
-						pointer=0;
-						different=false;
-						notification.show();
-					}
-					Thread.sleep(6000);
+				FileWriter fw = new FileWriter(data);
+				Document document = Jsoup.connect("http://www.tamuk.edu/").get();
+				Elements newsDiv =document.select("div#calendar");
+				Elements newsLinks = newsDiv.select("a[href]");
+				fw.write("");
+				for(Element Division :newsLinks)
+				{
+					fw.append(Division.toString()+"\n");
+					Log.i("Service","Found "+Division.toString());
 				}
+				fw.close();
+				Log.i("Service","Completed creating file");
+				created=true;
 			}
 			catch(Exception e)
 			{
 				Log.i("Service","Error "+e);
-			}			
-			return null;
+			}
 		}
-
+		
+		//If the file is not empty then it will grab and check updates
+		private void getUpdate()
+		{
+			Document document;
+			Elements newsDiv;
+			Elements newContent;
+			Scanner updateScan;
+			FileWriter fw;
+			try
+			{
+				updateScan = new Scanner(data);
+				
+				document = Jsoup.connect("http://www.tamuk.edu/").get();
+				newsDiv =document.select("div#calendar");
+				newContent = newsDiv.select("a[href]");
+				
+				for(Element Division :newContent)
+				{
+					if(!updateScan.nextLine().contains(Division.toString()))
+						different=true;
+					Sync[pointer]=Division.toString();
+					pointer++;
+				}
+				
+				//Closes the scanner
+				updateScan.close();
+				
+				//If there is a difference then the file is updated
+				if(different)
+				{
+					fw=new FileWriter(data);
+					fw.write("");
+					for(int start=0; start<pointer; start++)
+					{
+						fw.append(Sync[start]+"\n");
+					}
+					
+					//Closes file
+					
+					fw.close();
+					Log.i("Service","New updates found!");
+					updated=true;
+				}
+				else
+				{
+					Log.i("Service","No new updates");
+				}
+					
+			}
+			catch(Exception e)
+			{
+				Log.i("Service","Error "+e);
+			}
+		
+		}
+		
+		//Checks to see if the file is new or is empty
+		private boolean isFileNull()
+		{
+			boolean checkNull;
+			try
+			{	
+				Scanner temp = new Scanner(data);
+				Log.i("Service","Checking the file");
+				
+				checkNull=temp.hasNext();
+				
+				if(temp.hasNext())
+					checkNull=false;
+				else
+					checkNull=true;
+				temp.close();
+			}
+			catch(Exception e)
+			{
+				//e.printStackTrace();
+				Log.i("Service","IsFileNull error "+e);
+				checkNull=true;
+			}
+			
+			return checkNull;
+		}
 			
 	}
+
+	
 }

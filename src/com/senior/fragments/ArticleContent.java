@@ -127,5 +127,5 @@ private class getArticles extends AsyncTask<String, Void, ArrayList<String>>
 			}	
 		}
 		
-		}
+	}
 }

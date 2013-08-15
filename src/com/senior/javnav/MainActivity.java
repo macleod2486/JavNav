@@ -43,15 +43,14 @@ import com.senior.fragments.CustomWebpage;
 import com.senior.fragments.GoogleFragment;
 import com.senior.fragments.HomeFragment;
 //Android imports
-import android.location.Criteria;
-import android.location.Location;
-import android.location.LocationManager;
 import android.net.ConnectivityManager;
 import android.net.NetworkInfo;
 import android.os.Bundle;
+import android.os.SystemClock;
 import android.preference.PreferenceManager;
-//import android.app.Activity;
+import android.app.AlarmManager;
 import android.app.AlertDialog;
+import android.app.PendingIntent;
 import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
@@ -61,10 +60,10 @@ import android.util.Log;
 import android.view.View;
 import android.webkit.WebView;
 import android.widget.Spinner;
-import android.widget.Toast;
 
 public class MainActivity extends SherlockFragmentActivity {
 	
+	public static final String ServiceName = "android.intent.action.service";
 	
 	SherlockListFragment Home =  new HomeFragment();
 	//Google map module
@@ -139,14 +138,13 @@ public class MainActivity extends SherlockFragmentActivity {
 		//Add new customizable features
 		Log.i("Main","Main activity called!");
 		
-		
+		//Checks to see if the device is online and alerts user if not
 		if(!online())
 		{
 			AlertDialog.Builder connectBuild = new AlertDialog.Builder(this);
 			
 			connectBuild.setTitle("Warning!");
 			connectBuild.setMessage("You need to be connected to the internet!").setCancelable(true);
-			//connectBuild.setNeutralButton(textId, listener)
 			
 			AlertDialog connect = connectBuild.create();
 			connect.show();
@@ -154,35 +152,33 @@ public class MainActivity extends SherlockFragmentActivity {
 		
 		Log.i("Main","Maintab entered");
 		
-				
+		//Sets up the actionbar
 		ActionBar action = getSupportActionBar();
 	
 		action.setNavigationMode(ActionBar.NAVIGATION_MODE_TABS);
 		action.setDisplayShowTitleEnabled(false);
-		action.setDisplayShowTitleEnabled(false);
 		action.setDisplayUseLogoEnabled(false);
 		
 			
-			homeTab = action.newTab();
-			homeTab.setText("Home");
-			homeTab.setTabListener(new ListTabListener(Home));
-			action.addTab(homeTab);
-			
-			javTab = action.newTab();
-			javTab.setText("Map");
-			javTab.setTabListener(new TabListener(Google));
-			action.addTab(javTab);
-			
-			blueTab = action.newTab();
-			blueTab.setText("Bluegold");
-			blueTab.setTabListener(new TabListener(bluegold));
-			action.addTab(blueTab);
-			
-			blackTab = action.newTab();
-			blackTab.setText("Blackboard");
-			blackTab.setTabListener(new TabListener(blackboard));
-			action.addTab(blackTab);
-			
+		homeTab = action.newTab();
+		homeTab.setText("Home");
+		homeTab.setTabListener(new ListTabListener(Home));
+		action.addTab(homeTab);
+		
+		javTab = action.newTab();
+		javTab.setText("Map");
+		javTab.setTabListener(new TabListener(Google));
+		action.addTab(javTab);
+		
+		blueTab = action.newTab();
+		blueTab.setText("Bluegold");
+		blueTab.setTabListener(new TabListener(bluegold));
+		action.addTab(blueTab);
+		
+		blackTab = action.newTab();
+		blackTab.setText("Blackboard");
+		blackTab.setTabListener(new TabListener(blackboard));
+		action.addTab(blackTab);
 		
 			
 		//Sets the layout to the activity main layout
@@ -200,6 +196,7 @@ public class MainActivity extends SherlockFragmentActivity {
 		
 		ActionBar action = getSupportActionBar();
 		SharedPreferences shared = PreferenceManager.getDefaultSharedPreferences(this);
+		SharedPreferences.Editor edit = shared.edit();
 		Log.i("Main","Current value "+shared.getBoolean("extra", false));
 		
 		//When the custom tab selection is toggled it makes the necessary changes
@@ -221,6 +218,16 @@ public class MainActivity extends SherlockFragmentActivity {
 			}
 		}
 		
+		/*
+		if(!shared.getBoolean("notif", true))
+		{
+			AlarmManager mgr=(AlarmManager)getApplicationContext().getSystemService(Context.ALARM_SERVICE);
+			Intent newsIntent=new Intent(getApplicationContext(), NewsUpdate.class);
+			PendingIntent pending=PendingIntent.getBroadcast(getApplicationContext(), 0, newsIntent, 0);
+			mgr.cancel(pending);
+		}
+		*/
+		
 	}
 	
 	//When the activity is destroyed
@@ -231,6 +238,26 @@ public class MainActivity extends SherlockFragmentActivity {
 		super.onDestroy();
 	}
 	
+	@Override
+	protected void onStop()
+	{
+		//Start the service in a timely interval
+		SharedPreferences shared = PreferenceManager.getDefaultSharedPreferences(this);
+		if(shared.getBoolean("notif", true))
+		{
+			
+			/*
+			AlarmManager mgr=(AlarmManager)getApplicationContext().getSystemService(Context.ALARM_SERVICE);
+			Intent newsIntent=new Intent(getApplicationContext(), NewsUpdate.class);
+			PendingIntent pending=PendingIntent.getBroadcast(getApplicationContext(), 0, newsIntent, 0);
+			mgr.setRepeating(AlarmManager.ELAPSED_REALTIME_WAKEUP, SystemClock.elapsedRealtime(), 6000, pending);
+			*/
+			Intent i = new Intent(getBaseContext(),NewsUpdate.class);
+			startService(i);
+		}
+		
+		super.onStop();
+	}
 	//When the item is selected from the settings list
 	@Override
 	public boolean onOptionsItemSelected(MenuItem item)
@@ -250,7 +277,14 @@ public class MainActivity extends SherlockFragmentActivity {
 	}
 	
 	/*
-		Various methods that are called on by the specified fragments.
+	 	*
+	 	*
+	 	*
+	 	*Various methods that are called on by the specified fragments.
+	 	*
+	 	*
+	 	*
+	 	*
 	*/
 	
 	//Checks if the device is online
@@ -266,6 +300,7 @@ public class MainActivity extends SherlockFragmentActivity {
 			return false;
 	}
 	
+	//Saves the state of the fragment
 	private void saveState()
 	{
 		int position = getSupportActionBar().getSelectedTab().getPosition();
@@ -361,7 +396,6 @@ public class MainActivity extends SherlockFragmentActivity {
 		Coordinates coorTAM = new Coordinates();
 		double lat=0;
 		double lon=0;
-		Location current;
 		Spinner building = (Spinner)findViewById(R.id.buildings);
 		String selected=building.getSelectedItem().toString();
 		GoogleMap TAMUK=((SupportMapFragment)getSupportFragmentManager().findFragmentById(R.id.google_map)).getMap();
@@ -371,40 +405,13 @@ public class MainActivity extends SherlockFragmentActivity {
 			
 			selected = building.getSelectedItem().toString();
 			TAMUK.clear();selected = building.getSelectedItem().toString();
-			//Haven't quite worked out obtaining the current location, will be available in a future build
-			if(selected.contains("Current Location"))
-			{
-				LocationManager TAMUKManage=(LocationManager)getSystemService(LOCATION_SERVICE);
-				Criteria TAMCrit = new Criteria();
-				String provider = TAMUKManage.getBestProvider(TAMCrit, true);
-				
-				if(provider!=null)
-				{	
-					current=TAMUKManage.getLastKnownLocation(provider);
-					lat=current.getLatitude()*1E6;
-					lon=current.getLongitude()*1E6;
-					LatLng currentLoc=new LatLng(lat,lon);
-					TAMUK.addMarker(new MarkerOptions().position(currentLoc).title("Current Location"));
-				}
-				else
-				{
-					Toast.makeText(getApplicationContext(), "Please enable your location", Toast.LENGTH_SHORT).show();
-				}
-			}
-			else
-			{
-				
-				lat=coorTAM.latitude(selected);
-				lon=coorTAM.longitude(selected);
-				TAMUK.addMarker(new MarkerOptions().position(new LatLng(lat,lon)).title(selected));
-				TAMUK.animateCamera(CameraUpdateFactory.newLatLngZoom(new LatLng(lat,lon), 17));
-			}
-		
+			lat=coorTAM.latitude(selected);
+			lon=coorTAM.longitude(selected);
+			TAMUK.addMarker(new MarkerOptions().position(new LatLng(lat,lon)).title(selected));
+			TAMUK.animateCamera(CameraUpdateFactory.newLatLngZoom(new LatLng(lat,lon), 17));
 		}
 		
 		Log.i("Main","Search is called "+selected+" Long="+lon+" "+"Latitude="+lat);
-
-		
 	}
 	
 	/*
@@ -462,24 +469,28 @@ public class MainActivity extends SherlockFragmentActivity {
 //Class for the fragments to be attached to the action bar
     protected class TabListener extends SherlockFragmentActivity implements ActionBar.TabListener
     {
+    	
    	 public SherlockFragment fragment;
    	 
-		public TabListener(SherlockFragment fragment) {
-			// TODO Auto-generated constructor stub
+		public TabListener(SherlockFragment fragment) 
+		{
+			
 			Log.i("Tabs","Fragment being reassigned");
 			this.fragment = fragment;
 		}
 
-		public void onTabReselected(Tab tab, FragmentTransaction ft) {
-			// TODO Auto-generated method stub
+		public void onTabReselected(Tab tab, FragmentTransaction ft) 
+		{
+			
 			Log.i("Tabs","Reselected");
 			
 		}
 
-		public void onTabSelected(Tab tab, FragmentTransaction ft) {
-			// TODO Auto-generated method stub
-			try{
-			Log.i("Tabs","Replaced called");
+		public void onTabSelected(Tab tab, FragmentTransaction ft) 
+		{
+			try
+			{
+				Log.i("Tabs","Replaced called");
 				ft.replace(R.id.container, fragment);
 			}
 			catch(Exception e)
@@ -488,8 +499,8 @@ public class MainActivity extends SherlockFragmentActivity {
 			}
 		}
 
-		public void onTabUnselected(Tab tab, FragmentTransaction ft) {
-			// TODO Auto-generated method stub
+		public void onTabUnselected(Tab tab, FragmentTransaction ft) 
+		{
 			
 			Log.i("Tabs","On remove called to "+fragment.toString());
 			

@@ -130,11 +130,13 @@ public class GoogleFragment extends SherlockFragment
 		{
 			
 			TAMUK=((SupportMapFragment)getFragmentManager().findFragmentById(R.id.google_map)).getMap();
-			//Shows your current location on the map.
+			
+			//Sets the options for the user to show their current location
 			TAMUK.setMyLocationEnabled(true);
 			
 			TAMUK.animateCamera(CameraUpdateFactory.newLatLngZoom(TAMUKLoc, 16));
 			
+			//Sets the camera view as determined by the users settings
 			if(mapSel.contains("1"))
 			{	
 				TAMUK.setMapType(GoogleMap.MAP_TYPE_HYBRID);
