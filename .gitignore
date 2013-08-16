@@ -1,13 +1,17 @@
-<<<<<<< HEAD
 #Eliminate unnecessary directories
 bin/
 gen/
 =======
+=======
+>>>>>>> 9da7ecc... added the generated files (bin/, gen/, and eclipse files) to.gitignore so Git will ignore them.
 /.settings
 /bin
 /gen
 /.classpath
 /.project
+<<<<<<< HEAD
 /.gradle
 /build
 >>>>>>> efb5561... added the gradle build dirs to .gitignore
+=======
+>>>>>>> 9da7ecc... added the generated files (bin/, gen/, and eclipse files) to.gitignore so Git will ignore them.
