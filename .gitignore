@@ -1,3 +1,13 @@
+<<<<<<< HEAD
 #Eliminate unnecessary directories
 bin/
 gen/
+=======
+/.settings
+/bin
+/gen
+/.classpath
+/.project
+/.gradle
+/build
+>>>>>>> efb5561... added the gradle build dirs to .gitignore
