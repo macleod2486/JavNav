@@ -44,11 +44,11 @@
         </activity>
         
         <service
-            android:name=".NewsUpdate"
+            android:name="NewsUpdate"
             android:label="TAMUKNews"
             android:enabled="true"
         />    
-        <receiver android:name=".BroadcastNews"/>
+        <receiver android:name="BroadcastNews"/>
         <meta-data
    			android:name="com.google.android.maps.v2.API_KEY"
    			android:value="AIzaSyAOfJ9u1w2CC6oBY8HqpM3ePjnXT0kj8KE"

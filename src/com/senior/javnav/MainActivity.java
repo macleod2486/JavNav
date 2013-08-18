@@ -46,7 +46,6 @@ import com.senior.fragments.HomeFragment;
 import android.net.ConnectivityManager;
 import android.net.NetworkInfo;
 import android.os.Bundle;
-import android.os.SystemClock;
 import android.preference.PreferenceManager;
 import android.app.AlarmManager;
 import android.app.AlertDialog;
@@ -196,7 +195,7 @@ public class MainActivity extends SherlockFragmentActivity {
 		
 		ActionBar action = getSupportActionBar();
 		SharedPreferences shared = PreferenceManager.getDefaultSharedPreferences(this);
-		SharedPreferences.Editor edit = shared.edit();
+		
 		Log.i("Main","Current value "+shared.getBoolean("extra", false));
 		
 		//When the custom tab selection is toggled it makes the necessary changes
@@ -218,15 +217,16 @@ public class MainActivity extends SherlockFragmentActivity {
 			}
 		}
 		
-		/*
-		if(!shared.getBoolean("notif", true))
+		if(!shared.getBoolean("notifCan",true))
 		{
-			AlarmManager mgr=(AlarmManager)getApplicationContext().getSystemService(Context.ALARM_SERVICE);
-			Intent newsIntent=new Intent(getApplicationContext(), NewsUpdate.class);
-			PendingIntent pending=PendingIntent.getBroadcast(getApplicationContext(), 0, newsIntent, 0);
-			mgr.cancel(pending);
+			
+			//Cancel the alarm manager service
+			Intent service = new Intent(getBaseContext(),BroadcastNews.class);
+			PendingIntent pendingService = PendingIntent.getBroadcast(getBaseContext(),0,service,0);
+			AlarmManager newsUpdate = (AlarmManager)getSystemService(ALARM_SERVICE);
+			newsUpdate.cancel(pendingService);
 		}
-		*/
+		
 		
 	}
 	
@@ -243,17 +243,20 @@ public class MainActivity extends SherlockFragmentActivity {
 	{
 		//Start the service in a timely interval
 		SharedPreferences shared = PreferenceManager.getDefaultSharedPreferences(this);
+		
+		
 		if(shared.getBoolean("notif", true))
 		{
+			//Start the alarm manager service
+			SharedPreferences.Editor edit = shared.edit();
+			Intent service = new Intent(getApplicationContext(),BroadcastNews.class);
+			PendingIntent pendingService = PendingIntent.getBroadcast(getApplicationContext(),0,service,0);
+			AlarmManager newsUpdate = (AlarmManager)getSystemService(ALARM_SERVICE);
 			
-			/*
-			AlarmManager mgr=(AlarmManager)getApplicationContext().getSystemService(Context.ALARM_SERVICE);
-			Intent newsIntent=new Intent(getApplicationContext(), NewsUpdate.class);
-			PendingIntent pending=PendingIntent.getBroadcast(getApplicationContext(), 0, newsIntent, 0);
-			mgr.setRepeating(AlarmManager.ELAPSED_REALTIME_WAKEUP, SystemClock.elapsedRealtime(), 6000, pending);
-			*/
-			Intent i = new Intent(getBaseContext(),NewsUpdate.class);
-			startService(i);
+			//Check for the update every 15 minutes
+			newsUpdate.setRepeating(AlarmManager.RTC_WAKEUP, System.currentTimeMillis(), AlarmManager.INTERVAL_FIFTEEN_MINUTES, pendingService);
+			edit.putBoolean("notifCanc", true).commit();
+			Log.i("Main","Alarm set");
 		}
 		
 		super.onStop();

@@ -20,10 +20,11 @@
 *
 */
 package com.senior.javnav;
-
+//Android imports
 import android.content.BroadcastReceiver;
 import android.content.Context;
 import android.content.Intent;
+import android.util.Log;
 
 public class BroadcastNews extends BroadcastReceiver 
 {
@@ -31,8 +32,11 @@ public class BroadcastNews extends BroadcastReceiver
 	@Override
 	public void onReceive(Context arg0, Intent arg1) 
 	{
-		// TODO Auto-generated method stub
-
+		Log.i("BroadcastNews","Broadcast recieved");
+		
+		//Starting the news update class
+		Intent newsUpdate = new Intent(arg0,NewsUpdate.class);
+		arg0.startService(newsUpdate); 
 	}
 
 }

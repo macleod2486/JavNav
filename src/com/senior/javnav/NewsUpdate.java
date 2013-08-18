@@ -87,7 +87,7 @@ public class NewsUpdate extends IntentService
 			//checks to see if the temp file needs to be created
 			boolean isFileEmpty;
 			
-			
+			//Checks to see if the file is there
 			isFileEmpty=isFileNull();
 			
 			Log.i("String","File path "+path);
@@ -108,6 +108,7 @@ public class NewsUpdate extends IntentService
 		
 		
 		@SuppressWarnings("deprecation")
+		
 		//After the async task completes the execution 
 		@Override
 		protected void onPostExecute(Void go)
