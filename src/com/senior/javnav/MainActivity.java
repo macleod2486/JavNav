@@ -217,14 +217,19 @@ public class MainActivity extends SherlockFragmentActivity {
 			}
 		}
 		
-		if(!shared.getBoolean("notifCan",true))
+		//If the alarm manager went through then it will attempt to cancel
+		if(shared.getBoolean("notifiCanc",true))
 		{
-			
-			//Cancel the alarm manager service
-			Intent service = new Intent(getBaseContext(),BroadcastNews.class);
-			PendingIntent pendingService = PendingIntent.getBroadcast(getBaseContext(),0,service,0);
-			AlarmManager newsUpdate = (AlarmManager)getSystemService(ALARM_SERVICE);
-			newsUpdate.cancel(pendingService);
+			if(!shared.getBoolean("notif", true))
+			{
+				SharedPreferences.Editor edit = shared.edit();
+				//Cancel the alarm manager service
+				Intent service = new Intent(getBaseContext(),BroadcastNews.class);
+				PendingIntent pendingService = PendingIntent.getBroadcast(getBaseContext(),0,service,0);
+				AlarmManager newsUpdate = (AlarmManager)getSystemService(ALARM_SERVICE);
+				newsUpdate.cancel(pendingService);
+				edit.putBoolean("notifiCanc", false).commit();
+			}
 		}
 		
 		
@@ -243,9 +248,7 @@ public class MainActivity extends SherlockFragmentActivity {
 	{
 		//Start the service in a timely interval
 		SharedPreferences shared = PreferenceManager.getDefaultSharedPreferences(this);
-		
-		
-		if(shared.getBoolean("notif", true))
+		if(shared.getBoolean("notif", true)&&!shared.getBoolean("notifiCanc", false))
 		{
 			//Start the alarm manager service
 			SharedPreferences.Editor edit = shared.edit();
@@ -254,11 +257,10 @@ public class MainActivity extends SherlockFragmentActivity {
 			AlarmManager newsUpdate = (AlarmManager)getSystemService(ALARM_SERVICE);
 			
 			//Check for the update every 15 minutes
-			newsUpdate.setRepeating(AlarmManager.RTC_WAKEUP, System.currentTimeMillis(), AlarmManager.INTERVAL_FIFTEEN_MINUTES, pendingService);
-			edit.putBoolean("notifCanc", true).commit();
+			newsUpdate.setRepeating(AlarmManager.RTC_WAKEUP, System.currentTimeMillis(), 20000, pendingService);
+			edit.putBoolean("notifiCanc", true).commit();
 			Log.i("Main","Alarm set");
 		}
-		
 		super.onStop();
 	}
 	//When the item is selected from the settings list
