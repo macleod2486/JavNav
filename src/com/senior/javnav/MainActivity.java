@@ -257,7 +257,7 @@ public class MainActivity extends SherlockFragmentActivity {
 			AlarmManager newsUpdate = (AlarmManager)getSystemService(ALARM_SERVICE);
 			
 			//Check for the update every 15 minutes
-			newsUpdate.setRepeating(AlarmManager.RTC_WAKEUP, System.currentTimeMillis(), 20000, pendingService);
+			newsUpdate.setRepeating(AlarmManager.RTC_WAKEUP, System.currentTimeMillis(), AlarmManager.INTERVAL_FIFTEEN_MINUTES, pendingService);
 			edit.putBoolean("notifiCanc", true).commit();
 			Log.i("Main","Alarm set");
 		}
