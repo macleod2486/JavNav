@@ -38,7 +38,6 @@ import android.content.Context;
 import android.content.Intent;
 import android.os.AsyncTask;
 import android.util.Log;
-import android.widget.Toast;
 
 public class NewsUpdate extends IntentService 
 {
@@ -73,7 +72,6 @@ public class NewsUpdate extends IntentService
 		File filePath = getBaseContext().getCacheDir();
 		String path = filePath.toString();
 		File data = new File(path+"/news.txt");
-		Toast notification;
 		
 		boolean created = false;
 		boolean updated = false;
@@ -120,9 +118,9 @@ public class NewsUpdate extends IntentService
 				notifi= new Notification(R.drawable.ic_launcher,"JavNav",System.currentTimeMillis());
 				notifi.setLatestEventInfo(getApplicationContext(), "JavNav", "New Events!", homePending);
 				notifiManage.notify(0,notifi);				
-				
+				/*
 				notification = Toast.makeText(getApplicationContext(), "File created", Toast.LENGTH_SHORT);
-				notification.show();
+				notification.show();*/
 				
 			}
 			else if(updated)
@@ -132,9 +130,9 @@ public class NewsUpdate extends IntentService
 				notifi= new Notification(R.drawable.ic_launcher,"JavNav",System.currentTimeMillis());
 				notifi.setLatestEventInfo(getApplicationContext(), "JavNav", "New Events!", homePending);
 				notifiManage.notify(0,notifi);				
-				
+				/*
 				notification = Toast.makeText(getApplicationContext(), "File updated", Toast.LENGTH_SHORT);
-				notification.show();
+				notification.show();*/
 			}
 		}
 		
