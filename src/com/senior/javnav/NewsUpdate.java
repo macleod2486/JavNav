@@ -116,23 +116,19 @@ public class NewsUpdate extends IntentService
 				Intent homeIntent = new Intent(getBaseContext(),MainActivity.class);
 				PendingIntent homePending = PendingIntent.getActivity(getBaseContext(), 0,homeIntent, 0);
 				notifi= new Notification(R.drawable.ic_launcher,"JavNav",System.currentTimeMillis());
-				notifi.setLatestEventInfo(getApplicationContext(), "JavNav", "New Events!", homePending);
-				notifiManage.notify(0,notifi);				
-				/*
-				notification = Toast.makeText(getApplicationContext(), "File created", Toast.LENGTH_SHORT);
-				notification.show();*/
-				
+				notifi.setLatestEventInfo(getApplicationContext(), "JavNav", "File created", homePending);
+				notifi.flags = Notification.FLAG_AUTO_CANCEL;
+				notifiManage.notify(0,notifi);
 			}
-			else if(updated)
+			
+			if(updated)
 			{
 				Intent homeIntent = new Intent(getBaseContext(),MainActivity.class);
 				PendingIntent homePending = PendingIntent.getActivity(getBaseContext(), 0,homeIntent, 0);
 				notifi= new Notification(R.drawable.ic_launcher,"JavNav",System.currentTimeMillis());
 				notifi.setLatestEventInfo(getApplicationContext(), "JavNav", "New Events!", homePending);
+				notifi.flags = Notification.FLAG_AUTO_CANCEL;
 				notifiManage.notify(0,notifi);				
-				/*
-				notification = Toast.makeText(getApplicationContext(), "File updated", Toast.LENGTH_SHORT);
-				notification.show();*/
 			}
 		}
 		
