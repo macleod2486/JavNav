@@ -73,7 +73,6 @@ public class NewsUpdate extends IntentService
 		String path = filePath.toString();
 		File data = new File(path+"/news.txt");
 		
-		boolean created = false;
 		boolean updated = false;
 		
 		
@@ -140,7 +139,6 @@ public class NewsUpdate extends IntentService
 				}
 				fw.close();
 				Log.i("Service","Completed creating file");
-				created=true;
 			}
 			catch(Exception e)
 			{
