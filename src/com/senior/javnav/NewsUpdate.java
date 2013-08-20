@@ -111,16 +111,6 @@ public class NewsUpdate extends IntentService
 		@Override
 		protected void onPostExecute(Void go)
 		{
-			if(created)
-			{
-				Intent homeIntent = new Intent(getBaseContext(),MainActivity.class);
-				PendingIntent homePending = PendingIntent.getActivity(getBaseContext(), 0,homeIntent, 0);
-				notifi= new Notification(R.drawable.ic_launcher,"JavNav",System.currentTimeMillis());
-				notifi.setLatestEventInfo(getApplicationContext(), "JavNav", "File created", homePending);
-				notifi.flags = Notification.FLAG_AUTO_CANCEL;
-				notifiManage.notify(0,notifi);
-			}
-			
 			if(updated)
 			{
 				Intent homeIntent = new Intent(getBaseContext(),MainActivity.class);
