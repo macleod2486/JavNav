@@ -27,7 +27,6 @@
         <CheckBoxPreference 
             android:title="TAMUK News"
             android:key="notif"
-            android:persistent="true"
             android:defaultValue="true"
          />
     </PreferenceCategory>
