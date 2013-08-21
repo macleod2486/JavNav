@@ -1,12 +1,12 @@
 <?xml version="1.0" encoding="utf-8"?>
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
     package="com.senior.javnav"
-    android:versionCode="11"
-    android:versionName="1.4.6" >
+    android:versionCode="12"
+    android:versionName="1.4.7" >
 
     <uses-sdk
         android:minSdkVersion="8"
-        android:targetSdkVersion="17" />
+        android:targetSdkVersion="18" />
 	   	<uses-permission android:name="android.permission.ACCESS_NETWORK_STATE" />
 		<permission android:name="com.senior.javnav.permission.MAPS_RECEIVE"
          android:protectionLevel="signature"/>
