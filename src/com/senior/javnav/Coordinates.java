@@ -28,13 +28,13 @@ import android.util.Log;
 
 public class Coordinates 
 {
-
+	//Longitude of every building in the names array
 	public double longit[]={-97.878292,-97.880716,-97.879542,-97.879547,-97.881585,-97.879493,-97.881526,-97.882808,-97.882862,
 					 -97.879279,-97.882454,-97.881896,-97.879493,-97.880191,-97.880148,-97.878512,-97.882969,-97.878914,
 					 -97.880491,-97.880287,-97.883635,-97.883238,-97.884954,-97.883688,-97.881875,-97.884675,-97.880931,
 					 -97.879268,-97.883281,-97.878420,-97.879021,-97.883388,-97.882926,-97.883592,-97.879504,-97.879289,
 					 -97.879922,-97.881746,-97.885158,-97.885115,-97.880234,-97.884321,-97.881778,-97.878233,-97.881816,
-					 -97.882851,-97.880325,-97.878844,-97.879107,-97.880073,-97.883989,-97.884927,-97.884783};
+					 -97.882851,-97.880325,-97.878844,-97.879107,-97.880073,-97.883989,-97.884927};
 	
 	//Latitude of every building in the names array
 	public double latit[]={27.525846,27.525998,27.529832,27.523838,27.529261,27.524561,27.524638,27.526902,27.521812,
@@ -42,17 +42,17 @@ public class Coordinates
 					27.524733,27.523781,27.524752,27.529556,27.524657,27.526103,27.526008,27.525304,27.523068,
 					27.528957,27.522858,27.524209,27.525356,27.525617,27.524162,27.527568,27.523305,27.528938,
 					27.525513,27.523505,27.527730,27.526740,27.523286,27.527948,27.522230,27.524794,27.527815,
-					27.526141,27.524457,27.522264,27.524171,27.526983,27.525851,27.523030,27.525832};
+					27.526141,27.524457,27.522264,27.524171,27.526983,27.525851,27.523030};
 	
-	//Names of all the 
+	//Names of all the buildings on campus
 	public String names[]={"AL Gross Hall","Al Kleberg Hall","Athletic Offices","Bailey Arts","Baseball Field","Bellamah Music","Biology-Earth Science","Business Administration","Center for Young Children",
 			"Clement","College Hall","College of Pharmacy","Conner Museum","Cousins Hall","Dotterweich Engineering","Drama/Arts Building","Eckhardt Hall","Engineering Complex",
 			"Health And Recreation","Hill Hall","Human Sciences","Intramural Fields","J.C. Martin Hall","JW Howe AG","James Jernigan","Javelina Dining","Javelina House",
-			"Javelina Stadium","John Lynch Hall","Jones Auditorium","Karr Veterans","Kleberg AG","Lewis Hall","Life Services","Manning Hall","McCulley Hall",
+			"Javelina Stadium","John Lynch Hall","Jones Auditorium","Karr Veterans","Kleberg AG","Lewis Hall","Life Services","Lucio Hall","Manning Hall","McCulley Hall",
 			"McNeil Engineering","Memorial SUB","Mesquite Grove","Mesquite Village","Nierman Science","Physical Plant","Poteet Hall","Presidents Home","Recreation Center",
-			"Rhode Hall","Sam Fore Hall","Seale Hall","Speech Building","Steike Physical ED","Support Services","Turner-Bishop Hall","University Village"};
+			"Rhode Hall","Sam Fore Hall","Seale Hall","Speech Building","Steike Physical ED","Support Services","Turner-Bishop Hall"};
 			
-	
+	//Matches the name of the building to the latitude
 	public double latitude(String name)
 	{
 		double result=0;
@@ -69,6 +69,7 @@ public class Coordinates
 		}
 		return result;
 	}
+	//Matches the name of the building to the longitude
 	public double longitude(String name)
 	{
 		double result=0;
@@ -119,6 +120,7 @@ public class Coordinates
 		//Kleberg AG - Lat=27.525617 Long=-97.883388
 		//Lewis Hall - Lat=27.524162 Long=-97.882926
 		//Life Services - Lat=27.527568 Long=-97.883592
+		//Lucio Hall - Lat=27.525832 Long=-97.884783
 		//Manning - Lat=27.523305 Long=-97.879504
 		//McCulley Hall - Lat=27.528957 Long=-97.879268
 		//McNeil Engineering - Lat=27.525513 Long=-97.879922
@@ -137,7 +139,6 @@ public class Coordinates
 		//Steike Physical ED - Lat=27.526983 Long=-97.880073
 		//Support Services - Lat=27.525851 Long=-97.883989
 		//Turner-Bishop Hall - Lat=27.523030 Long=-97.884927 
-		//University Village - Lat=27.525832 Long=-97.884783
 		
  */
 	
