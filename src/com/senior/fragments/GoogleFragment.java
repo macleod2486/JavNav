@@ -20,16 +20,16 @@
 *
 */
 package com.senior.fragments;
-
+//Sherlock imports
 import com.actionbarsherlock.app.SherlockFragment;
+//Google Imports
 import com.google.android.gms.maps.CameraUpdateFactory;
 import com.google.android.gms.maps.GoogleMap;
-//import com.google.android.gms.maps.MapFragment;
 import com.google.android.gms.maps.SupportMapFragment;
 import com.google.android.gms.maps.model.LatLng;
+//Main activity import
 import com.senior.javnav.R;
-
-
+//Android imports
 import android.support.v4.app.FragmentTransaction;
 import android.content.SharedPreferences;
 import android.os.Bundle;
@@ -120,7 +120,6 @@ public class GoogleFragment extends SherlockFragment
 		
 		String mapSel = shared.getString("mapSelect", "1");
 		
-		//String mapSel="1";
 		if(TAMUK==null)
 		{
 			TAMUK=((SupportMapFragment)getFragmentManager().findFragmentById(R.id.google_map)).getMap();
