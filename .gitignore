@@ -4,5 +4,6 @@ bin/
 gen/
 .classpath
 .project
+project.properties
 .gradle/
 build/
