@@ -20,18 +20,22 @@
 *
 */
 package com.senior.fragments;
+//Java imports
 import java.util.ArrayList;
 
+//JSoup imports
 import org.jsoup.Jsoup;
 import org.jsoup.nodes.Document;
 import org.jsoup.nodes.Element;
 import org.jsoup.select.Elements;
 
+//Actionbar sherlock imports
 import com.actionbarsherlock.app.SherlockFragment;
+
+//Project imports
 import com.senior.javnav.R;
 
-
-//import android.support.v4.app.Fragment;
+//Android imports
 import android.graphics.Color;
 import android.os.AsyncTask;
 import android.os.Bundle;
@@ -46,9 +50,9 @@ import android.widget.TextView;
 
 public class ArticleContent extends SherlockFragment{
 	
-	View view;
+	View articleView;
 	int i=0;
-	int j=HomeFragment.m;;
+	int j=HomeFragment.m;
 	String eventstring;
 	String eventlink;
 	ArrayList<String> events = HomeFragment.eventtitles;
@@ -56,27 +60,31 @@ public class ArticleContent extends SherlockFragment{
 	ArrayList<String> eventcontent;
 	String PassedTitle = HomeFragment.TitleChosen;
 	
-	//@Override
+	@Override
 	 public void onActivityCreated(Bundle savedInstanceState)
 	 {
 		 super.onActivityCreated(savedInstanceState);
 		 new getArticles().execute();
 	 }
-	//@Override
-	 public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState){
-		 
-		 view=inflater.inflate(R.layout.articles_fragment,container,false);
-		 ImageView banner = (ImageView)view.findViewById(R.id.banner);
-		 ImageView footerImg = (ImageView)view.findViewById(R.id.footerimg);
-		 TextView title = (TextView)view.findViewById(R.id.title);
+	@Override
+	 public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState)
+	 {
+		 //Obtains each 
+		 articleView=inflater.inflate(R.layout.articles_fragment,container,false);
+		 ImageView banner = (ImageView)articleView.findViewById(R.id.banner);
+		 ImageView footerImg = (ImageView)articleView.findViewById(R.id.footerimg);
+		 TextView title = (TextView)articleView.findViewById(R.id.title);
 		 SpannableString NewTitle = new SpannableString(PassedTitle);
+		 
+		 //Sets the options for display
 		 NewTitle.setSpan(new UnderlineSpan(), 0, NewTitle.length(), 0);
 		 title.setText(NewTitle);
 		 title.setBackgroundColor(Color.BLACK);
 		 banner.setImageResource(R.drawable.gohogs);
 		 footerImg.setImageResource(R.drawable.tamukbanner);
-		 return view;
-		}
+		 
+		 return articleView;
+	}
 
 private class getArticles extends AsyncTask<String, Void, ArrayList<String>>
 {
@@ -89,10 +97,10 @@ private class getArticles extends AsyncTask<String, Void, ArrayList<String>>
 			try
 			{
 					Document document = Jsoup.connect(connection).get();
-					Elements divisions1=document.select("div#newsbody");
-					Elements divisions = divisions1.select("div#newscontent");
+					Elements news=document.select("div#newsbody");
+					Elements newsContent = news.select("div#newscontent");
 					
-					for(Element Division :divisions)
+					for(Element Division :newsContent)
 					{
 						if(isCancelled())
 							break;
@@ -112,15 +120,12 @@ private class getArticles extends AsyncTask<String, Void, ArrayList<String>>
 		protected void onPostExecute(ArrayList<String> strings)
 		{
 			Log.i("Article","on post execute");
-			for(int l=0; l<eventcontent.size(); l++)
+			for(int limit=0; limit<eventcontent.size(); limit++)
 			{
-			{	
-					if(isCancelled())
-						break;
-					eventstring = "\n"+eventcontent.get(l)+"\n";
-					
-			}
-				TextView tv = (TextView)view.findViewById(R.id.text);
+				if(isCancelled())
+					break;
+				eventstring = "\n"+eventcontent.get(limit)+"\n";
+				TextView tv = (TextView)articleView.findViewById(R.id.text);
 				tv.setBackgroundColor(Color.BLACK);
 				//tv.setTextColor(Color.YELLOW);
 				tv.setText(eventstring);
