@@ -201,7 +201,7 @@ public class MainActivity extends SherlockFragmentActivity {
 		//When the custom tab selection is toggled it makes the necessary changes
 		if(shared.getBoolean("extra", false))
 		{
-			if(action.getTabCount()<5)
+			if(action.getTabCount()<5&&!shared.getString("webURL", "http://www.google.com").isEmpty())
 			{
 				customTab = action.newTab();
 				customTab.setText("Extra");
