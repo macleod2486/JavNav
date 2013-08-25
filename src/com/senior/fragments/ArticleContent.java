@@ -86,6 +86,7 @@ public class ArticleContent extends SherlockFragment{
 		 return articleView;
 	}
 
+//Class that obtains the articles.
 private class getArticles extends AsyncTask<String, Void, ArrayList<String>>
 {
 		
@@ -120,12 +121,12 @@ private class getArticles extends AsyncTask<String, Void, ArrayList<String>>
 		protected void onPostExecute(ArrayList<String> strings)
 		{
 			Log.i("Article","on post execute");
+			TextView tv = (TextView)articleView.findViewById(R.id.text);
 			for(int limit=0; limit<eventcontent.size(); limit++)
 			{
 				if(isCancelled())
 					break;
 				eventstring = "\n"+eventcontent.get(limit)+"\n";
-				TextView tv = (TextView)articleView.findViewById(R.id.text);
 				tv.setBackgroundColor(Color.BLACK);
 				//tv.setTextColor(Color.YELLOW);
 				tv.setText(eventstring);
