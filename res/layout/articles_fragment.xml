@@ -14,13 +14,13 @@
         android:id="@+id/banner"
         android:contentDescription="@string/blank"
         android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
+        android:layout_height="75dp"
         android:adjustViewBounds="true" 
         />
     <TextView android:layout_width="match_parent"
     	android:id="@+id/title"
     	android:textColor="#FFFF00"
-    	android:textSize="25sp"
+    	android:textSize="15sp"
     	android:gravity="center"
     	android:layout_height="wrap_content"
     	android:text="@string/blank"
@@ -33,8 +33,8 @@
         <ImageView 
         android:id="@+id/footerimg"
         android:contentDescription="@string/blank"
-        android:layout_width="fill_parent"
-        android:layout_height="wrap_content"
+        android:layout_width="wrap_content"
+        android:layout_height="30dp"
         android:adjustViewBounds="true" 
         />
     </RelativeLayout>
@@ -49,7 +49,7 @@
         android:layout_width="fill_parent"
     	android:id="@+id/text"
     	android:textColor="#FFFFFF"
-    	android:textSize="20sp"
+    	android:textSize="14sp"
     	android:layout_height="fill_parent"
     	android:text="@string/blank"
     	/></RelativeLayout></ScrollView>
