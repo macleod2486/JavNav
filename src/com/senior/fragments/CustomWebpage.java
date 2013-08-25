@@ -50,6 +50,9 @@ public class CustomWebpage extends SherlockFragment
 		
 		SharedPreferences shared = PreferenceManager.getDefaultSharedPreferences(getActivity());
 		String url = shared.getString("webURL", "https://www.google.com");
+		if(url==null)
+			url="https://www.google.com";
+		
 		if(url.charAt(0)!='h')
 			url="http://"+url;
 		
