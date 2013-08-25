@@ -35,7 +35,9 @@
         android:contentDescription="@string/blank"
         android:layout_width="wrap_content"
         android:layout_height="30dp"
-        android:adjustViewBounds="true" 
+        android:adjustViewBounds="true"
+        android:layout_centerHorizontal="true"
+        android:layout_centerVertical="true" 
         />
     </RelativeLayout>
     
