@@ -1,0 +1,48 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:id="@+id/bluegold"
+    android:orientation="vertical" >
+    <WebView
+        android:id="@+id/webBluegold"
+        android:layout_width="fill_parent"
+        android:layout_height="fill_parent"
+        android:layout_below="@+id/blueBack" />
+
+    <ProgressBar
+        android:id="@+id/webProgress"
+        style="?android:attr/progressBarStyleLarge"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_centerHorizontal="true"
+        android:layout_centerVertical="true" />
+
+    <Button
+        android:id="@+id/blueBack"
+        android:layout_width="100dp"
+        android:layout_height="wrap_content"
+        android:layout_alignParentLeft="true"
+        android:layout_alignParentTop="true"
+        android:onClick="website"
+        android:text="@string/back" />
+
+    <Button
+        android:id="@+id/blueForward"
+        android:layout_width="100dp"
+        android:layout_height="wrap_content"
+        android:layout_alignParentRight="true"
+        android:layout_alignParentTop="true"
+        android:onClick="website"
+        android:text="@string/forward" />
+
+    <Button
+        android:id="@+id/blueRefresh"
+        android:layout_width="100dp"
+        android:layout_height="wrap_content"
+        android:layout_alignParentTop="true"
+        android:layout_centerHorizontal="true"
+        android:onClick="website"
+        android:text="@string/refresh" />
+
+</RelativeLayout>
