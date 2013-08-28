@@ -54,7 +54,7 @@ public class CustomWebpage extends SherlockFragment
 		//Checks to makes sure the url is not null.
 		try
 		{
-			if(url.isEmpty())
+			if(url==null)
 				url="https://www.google.com";
 		}
 		catch(Exception e)
