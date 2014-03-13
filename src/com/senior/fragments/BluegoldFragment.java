@@ -49,7 +49,7 @@ public class BluegoldFragment extends SherlockFragment
 		bluegoldview.setWebViewClient(new Client());
 		bluegoldview.getSettings().setJavaScriptEnabled(true);
 		bluegoldview.getSettings().setBuiltInZoomControls(true);
-		bluegoldview.setInitialScale(25);
+		bluegoldview.setInitialScale(50);
 		if(savedInstanceState!=null)
 		{
 			bluegoldview.restoreState(savedInstanceState);

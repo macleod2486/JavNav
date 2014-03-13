@@ -31,6 +31,7 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.webkit.WebChromeClient;
+import android.webkit.WebSettings;
 import android.webkit.WebView;
 import android.webkit.WebViewClient;
 import android.widget.ProgressBar;
@@ -49,7 +50,7 @@ public class BlackboardFrag extends SherlockFragment
 		blackboardView.setWebViewClient(new Client());
 		blackboardView.getSettings().setBuiltInZoomControls(true);
 		blackboardView.getSettings().setJavaScriptEnabled(true);
-		blackboardView.setInitialScale(25);
+		blackboardView.setInitialScale(50);
 		
 		if(savedInstanceState!=null)
 		{
