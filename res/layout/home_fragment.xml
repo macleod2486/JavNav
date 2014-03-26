@@ -33,10 +33,6 @@ android:layout_height="fill_parent"
     	  android:dividerHeight="1dp"
     	  android:layout_below="@+id/calenderevents"
     	  />
-<TextView android:layout_width="fill_parent"
-    	  android:id="@+id/text"
-    	  android:layout_height="wrap_content"
-    	  android:text="@string/blank"/>
 </RelativeLayout>
 
 </LinearLayout>
