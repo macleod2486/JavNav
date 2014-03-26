@@ -48,7 +48,8 @@ import android.view.ViewGroup;
 import android.widget.ImageView;
 import android.widget.TextView;
 
-public class ArticleContent extends SherlockFragment{
+public class ArticleContent extends SherlockFragment
+{
 	
 	View articleView;
 	int i=0;
@@ -86,52 +87,51 @@ public class ArticleContent extends SherlockFragment{
 		 return articleView;
 	}
 
-//Class that obtains the articles.
-private class getArticles extends AsyncTask<String, Void, ArrayList<String>>
-{
-		
-		protected ArrayList<String> doInBackground(String...params)
-		{
-			Log.i("Article","do in background");
-			eventcontent= new ArrayList<String>();
-			String connection = links.get(j);
-			try
+	//Class that obtains the articles.
+	private class getArticles extends AsyncTask<String, Void, ArrayList<String>>
+	{
+			
+			protected ArrayList<String> doInBackground(String...params)
 			{
-					Document document = Jsoup.connect(connection).get();
-					Elements news=document.select("div#newsbody");
-					Elements newsContent = news.select("div#newscontent");
-					
-					for(Element Division :newsContent)
-					{
-						if(isCancelled())
-							break;
-						eventcontent.add(Division.text());
+				Log.i("Article","do in background");
+				eventcontent= new ArrayList<String>();
+				String connection = links.get(j);
+				try
+				{
+						Document document = Jsoup.connect(connection).get();
+						Elements news=document.select("div#newsbody");
+						Elements newsContent = news.select("div#newscontent");
 						
-					}
+						for(Element Division :newsContent)
+						{
+							if(isCancelled())
+								break;
+							eventcontent.add(Division.text());
+							
+						}
+				}
+				catch(Exception e)
+				{
+					Log.i("Article","Error "+e);
+				}
+				Log.e("Article","Results: "+eventcontent.size());
+				return eventcontent;
 			}
-			catch(Exception e)
+			//When the article is post executed
+			@Override
+			protected void onPostExecute(ArrayList<String> strings)
 			{
-				Log.i("Article","Error "+e);
+				Log.i("Article","on post execute");
+				TextView tv = (TextView)articleView.findViewById(R.id.text);
+				for(int limit=0; limit<eventcontent.size(); limit++)
+				{
+					if(isCancelled())
+						break;
+					eventstring = "\n"+eventcontent.get(limit)+"\n";
+					tv.setBackgroundColor(Color.BLACK);
+					tv.setText(eventstring);
+				}	
 			}
-			Log.e("Article","Results: "+eventcontent.size());
-			return eventcontent;
+			
 		}
-		//When the article is post executed
-		@Override
-		protected void onPostExecute(ArrayList<String> strings)
-		{
-			Log.i("Article","on post execute");
-			TextView tv = (TextView)articleView.findViewById(R.id.text);
-			for(int limit=0; limit<eventcontent.size(); limit++)
-			{
-				if(isCancelled())
-					break;
-				eventstring = "\n"+eventcontent.get(limit)+"\n";
-				tv.setBackgroundColor(Color.BLACK);
-				//tv.setTextColor(Color.YELLOW);
-				tv.setText(eventstring);
-			}	
-		}
-		
-	}
 }

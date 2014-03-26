@@ -46,7 +46,8 @@ import android.widget.ImageView;
 import android.widget.ListView;
 import android.widget.TextView;
 
-public class HomeFragment extends SherlockListFragment{
+public class HomeFragment extends SherlockListFragment
+{
 	ListView mListView;
 	ImageView image;
 	View view;
@@ -56,39 +57,43 @@ public class HomeFragment extends SherlockListFragment{
 	static ArrayList<String> eventtitles;
 	public static ArrayList<String> eventlinks = new ArrayList<String>();
 	static String TitleChosen;
-	 @Override
-	 public void onActivityCreated(Bundle savedInstanceState){
-	 super.onActivityCreated(savedInstanceState);
-	 mListView.setBackgroundColor(Color.BLACK);
-	 new getDivs().execute();
-	 }
+
+	@Override
+	public void onActivityCreated(Bundle savedInstanceState)
+	{
+		 super.onActivityCreated(savedInstanceState);
+		 mListView.setBackgroundColor(Color.BLACK);
+		 new getDivs().execute();
+	}
 	 
-	 @Override
-	 public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState)
-	 {
+	@Override
+	public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState)
+	{
 		 
-		 view=inflater.inflate(R.layout.home_fragment,container,false);
-		 image=(ImageView)view.findViewById(R.id.imgIcon);
-		 image.setImageResource(R.drawable.students);
-		 titletext = (TextView)view.findViewById(R.id.calenderevents);
-		 SpannableString NewTitle = new SpannableString("Calendar Of Events");
-		 NewTitle.setSpan(new UnderlineSpan(), 0, NewTitle.length(), 0);
-		 titletext.setText(NewTitle);
-		 titletext.setBackgroundColor(Color.BLACK);
-		 mListView=(ListView)view.findViewById(android.R.id.list);
-		 return view;
-	 }
+		view=inflater.inflate(R.layout.home_fragment,container,false);
+		image=(ImageView)view.findViewById(R.id.imgIcon);
+		image.setImageResource(R.drawable.students);
+		titletext = (TextView)view.findViewById(R.id.calenderevents);
+		SpannableString NewTitle = new SpannableString("Calendar Of Events");
+		NewTitle.setSpan(new UnderlineSpan(), 0, NewTitle.length(), 0);
+		titletext.setText(NewTitle);
+		titletext.setBackgroundColor(Color.BLACK);
+		mListView=(ListView)view.findViewById(android.R.id.list);
+		return view;
+	}
 	
 	
-private class getDivs extends AsyncTask<String, Void, ArrayList<String>>{
-		
-		protected ArrayList<String> doInBackground(String...params){
-			eventtitles= new ArrayList<String>();
-			try{
-			Document document = Jsoup.connect("http://www.tamuk.edu/").get();
-			Elements divisions=document.select("div#calendar");
-			Elements divisions2=divisions.select("a");
-			Elements links = divisions2.select("[href]");
+	private class getDivs extends AsyncTask<String, Void, ArrayList<String>>
+	{
+			protected ArrayList<String> doInBackground(String...params)
+			{
+				eventtitles= new ArrayList<String>();
+				try
+				{
+					Document document = Jsoup.connect("http://www.tamuk.edu/").get();
+					Elements divisions=document.select("div#calendar");
+					Elements divisions2=divisions.select("a");
+					Elements links = divisions2.select("[href]");
 					
 					for(Element Division :divisions2)
 					{
@@ -102,56 +107,60 @@ private class getDivs extends AsyncTask<String, Void, ArrayList<String>>{
 							break;
 						eventlinks.add(link.attr("abs:href").toString());
 					}
-					
-			}catch(Exception e){	
+						
+				}
+				catch(Exception e)
+				{
+					e.printStackTrace();
+				}
+				return eventtitles;
 			}
-			return eventtitles;
-		}
-		@Override
-		protected void onPostExecute(ArrayList<String> strings){
-			try
+			@Override
+			protected void onPostExecute(ArrayList<String> strings)
 			{
-				int eventtitlesize=eventtitles.size();
+				try
+				{
+					int eventtitlesize=eventtitles.size();
+					titles = new String[eventtitlesize];
+					for(int i=1; i<eventtitlesize; i++)
+					{
+						if(isCancelled())
+							break;
+						String titleDetail = eventtitles.get(i);
+						titles[i]= titleDetail.toString();
+						
+					}
+					Log.i("home frag","Results: "+eventtitles.size());
+					mListView.setAdapter(new MyPerformanceArrayAdapter(getActivity(),titles));
+				}
+				catch(Exception e)
+				{
+					Log.i("Home","Error on post execute");
+				}
+			}
 			
-			titles = new String[eventtitlesize];
-			for(int i=1; i<eventtitlesize; i++)
-			{
-				if(isCancelled())
-					break;
-				String titleDetail = eventtitles.get(i);
-				titles[i]= titleDetail.toString();
 				
-			}
-			Log.i("home frag","Results: "+eventtitles.size());
-			
-		     mListView.setAdapter(new MyPerformanceArrayAdapter(getActivity(),titles));
-			}
-			catch(Exception e)
+	}
+
+	public void onListItemClick(ListView mListView, View view, int position, long id)
+	{
+		
+	    String chosen = titles[position];
+	    for(int k = 1; k<titles.length; k++)
+	    {
+			if(chosen.equals(titles[k]))
 			{
-				Log.i("Home","Error on post execute");
+				m=k;
+				TitleChosen = chosen;
+				Fragment articles = new ArticleContent();
+				FragmentTransaction ft = getFragmentManager().beginTransaction();
+				ft.replace(R.id.container, articles);
+				ft.addToBackStack(null);
+				ft.commit();
 			}
 		}
 		
-			
-		}
+	}
 
-public void onListItemClick(ListView mListView, View view, int position, long id){
-	
-    String chosen = titles[position];
-    for(int k = 1; k<titles.length; k++){
-	if(chosen.equals(titles[k])){
-		m=k;
-		TitleChosen = chosen;
-		Fragment articles = new ArticleContent();
-		FragmentTransaction ft = getFragmentManager().beginTransaction();
-		//ft = getFragmentManager().beginTransaction();
-		ft.replace(R.id.container, articles);
-		ft.addToBackStack(null);
-		ft.commit();
-	}
-	}
-	
 }
-
-	}
 	

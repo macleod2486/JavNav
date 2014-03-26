@@ -71,46 +71,46 @@ public class CustomWebpage extends SherlockFragment
 	}
 	
 
-public class ChromeClient extends WebChromeClient 
-{
-	
-	public void onProgressChanged(WebView view, int progres)
+	public class ChromeClient extends WebChromeClient 
 	{
-		ProgressBar progress;
-		Log.i("Client","Current "+progres);
-		progress  = (ProgressBar)customView.findViewById(R.id.webProgress);
-		if(progres<100&&progress!=null)
+		
+		public void onProgressChanged(WebView view, int progres)
 		{
-				//progress.setVisibility(1);
-				progress.setProgress(progres);
+			ProgressBar progress;
+			Log.i("Client","Current "+progres);
+			progress  = (ProgressBar)customView.findViewById(R.id.webProgress);
+			if(progres<100&&progress!=null)
+			{
+					//progress.setVisibility(1);
+					progress.setProgress(progres);
+			}
+			if(progres==100&&progress!=null)
+				progress.setVisibility(View.GONE);
 		}
-		if(progres==100&&progress!=null)
-			progress.setVisibility(View.GONE);
-	}
-
-}
-//WebViewClient
-
-public class Client extends WebViewClient
-{
-
-	@Override
-	public void onPageStarted(WebView view, String url, Bitmap favicon)
-	{
-		Log.i("Client","Page started");
-		ProgressBar progress = (ProgressBar)customView.findViewById(R.id.webProgress);
-		progress.setVisibility(View.VISIBLE);
-		super.onPageStarted(view, url, favicon);
-	}
-	@Override
-	public boolean shouldOverrideUrlLoading(WebView view, String url)
-	{
-		view.loadUrl(url);
-		return true;
-	}
 	
+	}
+	//WebViewClient
+
+	public class Client extends WebViewClient
+	{
 	
-}
+		@Override
+		public void onPageStarted(WebView view, String url, Bitmap favicon)
+		{
+			Log.i("Client","Page started");
+			ProgressBar progress = (ProgressBar)customView.findViewById(R.id.webProgress);
+			progress.setVisibility(View.VISIBLE);
+			super.onPageStarted(view, url, favicon);
+		}
+		@Override
+		public boolean shouldOverrideUrlLoading(WebView view, String url)
+		{
+			view.loadUrl(url);
+			return true;
+		}
+		
+		
+	}
 
 	
 }

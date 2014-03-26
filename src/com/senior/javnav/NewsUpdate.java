@@ -221,7 +221,6 @@ public class NewsUpdate extends IntentService
 			}
 			catch(Exception e)
 			{
-				//e.printStackTrace();
 				Log.i("Service","IsFileNull error "+e);
 				checkNull=true;
 			}

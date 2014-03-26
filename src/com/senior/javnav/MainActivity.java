@@ -94,7 +94,6 @@ public class MainActivity extends SherlockFragmentActivity {
 		
 		if(getSupportActionBar().getSelectedTab()!=homeTab)
 		{
-				//finish();
 				saveState();
 				getSupportActionBar().removeAllTabs();
 				super.onBackPressed();
@@ -108,7 +107,6 @@ public class MainActivity extends SherlockFragmentActivity {
 			}
 			else
 			{
-				//finish();	
 				saveState();
 				getSupportActionBar().removeAllTabs();
 				super.onBackPressed();
@@ -417,22 +415,23 @@ public class MainActivity extends SherlockFragmentActivity {
 	{
 		public SherlockListFragment fragment;
 	   	 
-		public ListTabListener(SherlockListFragment fragment) {
-			// TODO Auto-generated constructor stub
+		public ListTabListener(SherlockListFragment fragment) 
+		{
 			Log.i("Tabs","Fragment being reassigned");
 			this.fragment = fragment;
 		}
 
-		public void onTabReselected(Tab tab, FragmentTransaction ft) {
-			// TODO Auto-generated method stub
+		public void onTabReselected(Tab tab, FragmentTransaction ft) 
+		{
 			Log.i("Tabs","Reselected");
 			
 		}
 
-		public void onTabSelected(Tab tab, FragmentTransaction ft) {
-			// TODO Auto-generated method stub
-			try{
-			Log.i("Tabs","Replaced called");
+		public void onTabSelected(Tab tab, FragmentTransaction ft) 
+		{
+			try
+			{
+				Log.i("Tabs","Replaced called");
 				ft.replace(R.id.container, fragment);
 			}
 			catch(Exception e)
@@ -441,8 +440,8 @@ public class MainActivity extends SherlockFragmentActivity {
 			}
 		}
 
-		public void onTabUnselected(Tab tab, FragmentTransaction ft) {
-			// TODO Auto-generated method stub
+		public void onTabUnselected(Tab tab, FragmentTransaction ft) 
+		{
 			
 			Log.i("Tabs","On remove called to "+fragment.toString());
 			
@@ -460,7 +459,7 @@ public class MainActivity extends SherlockFragmentActivity {
 	}
 	
 	
-//Class for the fragments to be attached to the action bar
+	//Class for the fragments to be attached to the action bar
     protected class TabListener extends SherlockFragmentActivity implements ActionBar.TabListener
     {
     	
