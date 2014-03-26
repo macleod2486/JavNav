@@ -95,17 +95,13 @@ public class HomeFragment extends SherlockListFragment
 					Elements divisions2=divisions.select("a");
 					Elements links = divisions2.select("[href]");
 					
-					for(Element Division :divisions2)
+					for(int index = 0; index < divisions2.size()&&index < links.size(); index++)
 					{
-						if(isCancelled())
-							break;
-						eventtitles.add(Division.text());
-					}
-					for(Element link:links)
-					{
-						if(isCancelled())
-							break;
-						eventlinks.add(link.attr("abs:href").toString());
+							if(isCancelled())
+								break;
+							eventtitles.add(divisions2.get(index).text());
+							eventlinks.add(links.get(index).attr("abs:href").toString());
+						
 					}
 						
 				}
