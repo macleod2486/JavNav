@@ -60,10 +60,8 @@ import android.view.View;
 import android.webkit.WebView;
 import android.widget.Spinner;
 
-public class MainActivity extends SherlockFragmentActivity {
-	
-	public static final String ServiceName = "android.intent.action.service";
-	
+public class MainActivity extends SherlockFragmentActivity 
+{		
 	SherlockListFragment Home =  new HomeFragment();
 	//Google map module
 	SherlockFragment Google = new GoogleFragment();
