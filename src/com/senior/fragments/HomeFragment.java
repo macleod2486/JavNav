@@ -26,6 +26,7 @@ import org.jsoup.nodes.Document;
 import org.jsoup.nodes.Element;
 import org.jsoup.select.Elements;
 
+import com.actionbarsherlock.app.SherlockFragment;
 import com.actionbarsherlock.app.SherlockListFragment;
 import com.senior.javnav.R;
 
@@ -59,6 +60,8 @@ public class HomeFragment extends SherlockListFragment
 	static ArrayList<String> eventtitles;
 	public static ArrayList<String> eventlinks = new ArrayList<String>();
 	static String TitleChosen;
+	
+	ArticleContent articles = new ArticleContent();
 
 	@Override
 	public void onActivityCreated(Bundle savedInstanceState)
@@ -96,6 +99,11 @@ public class HomeFragment extends SherlockListFragment
 	{
 		reloadButton.setVisibility(View.INVISIBLE);
 		new getDivs().execute();
+	}
+	
+	public void reloadArticle()
+	{
+		articles.reloadArticle();
 	}
 	
 	private class getDivs extends AsyncTask<String, Void, ArrayList<String>>
@@ -175,7 +183,7 @@ public class HomeFragment extends SherlockListFragment
 			{
 				m=index;
 				TitleChosen = chosen;
-				Fragment articles = new ArticleContent();
+				articles = new ArticleContent();
 				FragmentTransaction ft = getFragmentManager().beginTransaction();
 				ft.replace(R.id.container, articles);
 				ft.addToBackStack(null);

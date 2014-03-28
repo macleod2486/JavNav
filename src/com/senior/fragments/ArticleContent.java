@@ -45,6 +45,7 @@ import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.TextView;
 
@@ -52,6 +53,8 @@ public class ArticleContent extends SherlockFragment
 {
 	
 	View articleView;
+	Button reloadButton;
+	
 	int i=0;
 	int j=HomeFragment.m;
 	String eventstring;
@@ -80,12 +83,21 @@ public class ArticleContent extends SherlockFragment
 		 title.setText(NewTitle);
 		 title.setBackgroundColor(Color.BLACK);
 		 
+		 reloadButton = (Button)articleView.findViewById(R.id.refresh);
+		 
 		 return articleView;
+	}
+	
+	public void reloadArticle()
+	{
+		reloadButton.setVisibility(View.INVISIBLE);
+		new getArticles().execute();
 	}
 
 	//Class that obtains the articles.
 	private class getArticles extends AsyncTask<String, Void, ArrayList<String>>
 	{
+			private boolean completed = false;
 			
 			protected ArrayList<String> doInBackground(String...params)
 			{
@@ -105,9 +117,11 @@ public class ArticleContent extends SherlockFragment
 							eventcontent.add(Division.text());
 							
 						}
+						completed = true;
 				}
 				catch(Exception e)
 				{
+					completed = false;
 					Log.i("Article","Error "+e);
 				}
 				Log.e("Article","Results: "+eventcontent.size());
@@ -127,6 +141,14 @@ public class ArticleContent extends SherlockFragment
 					tv.setBackgroundColor(Color.BLACK);
 					tv.setText(eventstring);
 				}	
+				if(completed)
+				{
+					reloadButton.setVisibility(View.INVISIBLE);
+				}
+				else
+				{
+					reloadButton.setVisibility(View.VISIBLE);
+				}
 			}
 			
 		}

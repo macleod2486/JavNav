@@ -327,6 +327,11 @@ public class MainActivity extends SherlockFragmentActivity
 		Home.reloadHome(view);
 	}
 	
+	public void reloadArticle(View view)
+	{
+		Home.reloadArticle();
+	}
+	
 	//Handles the webviews buttons
 	public void website(View view)
 	{
