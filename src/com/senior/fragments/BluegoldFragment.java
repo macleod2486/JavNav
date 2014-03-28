@@ -79,7 +79,6 @@ public class BluegoldFragment extends SherlockFragment
 			progress  = (ProgressBar)bluegold.findViewById(R.id.webProgress);
 			if(progres<100&&progress!=null)
 			{
-					//progress.setVisibility(1);
 					progress.setProgress(progres);
 			}
 			if(progres==100&&progress!=null)
