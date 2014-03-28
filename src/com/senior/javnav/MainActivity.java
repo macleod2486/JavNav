@@ -92,8 +92,6 @@ public class MainActivity extends SherlockFragmentActivity
 		
 		if(getSupportActionBar().getSelectedTab()!=homeTab)
 		{
-				saveState();
-				getSupportActionBar().removeAllTabs();
 				super.onBackPressed();
 		}
 		else
@@ -105,7 +103,6 @@ public class MainActivity extends SherlockFragmentActivity
 			}
 			else
 			{
-				saveState();
 				getSupportActionBar().removeAllTabs();
 				super.onBackPressed();
 			}
@@ -289,38 +286,7 @@ public class MainActivity extends SherlockFragmentActivity
 		else
 			return false;
 	}
-	
-	//Saves the state of the fragment
-	private void saveState()
-	{
-		int position = getSupportActionBar().getSelectedTab().getPosition();
 		
-		if(position==0)
-		{	
-			Home.setRetainInstance(true);
-		}
-		else if(position==1)
-		{	
-			Google.setRetainInstance(true);
-		}
-		else if(position==2)
-		{	
-			bluegold.setRetainInstance(true);
-		}
-		else if(position==3)
-		{
-			blackboard.setRetainInstance(true);
-		}
-		else if(position==4)
-		{
-			custom.setRetainInstance(true);
-		}
-		SharedPreferences shared = PreferenceManager.getDefaultSharedPreferences(this);
-		SharedPreferences.Editor edit = shared.edit();
-		edit.putInt("TabSelect", position).commit();
-		
-	}
-	
 	//Handles the home fragments requests for a refresh
 	public void reloadHome(View view)
 	{
