@@ -64,11 +64,11 @@ public class MainActivity extends SherlockFragmentActivity
 {		
 	HomeFragment Home =  new HomeFragment();
 	//Google map module
-	SherlockFragment Google = new GoogleFragment();
+	GoogleFragment Google = new GoogleFragment();
 	//Bluegold module
-	SherlockFragment bluegold = new BluegoldFragment();
+	BluegoldFragment bluegold = new BluegoldFragment();
 	//Blackboard module
-	SherlockFragment blackboard = new BlackboardFrag();
+	BlackboardFrag blackboard = new BlackboardFrag();
 	//Custom web fragment
 	SherlockFragment custom = new CustomWebpage();
 	
