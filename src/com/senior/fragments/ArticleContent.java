@@ -72,8 +72,6 @@ public class ArticleContent extends SherlockFragment
 	 {
 		 //Obtains each 
 		 articleView=inflater.inflate(R.layout.articles_fragment,container,false);
-		 ImageView banner = (ImageView)articleView.findViewById(R.id.banner);
-		 ImageView footerImg = (ImageView)articleView.findViewById(R.id.footerimg);
 		 TextView title = (TextView)articleView.findViewById(R.id.title);
 		 SpannableString NewTitle = new SpannableString(PassedTitle);
 		 
@@ -81,8 +79,6 @@ public class ArticleContent extends SherlockFragment
 		 NewTitle.setSpan(new UnderlineSpan(), 0, NewTitle.length(), 0);
 		 title.setText(NewTitle);
 		 title.setBackgroundColor(Color.BLACK);
-		 banner.setImageResource(R.drawable.gohogs);
-		 footerImg.setImageResource(R.drawable.tamukbanner);
 		 
 		 return articleView;
 	}

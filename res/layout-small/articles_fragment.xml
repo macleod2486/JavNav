@@ -10,13 +10,6 @@
     	android:layout_height="wrap_content" 
     	android:background="#000000" 
     	android:layout_alignParentTop="true">
-    <ImageView 
-        android:id="@+id/banner"
-        android:contentDescription="@string/blank"
-        android:layout_width="wrap_content"
-        android:layout_height="75dp"
-        android:adjustViewBounds="true" 
-        />
     <TextView android:layout_width="match_parent"
     	android:id="@+id/title"
     	android:textColor="#FFFF00"
@@ -27,20 +20,6 @@
     	android:textStyle="bold"
     	android:layout_below="@+id/banner" />  
     </RelativeLayout>
-    
-    <RelativeLayout android:id="@+id/footer" android:layout_height="wrap_content" 
-        android:layout_width="fill_parent" android:layout_alignParentBottom="true">
-        <ImageView 
-        android:id="@+id/footerimg"
-        android:contentDescription="@string/blank"
-        android:layout_width="wrap_content"
-        android:layout_height="30dp"
-        android:adjustViewBounds="true"
-        android:layout_centerHorizontal="true"
-        android:layout_centerVertical="true" 
-        />
-    </RelativeLayout>
-    
     <RelativeLayout android:layout_above="@+id/footer" android:layout_below="@+id/top" android:id="@+id/center" android:layout_width="fill_parent" android:layout_height="fill_parent">
     <ScrollView 
         android:layout_width="fill_parent"
