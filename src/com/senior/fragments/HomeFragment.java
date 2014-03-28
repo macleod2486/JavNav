@@ -118,12 +118,12 @@ public class HomeFragment extends SherlockListFragment
 				{
 					int eventtitlesize=eventtitles.size();
 					titles = new String[eventtitlesize];
-					for(int i=1; i<eventtitlesize; i++)
+					for(int index=0; index<eventtitlesize; index++)
 					{
 						if(isCancelled())
 							break;
-						String titleDetail = eventtitles.get(i);
-						titles[i]= titleDetail.toString();
+						String titleDetail = eventtitles.get(index);
+						titles[index]= titleDetail.toString();
 						
 					}
 					Log.i("home frag","Results: "+eventtitles.size());
@@ -142,11 +142,11 @@ public class HomeFragment extends SherlockListFragment
 	{
 		
 	    String chosen = titles[position];
-	    for(int k = 1; k<titles.length; k++)
+	    for(int index = 0; index<titles.length; index++)
 	    {
-			if(chosen.equals(titles[k]))
+			if(chosen.equals(titles[index]))
 			{
-				m=k;
+				m=index;
 				TitleChosen = chosen;
 				Fragment articles = new ArticleContent();
 				FragmentTransaction ft = getFragmentManager().beginTransaction();
