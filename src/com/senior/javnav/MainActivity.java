@@ -72,11 +72,6 @@ public class MainActivity extends SherlockFragmentActivity
 	//Custom web fragment
 	SherlockFragment custom = new CustomWebpage();
 	
-	boolean goldtab=true;
-	boolean boardtab = true;
-	boolean maptab = true;
-	boolean maintab = true;
-	
 	String bluegoldurl = "https://www.tamuk.edu/bluegold";
 	String blackboardurl = "https://blackboard.tamuk.edu";
 	
