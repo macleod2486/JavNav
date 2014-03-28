@@ -39,6 +39,8 @@ public class BlackboardFrag extends SherlockFragment
 {
 	View blackboard;
 	WebView blackboardView;
+	String url = "https://blackboard.tamuk.edu"; 
+	
 	@Override
 	public View onCreateView(LayoutInflater inflate, ViewGroup container, Bundle savedInstanceState)
 	{
@@ -57,12 +59,22 @@ public class BlackboardFrag extends SherlockFragment
 		}
 		else
 		{
-			blackboardView.loadUrl("https://blackboard.tamuk.edu");
+			blackboardView.loadUrl(url);
 		}
 		Log.i("Blackboard","Blackboard fragment finished");
 		return blackboard;
 	}
 	
+	public void loadUrl(String url)
+	{
+		this.url = url;
+	}
+	
+	public String currentUrl()
+	{
+		String currentUrl = blackboardView.getUrl();
+		return currentUrl;
+	}
 	
 	public void onSaveInstanceState(Bundle outstate)
 	{

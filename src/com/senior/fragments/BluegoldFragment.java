@@ -39,6 +39,8 @@ public class BluegoldFragment extends SherlockFragment
 {
 	View bluegold;
 	WebView bluegoldview;
+	String url = "https://www.tamuk.edu/bluegold";
+	
 	@Override
 	public View onCreateView(LayoutInflater inflate, ViewGroup container, Bundle savedInstanceState)
 	{
@@ -56,7 +58,7 @@ public class BluegoldFragment extends SherlockFragment
 		}
 		else
 		{
-			bluegoldview.loadUrl("https://www.tamuk.edu/bluegold");
+			bluegoldview.loadUrl(url);
 		}
 		Log.i("Blue","Bluegold page finished loading");
 		return bluegold;
@@ -85,6 +87,18 @@ public class BluegoldFragment extends SherlockFragment
 		}
 
 	}
+	
+	public void loadUrl(String url)
+	{
+		this.url = url;
+	}
+	
+	public String currentUrl()
+	{
+		String currentUrl = bluegoldview.getUrl();
+		return currentUrl;
+	}
+	
 	//WebViewClient
 
 	public class Client extends WebViewClient

@@ -77,6 +77,9 @@ public class MainActivity extends SherlockFragmentActivity
 	boolean maptab = true;
 	boolean maintab = true;
 	
+	String bluegoldurl = "https://www.tamuk.edu/bluegold";
+	String blackboardurl = "https://blackboard.tamuk.edu";
+	
 	//Tabs that will be added to the actionbar
 	ActionBar.Tab homeTab;
 	ActionBar.Tab javTab;
@@ -408,6 +411,7 @@ public class MainActivity extends SherlockFragmentActivity
 			{
 				Log.i("Tabs","Replaced called");
 				ft.replace(R.id.container, fragment);
+				
 			}
 			catch(Exception e)
 			{
@@ -424,6 +428,7 @@ public class MainActivity extends SherlockFragmentActivity
 			{
 				if(fragment.getId()!=R.id.google_map)
 					ft.remove(fragment);
+					
 			}
 			catch(Exception e)
 			{
@@ -459,6 +464,13 @@ public class MainActivity extends SherlockFragmentActivity
 			try
 			{
 				Log.i("Tabs","Replaced called");
+				
+				if(fragment.getId()==bluegold.getId())
+					bluegold.loadUrl(bluegoldurl);
+				
+				else if(fragment.getId()==blackboard.getId())
+					blackboard.loadUrl(blackboardurl);
+				
 				ft.replace(R.id.container, fragment);
 			}
 			catch(Exception e)
@@ -476,6 +488,12 @@ public class MainActivity extends SherlockFragmentActivity
 			{
 				if(fragment.getId()!=R.id.google_map)
 					ft.remove(fragment);
+				
+				if(fragment.getId()==bluegold.getId())
+					bluegoldurl = bluegold.currentUrl();
+				
+				else if(fragment.getId()==blackboard.getId())
+					blackboardurl = blackboard.currentUrl();
 			}
 			catch(Exception e)
 			{
