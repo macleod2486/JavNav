@@ -97,10 +97,13 @@ public class HomeFragment extends SherlockListFragment
 					
 					for(int index = 0; index < divisions2.size()&&index < links.size(); index++)
 					{
+						if(links.get(index).toString().contains(".html"))
+						{
 							if(isCancelled())
 								break;
 							eventtitles.add(divisions2.get(index).text());
 							eventlinks.add(links.get(index).attr("abs:href").toString());
+						}
 						
 					}
 						
