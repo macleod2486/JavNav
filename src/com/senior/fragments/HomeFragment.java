@@ -23,15 +23,12 @@ package com.senior.fragments;
 import java.util.ArrayList;
 import org.jsoup.Jsoup;
 import org.jsoup.nodes.Document;
-import org.jsoup.nodes.Element;
 import org.jsoup.select.Elements;
 
-import com.actionbarsherlock.app.SherlockFragment;
 import com.actionbarsherlock.app.SherlockListFragment;
 import com.senior.javnav.R;
 
 
-import android.support.v4.app.Fragment;
 //import android.support.v4.app.FragmentActivity;
 import android.support.v4.app.FragmentTransaction;
 import android.graphics.Color;
@@ -44,7 +41,6 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
-import android.widget.ImageView;
 import android.widget.ListView;
 import android.widget.TextView;
 
