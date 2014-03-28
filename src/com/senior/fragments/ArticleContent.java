@@ -55,8 +55,7 @@ public class ArticleContent extends SherlockFragment
 	View articleView;
 	Button reloadButton;
 	
-	int i=0;
-	int j=HomeFragment.m;
+	int index=HomeFragment.linkIndex;
 	String eventstring;
 	String eventlink;
 	ArrayList<String> events = HomeFragment.eventtitles;
@@ -103,7 +102,7 @@ public class ArticleContent extends SherlockFragment
 			{
 				Log.i("Article","do in background");
 				eventcontent= new ArrayList<String>();
-				String connection = links.get(j);
+				String connection = links.get(index);
 				try
 				{
 						Document document = Jsoup.connect(connection).get();

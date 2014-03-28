@@ -56,7 +56,7 @@ public class HomeFragment extends SherlockListFragment
 	Button reloadButton;
 		
 	String[] titles;
-	static int m;
+	static int linkIndex;
 	static ArrayList<String> eventtitles;
 	public static ArrayList<String> eventlinks = new ArrayList<String>();
 	static String TitleChosen;
@@ -115,17 +115,17 @@ public class HomeFragment extends SherlockListFragment
 				try
 				{
 					Document document = Jsoup.connect("http://www.tamuk.edu/").get();
-					Elements divisions=document.select("div#calendar");
-					Elements divisions2=divisions.select("a");
-					Elements links = divisions2.select("[href]");
+					Elements calendar=document.select("div#calendar");
+					Elements titles=calendar.select("a");
+					Elements links = titles.select("[href]");
 					
-					for(int index = 0; index < divisions2.size()&&index < links.size(); index++)
+					for(int index = 0; index < titles.size()&&index < links.size(); index++)
 					{
 						if(links.get(index).toString().contains(".html"))
 						{
 							if(isCancelled())
 								break;
-							eventtitles.add(divisions2.get(index).text());
+							eventtitles.add(titles.get(index).text());
 							eventlinks.add(links.get(index).attr("abs:href").toString());
 						}
 						
@@ -181,7 +181,7 @@ public class HomeFragment extends SherlockListFragment
 	    {
 			if(chosen.equals(titles[index]))
 			{
-				m=index;
+				linkIndex=index;
 				TitleChosen = chosen;
 				articles = new ArticleContent();
 				FragmentTransaction ft = getFragmentManager().beginTransaction();
