@@ -62,7 +62,7 @@ import android.widget.Spinner;
 
 public class MainActivity extends SherlockFragmentActivity 
 {		
-	SherlockListFragment Home =  new HomeFragment();
+	HomeFragment Home =  new HomeFragment();
 	//Google map module
 	SherlockFragment Google = new GoogleFragment();
 	//Bluegold module
@@ -319,6 +319,12 @@ public class MainActivity extends SherlockFragmentActivity
 		SharedPreferences.Editor edit = shared.edit();
 		edit.putInt("TabSelect", position).commit();
 		
+	}
+	
+	//Handles the home fragments requests for a refresh
+	public void reloadHome(View view)
+	{
+		Home.reloadHome(view);
 	}
 	
 	//Handles the webviews buttons

@@ -27,10 +27,16 @@ android:layout_height="fill_parent"
     	  android:dividerHeight="1dp"
     	  android:layout_below="@+id/calenderevents"
     	  />
-<TextView android:layout_width="fill_parent"
-    	  android:id="@+id/text"
-    	  android:layout_height="wrap_content"
-    	  android:text="@string/blank"/>
+<Button
+        android:id="@+id/refresh"
+        style="?android:attr/buttonStyleSmall"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_centerHorizontal="true"
+        android:layout_centerVertical="true"
+        android:onClick="reloadHome"
+        android:visibility="invisible"
+        android:text="Reload" />
 </RelativeLayout>
 
 </LinearLayout>

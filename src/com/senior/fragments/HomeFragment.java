@@ -42,6 +42,7 @@ import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.ListView;
 import android.widget.TextView;
@@ -50,9 +51,11 @@ public class HomeFragment extends SherlockListFragment
 {
 	ListView mListView;
 	View view;
+	TextView titletext;
+	Button reloadButton;
+		
 	String[] titles;
 	static int m;
-	TextView titletext;
 	static ArrayList<String> eventtitles;
 	public static ArrayList<String> eventlinks = new ArrayList<String>();
 	static String TitleChosen;
@@ -60,6 +63,7 @@ public class HomeFragment extends SherlockListFragment
 	@Override
 	public void onActivityCreated(Bundle savedInstanceState)
 	{
+		Log.i("HomeFrag","Activity Created");
 		 super.onActivityCreated(savedInstanceState);
 		 mListView.setBackgroundColor(Color.BLACK);
 		 new getDivs().execute();
@@ -68,20 +72,35 @@ public class HomeFragment extends SherlockListFragment
 	@Override
 	public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState)
 	{
-		 
+		Log.i("HomeFrag","View Created"); 
+		
 		view=inflater.inflate(R.layout.home_fragment,container,false);
+		
 		titletext = (TextView)view.findViewById(R.id.calenderevents);
+		
 		SpannableString NewTitle = new SpannableString("Calendar Of Events");
+		
 		NewTitle.setSpan(new UnderlineSpan(), 0, NewTitle.length(), 0);
+		
 		titletext.setText(NewTitle);
 		titletext.setBackgroundColor(Color.BLACK);
+		
 		mListView=(ListView)view.findViewById(android.R.id.list);
+		
+		reloadButton = (Button)view.findViewById(R.id.refresh);
+		
 		return view;
 	}
 	
+	public void reloadHome(View view)
+	{
+		reloadButton.setVisibility(View.INVISIBLE);
+		new getDivs().execute();
+	}
 	
 	private class getDivs extends AsyncTask<String, Void, ArrayList<String>>
 	{
+			boolean completed = false;
 			protected ArrayList<String> doInBackground(String...params)
 			{
 				eventtitles= new ArrayList<String>();
@@ -103,10 +122,11 @@ public class HomeFragment extends SherlockListFragment
 						}
 						
 					}
-						
+					completed = true;
 				}
 				catch(Exception e)
 				{
+					completed = false;
 					e.printStackTrace();
 				}
 				return eventtitles;
@@ -128,6 +148,13 @@ public class HomeFragment extends SherlockListFragment
 					}
 					Log.i("home frag","Results: "+eventtitles.size());
 					mListView.setAdapter(new MyPerformanceArrayAdapter(getActivity(),titles));
+					
+					//If the information was not complete downloaded then it will bring back the
+					//reload button
+					if(completed)
+						reloadButton.setVisibility(View.INVISIBLE);
+					else
+						reloadButton.setVisibility(View.VISIBLE);
 				}
 				catch(Exception e)
 				{
