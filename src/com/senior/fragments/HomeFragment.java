@@ -49,7 +49,6 @@ import android.widget.TextView;
 public class HomeFragment extends SherlockListFragment
 {
 	ListView mListView;
-	ImageView image;
 	View view;
 	String[] titles;
 	static int m;
@@ -71,8 +70,6 @@ public class HomeFragment extends SherlockListFragment
 	{
 		 
 		view=inflater.inflate(R.layout.home_fragment,container,false);
-		image=(ImageView)view.findViewById(R.id.imgIcon);
-		image.setImageResource(R.drawable.students);
 		titletext = (TextView)view.findViewById(R.id.calenderevents);
 		SpannableString NewTitle = new SpannableString("Calendar Of Events");
 		NewTitle.setSpan(new UnderlineSpan(), 0, NewTitle.length(), 0);
