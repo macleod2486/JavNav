@@ -22,31 +22,6 @@
 package com.senior.javnav;
 
 
-//Actionbar sherlock imports
-import com.actionbarsherlock.app.ActionBar;
-import com.actionbarsherlock.app.SherlockFragment;
-import com.actionbarsherlock.app.SherlockFragmentActivity;
-import com.actionbarsherlock.app.SherlockListFragment;
-import com.actionbarsherlock.app.ActionBar.Tab;
-import com.actionbarsherlock.view.Menu;
-import com.actionbarsherlock.view.MenuItem;
-//Google imports
-import com.google.android.gms.maps.CameraUpdateFactory;
-import com.google.android.gms.maps.GoogleMap;
-import com.google.android.gms.maps.SupportMapFragment;
-import com.google.android.gms.maps.model.LatLng;
-import com.google.android.gms.maps.model.MarkerOptions;
-//Fragment imports
-import com.senior.fragments.BlackboardFrag;
-import com.senior.fragments.BluegoldFragment;
-import com.senior.fragments.CustomWebpage;
-import com.senior.fragments.GoogleFragment;
-import com.senior.fragments.HomeFragment;
-//Android imports
-import android.net.ConnectivityManager;
-import android.net.NetworkInfo;
-import android.os.Bundle;
-import android.preference.PreferenceManager;
 import android.app.AlarmManager;
 import android.app.AlertDialog;
 import android.app.PendingIntent;
@@ -54,11 +29,36 @@ import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.content.res.Configuration;
+import android.net.ConnectivityManager;
+import android.net.NetworkInfo;
+import android.os.Bundle;
+import android.preference.PreferenceManager;
 import android.support.v4.app.FragmentTransaction;
 import android.util.Log;
 import android.view.View;
 import android.webkit.WebView;
 import android.widget.Spinner;
+
+import com.senior.fragments.BlackboardFrag;
+import com.senior.fragments.BluegoldFragment;
+import com.senior.fragments.CustomWebpage;
+import com.senior.fragments.GoogleFragment;
+import com.senior.fragments.HomeFragment;
+
+import com.google.android.gms.maps.CameraUpdateFactory;
+import com.google.android.gms.maps.GoogleMap;
+import com.google.android.gms.maps.SupportMapFragment;
+import com.google.android.gms.maps.model.LatLng;
+import com.google.android.gms.maps.model.MarkerOptions;
+
+import com.actionbarsherlock.app.ActionBar;
+import com.actionbarsherlock.app.ActionBar.Tab;
+import com.actionbarsherlock.app.SherlockFragment;
+import com.actionbarsherlock.app.SherlockFragmentActivity;
+import com.actionbarsherlock.app.SherlockListFragment;
+import com.actionbarsherlock.view.Menu;
+import com.actionbarsherlock.view.MenuItem;
+
 
 public class MainActivity extends SherlockFragmentActivity 
 {		
@@ -108,6 +108,7 @@ public class MainActivity extends SherlockFragmentActivity
 		
 	}
 	
+	//Intercepts the configuration being being changed.
 	@Override
 	public void onConfigurationChanged(Configuration newConfig)
 	{
