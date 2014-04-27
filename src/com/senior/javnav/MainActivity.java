@@ -368,9 +368,7 @@ public class MainActivity extends SherlockFragmentActivity
 		
 		if(TAMUK!=null&&building!=null)
 		{
-			
-			selected = building.getSelectedItem().toString();
-			TAMUK.clear();selected = building.getSelectedItem().toString();
+			TAMUK.clear();
 			lat=coorTAM.latitude(selected);
 			lon=coorTAM.longitude(selected);
 			TAMUK.addMarker(new MarkerOptions().position(new LatLng(lat,lon)).title(selected));

@@ -22,8 +22,6 @@
 package com.senior.fragments;
 
 
-import com.actionbarsherlock.app.SherlockFragment;
-import com.senior.javnav.R;
 import android.graphics.Bitmap;
 import android.os.Bundle;
 import android.util.Log;
@@ -34,6 +32,10 @@ import android.webkit.WebChromeClient;
 import android.webkit.WebView;
 import android.webkit.WebViewClient;
 import android.widget.ProgressBar;
+
+import com.senior.javnav.R;
+
+import com.actionbarsherlock.app.SherlockFragment;
 
 public class BlackboardFrag extends SherlockFragment 
 {
