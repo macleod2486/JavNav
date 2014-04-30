@@ -20,8 +20,6 @@
 *
 */
 package com.senior.fragments;
-import com.senior.javnav.R;
-
 import android.content.Context;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -29,6 +27,8 @@ import android.view.ViewGroup;
 import android.widget.BaseAdapter;
 import android.widget.ImageView;
 import android.widget.TextView;
+
+import com.senior.javnav.R;
 
 public class MyPerformanceArrayAdapter extends BaseAdapter
 {
@@ -45,10 +45,8 @@ public class MyPerformanceArrayAdapter extends BaseAdapter
 	}
 	public MyPerformanceArrayAdapter(Context context2, String[] title)
 	{
-		//super(context2, R.layout.listview_item_row, title);
 		mContext = context2;
 		mInflater = LayoutInflater.from(context2);
-		//this.context=context2;
 		this.title=title;
 	}
 	public int getCount() 
@@ -57,7 +55,6 @@ public class MyPerformanceArrayAdapter extends BaseAdapter
 	} 
 	public Object getItem(int position) 
 	{
-		// TODO Auto-generated method stub
 		return position;
 	}
 	public long getItemId(int position) 
@@ -70,21 +67,16 @@ public class MyPerformanceArrayAdapter extends BaseAdapter
 	{
 		try 
 		{
-		//ViewHolder holder = null;
 			if (convertView == null) 
 			{
 				convertView = mInflater.inflate(R.layout.listview_item_row, parent, false);
 			}
 			ViewHolder holder = new ViewHolder();
-				holder.title = (TextView) convertView.findViewById(R.id.txtTitle);  
-				//if (position == 0) {
-					//convertView.setTag(holder);
-			
-				holder.title.setText(title[position]);
+			holder.title = (TextView) convertView.findViewById(R.id.txtTitle);  
+			holder.title.setText(title[position]);
 		} 
 		catch (Exception e) 
 		{
-				// TODO Auto-generated catch block
 				e.printStackTrace();
 		} 
 			return convertView;

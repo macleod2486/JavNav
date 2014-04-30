@@ -12,12 +12,6 @@
 	<string name="refresh">Refresh</string>
 	
 	<string name="blank"></string>
-	<string name="update">Press to update</string>
-	<string-array name="userType" >
-	    <item>Faculty</item>
-	    <item>Student</item>
-	    <item>ITech</item>
-	</string-array>
 	
 	<string-array name="selection">
 	    <item>1</item>
