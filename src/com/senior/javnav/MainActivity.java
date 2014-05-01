@@ -39,11 +39,9 @@ import android.view.View;
 import android.webkit.WebView;
 import android.widget.Spinner;
 
-import com.senior.fragments.BlackboardFrag;
-import com.senior.fragments.BluegoldFragment;
-import com.senior.fragments.CustomWebpage;
 import com.senior.fragments.GoogleFragment;
 import com.senior.fragments.HomeFragment;
+import com.senior.fragments.WebViewFrag;
 
 import com.google.android.gms.maps.CameraUpdateFactory;
 import com.google.android.gms.maps.GoogleMap;
@@ -63,17 +61,18 @@ import com.actionbarsherlock.view.MenuItem;
 public class MainActivity extends SherlockFragmentActivity 
 {		
 	HomeFragment Home =  new HomeFragment();
-	//Google map module
+	//Google map fragment
 	GoogleFragment Google = new GoogleFragment();
-	//Bluegold module
-	BluegoldFragment bluegold = new BluegoldFragment();
-	//Blackboard module
-	BlackboardFrag blackboard = new BlackboardFrag();
+	//Bluegold fragment
+	WebViewFrag bluegold = new WebViewFrag();
+	//Blackboard fragment
+	WebViewFrag blackboard = new WebViewFrag();
 	//Custom web fragment
-	SherlockFragment custom = new CustomWebpage();
+	WebViewFrag custom = new WebViewFrag();
 	
 	String bluegoldurl = "https://www.tamuk.edu/bluegold";
 	String blackboardurl = "https://blackboard.tamuk.edu";
+	String customUrl = "";
 	
 	//Tabs that will be added to the actionbar
 	ActionBar.Tab homeTab;
@@ -199,6 +198,8 @@ public class MainActivity extends SherlockFragmentActivity
 				customTab.setText("Extra");
 				customTab.setTabListener(new TabListener(custom));
 				action.addTab(customTab);
+				customUrl = shared.getString("webURL","http://www.google.com");
+				Log.i("CustomUrl",customUrl);
 			}
 		}
 		else
@@ -300,57 +301,20 @@ public class MainActivity extends SherlockFragmentActivity
 	//Handles the webviews buttons
 	public void website(View view)
 	{
-		if(view.getId()==R.id.backBlack)
+		WebView webFrag = (WebView)findViewById(R.id.webFrag);
+		if(view.getId() == R.id.webBack)
 		{
-			WebView blackboard = (WebView)findViewById(R.id.blackboardView);
-			if(blackboard.canGoBack())
-				blackboard.goBack();
+			if(webFrag.canGoBack())
+				webFrag.goBack();
 		}
-		else if(view.getId()==R.id.refreshBlack)
+		else if(view.getId() == R.id.webForw)
 		{
-			WebView blackboard = (WebView)findViewById(R.id.blackboardView);	
-			blackboard.reload();
+			if(webFrag.canGoForward())
+				webFrag.goForward();
 		}
-		else if(view.getId()==R.id.blackForward)
+		else if(view.getId() ==  R.id.webRefr)
 		{
-			WebView blackboard = (WebView)findViewById(R.id.blackboardView);
-			if(blackboard.canGoForward())	
-				blackboard.goForward();
-		}
-		else if(view.getId()==R.id.blueBack)
-		{
-			WebView bluegold = (WebView)findViewById(R.id.webBluegold);
-			if(bluegold.canGoBack())
-				bluegold.goBack();
-		}
-		else if(view.getId()==R.id.blueRefresh)
-		{
-			WebView bluegold = (WebView)findViewById(R.id.webBluegold);
-			bluegold.reload();
-		}
-		else if(view.getId()==R.id.blueForward)
-		{	WebView bluegold = (WebView)findViewById(R.id.webBluegold);
-			if(bluegold.canGoForward())
-				bluegold.goForward();
-		}
-		else if(view.getId()==R.id.custBack)
-		{
-			WebView custView = (WebView)findViewById(R.id.custom);
-			if(custView.canGoBack())
-				custView.goBack();
-		}
-		else if(view.getId()==R.id.custRefr)
-		{
-			WebView custView = (WebView)findViewById(R.id.custom);
-			custView.reload();
-		}
-		else if(view.getId()==R.id.custForw)
-		{
-			WebView custView = (WebView)findViewById(R.id.custom);
-			if(custView.canGoForward())
-			{
-				custView.goForward();
-			}
+			webFrag.reload();
 		}
 	}
 	/*
@@ -437,11 +401,10 @@ public class MainActivity extends SherlockFragmentActivity
     protected class TabListener extends SherlockFragmentActivity implements ActionBar.TabListener
     {
     	
-   	 public SherlockFragment fragment;
+   	 	public SherlockFragment fragment;
    	 
 		public TabListener(SherlockFragment fragment) 
 		{
-			
 			Log.i("Tabs","Fragment being reassigned");
 			this.fragment = fragment;
 		}
@@ -458,13 +421,18 @@ public class MainActivity extends SherlockFragmentActivity
 			try
 			{
 				Log.i("Tabs","Replaced called");
-				
-				if(fragment.getId()==bluegold.getId())
-					bluegold.loadUrl(bluegoldurl);
-				
-				else if(fragment.getId()==blackboard.getId())
+				if(fragment == blackboard)
+				{
 					blackboard.loadUrl(blackboardurl);
-				
+				}
+				else if(fragment == bluegold)
+				{
+					bluegold.loadUrl(bluegoldurl);
+				}
+				else if(fragment == custom)
+				{
+					custom.loadUrl(customUrl);
+				}
 				ft.replace(R.id.container, fragment);
 			}
 			catch(Exception e)
@@ -483,11 +451,18 @@ public class MainActivity extends SherlockFragmentActivity
 				if(fragment.getId()!=R.id.google_map)
 					ft.remove(fragment);
 				
-				if(fragment.getId()==bluegold.getId())
+				if(fragment == bluegold)
+				{
 					bluegoldurl = bluegold.currentUrl();
-				
-				else if(fragment.getId()==blackboard.getId())
+				}
+				else if(fragment==blackboard)
+				{
 					blackboardurl = blackboard.currentUrl();
+				}
+				else if(fragment == custom)
+				{
+					customUrl = custom.currentUrl();
+				}
 			}
 			catch(Exception e)
 			{

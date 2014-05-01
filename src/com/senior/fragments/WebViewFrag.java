@@ -21,7 +21,6 @@
 */
 package com.senior.fragments;
 
-
 import android.graphics.Bitmap;
 import android.os.Bundle;
 import android.util.Log;
@@ -37,50 +36,46 @@ import com.senior.javnav.R;
 
 import com.actionbarsherlock.app.SherlockFragment;
 
-public class BlackboardFrag extends SherlockFragment 
+
+public class WebViewFrag extends SherlockFragment 
 {
-	View blackboard;
-	WebView blackboardView;
-	String url = "https://blackboard.tamuk.edu"; 
+	View webFrag;
+	WebView webFragView;
+	String url = "https://www.google.com"; 
 	
 	@Override
 	public View onCreateView(LayoutInflater inflate, ViewGroup container, Bundle savedInstanceState)
 	{
-		Log.i("Blackboard","Blackboard started");
-		blackboard = inflate.inflate(R.layout.blackboard, container, false);
-		blackboardView = (WebView)blackboard.findViewById(R.id.blackboardView);
-		blackboardView.setWebChromeClient(new ChromeClient());
-		blackboardView.setWebViewClient(new Client());
-		blackboardView.getSettings().setBuiltInZoomControls(true);
-		blackboardView.getSettings().setJavaScriptEnabled(true);
-		blackboardView.setInitialScale(50);
+		Log.i("webFrag","webFrag started");
+		webFrag = inflate.inflate(R.layout.web_frag, container, false);
+		webFragView = (WebView)webFrag.findViewById(R.id.webFrag);
+		webFragView.setWebChromeClient(new ChromeClient());
+		webFragView.setWebViewClient(new Client());
+		webFragView.getSettings().setBuiltInZoomControls(true);
+		webFragView.getSettings().setJavaScriptEnabled(true);
+		webFragView.setInitialScale(50);
+		Log.i("WebFrag","Attempted url "+url);
+		webFragView.loadUrl(url);
 		
-		if(savedInstanceState!=null)
-		{
-			blackboardView.restoreState(savedInstanceState);
-		}
-		else
-		{
-			blackboardView.loadUrl(url);
-		}
-		Log.i("Blackboard","Blackboard fragment finished");
-		return blackboard;
+		Log.i("webFrag","webFrag fragment finished");
+		return webFrag;
 	}
 	
 	public void loadUrl(String url)
 	{
 		this.url = url;
+		Log.i("WebViewFrag", this.url);
 	}
 	
 	public String currentUrl()
 	{
-		String currentUrl = blackboardView.getUrl();
+		String currentUrl = webFragView.getUrl();
 		return currentUrl;
 	}
 	
 	public void onSaveInstanceState(Bundle outstate)
 	{
-		blackboardView.saveState(outstate);
+		webFragView.saveState(outstate);
 	}
 	//WebChromeClient
 	public class ChromeClient extends WebChromeClient 
@@ -90,10 +85,9 @@ public class BlackboardFrag extends SherlockFragment
 		{
 			ProgressBar progress;
 			Log.i("Client","Current "+progres);
-			progress  = (ProgressBar)blackboard.findViewById(R.id.webProgress);
+			progress  = (ProgressBar)webFrag.findViewById(R.id.webProgress);
 			if(progres<100&&progress!=null)
 			{
-					//progress.setVisibility(1);
 					progress.setProgress(progres);
 			}
 			if(progres==100&&progress!=null)
@@ -110,7 +104,7 @@ public class BlackboardFrag extends SherlockFragment
 		public void onPageStarted(WebView view, String url, Bitmap favicon)
 		{
 			Log.i("Client","Page started");
-			ProgressBar progress = (ProgressBar)blackboard.findViewById(R.id.webProgress);
+			ProgressBar progress = (ProgressBar)webFrag.findViewById(R.id.webProgress);
 			progress.setVisibility(View.VISIBLE);
 			super.onPageStarted(view, url, favicon);
 		}
@@ -124,4 +118,5 @@ public class BlackboardFrag extends SherlockFragment
 		
 	}
 
+	
 }
