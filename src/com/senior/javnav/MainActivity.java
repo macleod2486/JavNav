@@ -142,15 +142,16 @@ public class MainActivity extends SherlockFragmentActivity
 		
 		Log.i("Main","Maintab entered");
 		
+		//Seeds initial webpages.
+		bluegold.loadUrl(bluegoldurl, true);
+		blackboard.loadUrl(blackboardurl, true);
+		
 		//Sets up the actionbar
 		ActionBar action = getSupportActionBar();
 	
 		action.setNavigationMode(ActionBar.NAVIGATION_MODE_TABS);
 		action.setDisplayShowTitleEnabled(false);
 		action.setDisplayUseLogoEnabled(false);
-		
-		bluegold.loadUrl(bluegoldurl, true);
-		blackboard.loadUrl(blackboardurl, true);
 			
 		homeTab = action.newTab();
 		homeTab.setText("Home");
@@ -221,7 +222,7 @@ public class MainActivity extends SherlockFragmentActivity
 			if(!tempurl.equals(customUrl))
 			{
 				customUrl = tempurl;
-				custom.loadUrl(customUrl, true);
+				custom.changeUrl(tempurl);
 			}
 		}
 		

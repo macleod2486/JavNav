@@ -82,6 +82,17 @@ public class WebViewFrag extends SherlockFragment
 			Log.i("WebFrag","Activity Created");
 	}
 	
+	public void changeUrl(String url)
+	{
+		this.url = url;
+		if(webFragView != null)
+		{
+			webFragView.loadUrl(this.url);
+			webFragView.clearHistory();
+			restart = false;
+		}
+	}
+	
 	public void loadUrl(String url, boolean restart)
 	{
 		this.url = url;
