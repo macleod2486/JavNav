@@ -57,7 +57,7 @@ public class Coordinates
 								27.525304, //Javelina Dining
 								27.523068, //Javelina House
 								27.528767, //Javelina Stadium
-								27.530239, //Javelina Station
+								27.531702, //Javelina Station
 								27.522858, //John Lynch Hall
 								27.524209, //Jones Auditorium
 								27.525356, //Karr Veterans
@@ -116,7 +116,7 @@ public class Coordinates
 								-97.884675, //Javelina Dining
 								-97.880931, //Javelina House
 								-97.880062, //Javelina Stadium
-								-97.884574, //Javelina Station
+								-97.884938, //Javelina Station
 								-97.883281, //John Lynch Hall
 								-97.878420, //Jones Auditorium
 								-97.879021, //Karr Veterans
@@ -268,7 +268,7 @@ public class Coordinates
 		//Javelina Dining - Lat=27.525304 Long=-97.884675
 		//*Javelina House - Lat=27.523068 Long=-97.880931
 		//Javelina Stadium - Lat=27.528767 Long=-97.880062
-		//Javelina Station - Lat=27.530239 Long=-97.884574
+		//Javelina Station - Lat=27.531702 Long=-97.884938
 		//John Lynch Hall - Lat=27.522858 Long=-97.883281
 		//Jones Auditorium - Lat=27.524209 Long=-97.878420
 		//Karr Veterans - Lat=27.525356 Long=-97.879021
