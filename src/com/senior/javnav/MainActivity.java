@@ -149,6 +149,8 @@ public class MainActivity extends SherlockFragmentActivity
 		action.setDisplayShowTitleEnabled(false);
 		action.setDisplayUseLogoEnabled(false);
 		
+		bluegold.loadUrl(bluegoldurl, true);
+		blackboard.loadUrl(blackboardurl, true);
 			
 		homeTab = action.newTab();
 		homeTab.setText("Home");
@@ -170,7 +172,6 @@ public class MainActivity extends SherlockFragmentActivity
 		blackTab.setTabListener(new TabListener(blackboard));
 		action.addTab(blackTab);
 		
-			
 		//Sets the layout to the activity main layout
 		setContentView(R.layout.activity_main);
 		
@@ -198,7 +199,10 @@ public class MainActivity extends SherlockFragmentActivity
 				customTab.setText("Extra");
 				customTab.setTabListener(new TabListener(custom));
 				action.addTab(customTab);
+				
 				customUrl = shared.getString("webURL","http://www.google.com");
+				custom.loadUrl(customUrl, true);
+				
 				Log.i("CustomUrl",customUrl);
 			}
 		}
@@ -210,6 +214,16 @@ public class MainActivity extends SherlockFragmentActivity
 			}
 		}
 		
+		//Loads new url if another one is entered
+		if(action.getTabCount() == 5)
+		{
+			String tempurl = shared.getString("webURL","http://www.google.com");
+			if(!tempurl.equals(customUrl))
+			{
+				customUrl = tempurl;
+				custom.loadUrl(customUrl, true);
+			}
+		}
 		
 	}
 	
@@ -420,19 +434,6 @@ public class MainActivity extends SherlockFragmentActivity
 		{
 			try
 			{
-				Log.i("Tabs","Replaced called");
-				if(fragment == blackboard)
-				{
-					blackboard.loadUrl(blackboardurl);
-				}
-				else if(fragment == bluegold)
-				{
-					bluegold.loadUrl(bluegoldurl);
-				}
-				else if(fragment == custom)
-				{
-					custom.loadUrl(customUrl);
-				}
 				ft.replace(R.id.container, fragment);
 			}
 			catch(Exception e)
@@ -443,32 +444,7 @@ public class MainActivity extends SherlockFragmentActivity
 
 		public void onTabUnselected(Tab tab, FragmentTransaction ft) 
 		{
-			
 			Log.i("Tabs","On remove called to "+fragment.toString());
-			
-			try
-			{
-				if(fragment.getId()!=R.id.google_map)
-					ft.remove(fragment);
-				
-				if(fragment == bluegold)
-				{
-					bluegoldurl = bluegold.currentUrl();
-				}
-				else if(fragment==blackboard)
-				{
-					blackboardurl = blackboard.currentUrl();
-				}
-				else if(fragment == custom)
-				{
-					customUrl = custom.currentUrl();
-				}
-			}
-			catch(Exception e)
-			{
-				Log.i("Main","Error in replacing frag"+e);
-			}
-			
 		}
 
 

@@ -41,12 +41,15 @@ public class WebViewFrag extends SherlockFragment
 {
 	View webFrag;
 	WebView webFragView;
-	String url = "https://www.google.com"; 
+	String url = "https://www.google.com";
+	Bundle saveState;
+	boolean restart = false;
 	
 	@Override
 	public View onCreateView(LayoutInflater inflate, ViewGroup container, Bundle savedInstanceState)
 	{
 		Log.i("webFrag","webFrag started");
+		
 		webFrag = inflate.inflate(R.layout.web_frag, container, false);
 		webFragView = (WebView)webFrag.findViewById(R.id.webFrag);
 		webFragView.setWebChromeClient(new ChromeClient());
@@ -54,29 +57,47 @@ public class WebViewFrag extends SherlockFragment
 		webFragView.getSettings().setBuiltInZoomControls(true);
 		webFragView.getSettings().setJavaScriptEnabled(true);
 		webFragView.setInitialScale(50);
-		Log.i("WebFrag","Attempted url "+url);
-		webFragView.loadUrl(url);
+		
+		if(saveState == null || restart)
+		{
+			Log.i("WebFrag","Attempted url "+url);
+			webFragView.clearHistory();
+			webFragView.loadUrl(url);
+			restart = false;
+		}
+		else
+		{
+			webFragView.restoreState(saveState);
+		}
 		
 		Log.i("webFrag","webFrag fragment finished");
 		return webFrag;
 	}
 	
-	public void loadUrl(String url)
+	@Override
+	public void onActivityCreated(Bundle savedInstanceState)
+	{
+		super.onActivityCreated(savedInstanceState);
+		if(savedInstanceState != null)
+			Log.i("WebFrag","Activity Created");
+	}
+	
+	public void loadUrl(String url, boolean restart)
 	{
 		this.url = url;
+		this.restart = restart;
 		Log.i("WebViewFrag", this.url);
 	}
 	
-	public String currentUrl()
+	@Override
+	public void onStop()
 	{
-		String currentUrl = webFragView.getUrl();
-		return currentUrl;
+		saveState = new Bundle();
+		if(webFragView.saveState(saveState) != null)
+			Log.i("WebFrag","State Saved");
+		super.onStop();
 	}
 	
-	public void onSaveInstanceState(Bundle outstate)
-	{
-		webFragView.saveState(outstate);
-	}
 	//WebChromeClient
 	public class ChromeClient extends WebChromeClient 
 	{
