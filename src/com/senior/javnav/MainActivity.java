@@ -39,16 +39,6 @@ import android.view.View;
 import android.webkit.WebView;
 import android.widget.Spinner;
 
-import com.senior.fragments.GoogleFragment;
-import com.senior.fragments.HomeFragment;
-import com.senior.fragments.WebViewFrag;
-
-import com.google.android.gms.maps.CameraUpdateFactory;
-import com.google.android.gms.maps.GoogleMap;
-import com.google.android.gms.maps.SupportMapFragment;
-import com.google.android.gms.maps.model.LatLng;
-import com.google.android.gms.maps.model.MarkerOptions;
-
 import com.actionbarsherlock.app.ActionBar;
 import com.actionbarsherlock.app.ActionBar.Tab;
 import com.actionbarsherlock.app.SherlockFragment;
@@ -56,6 +46,14 @@ import com.actionbarsherlock.app.SherlockFragmentActivity;
 import com.actionbarsherlock.app.SherlockListFragment;
 import com.actionbarsherlock.view.Menu;
 import com.actionbarsherlock.view.MenuItem;
+import com.google.android.gms.maps.CameraUpdateFactory;
+import com.google.android.gms.maps.GoogleMap;
+import com.google.android.gms.maps.SupportMapFragment;
+import com.google.android.gms.maps.model.LatLng;
+import com.google.android.gms.maps.model.MarkerOptions;
+import com.senior.fragments.GoogleFragment;
+import com.senior.fragments.HomeFragment;
+import com.senior.fragments.WebViewFrag;
 
 
 public class MainActivity extends SherlockFragmentActivity 
@@ -94,14 +92,14 @@ public class MainActivity extends SherlockFragmentActivity
 		else
 		{
 			Log.i("Main","Backstack count "+getSupportFragmentManager().getBackStackEntryCount());
-			if(getSupportFragmentManager().getBackStackEntryCount()!=0)
+			if(getSupportFragmentManager().getBackStackEntryCount()!=0 && !Home.isAdded())
 			{
 				getSupportFragmentManager().popBackStack();
 			}
 			else
 			{
 				getSupportActionBar().removeAllTabs();
-				super.onBackPressed();
+				finish();
 			}
 		}
 		
