@@ -37,7 +37,6 @@ import android.support.v4.app.FragmentTransaction;
 import android.util.Log;
 import android.view.View;
 import android.webkit.WebView;
-import android.widget.Spinner;
 
 import com.actionbarsherlock.app.ActionBar;
 import com.actionbarsherlock.app.ActionBar.Tab;
@@ -46,11 +45,6 @@ import com.actionbarsherlock.app.SherlockFragmentActivity;
 import com.actionbarsherlock.app.SherlockListFragment;
 import com.actionbarsherlock.view.Menu;
 import com.actionbarsherlock.view.MenuItem;
-import com.google.android.gms.maps.CameraUpdateFactory;
-import com.google.android.gms.maps.GoogleMap;
-import com.google.android.gms.maps.SupportMapFragment;
-import com.google.android.gms.maps.model.LatLng;
-import com.google.android.gms.maps.model.MarkerOptions;
 import com.senior.fragments.GoogleFragment;
 import com.senior.fragments.HomeFragment;
 import com.senior.fragments.WebViewFrag;
@@ -120,8 +114,6 @@ public class MainActivity extends SherlockFragmentActivity
 	@Override
 	protected void onCreate(Bundle savedInstanceState) 
 	{	
-		
-
 		super.onCreate(savedInstanceState);
 		//Add new customizable features
 		Log.i("Main","Main activity called!");
@@ -176,8 +168,6 @@ public class MainActivity extends SherlockFragmentActivity
 		
 	}
 	
-	
-
 	public void onStart()
 	{
 			
@@ -330,30 +320,6 @@ public class MainActivity extends SherlockFragmentActivity
 			webFrag.reload();
 		}
 	}
-	/*
-		
-		This method is called when the find button is selected in the map fragment
-	*/
-	public void find(View view)
-	{
-		Coordinates coorTAM = new Coordinates();
-		double lat=0;
-		double lon=0;
-		Spinner building = (Spinner)findViewById(R.id.buildings);
-		String selected=building.getSelectedItem().toString();
-		GoogleMap TAMUK=((SupportMapFragment)getSupportFragmentManager().findFragmentById(R.id.google_map)).getMap();
-		
-		if(TAMUK!=null&&building!=null)
-		{
-			TAMUK.clear();
-			lat=coorTAM.latitude(selected);
-			lon=coorTAM.longitude(selected);
-			TAMUK.addMarker(new MarkerOptions().position(new LatLng(lat,lon)).title(selected));
-			TAMUK.animateCamera(CameraUpdateFactory.newLatLngZoom(new LatLng(lat,lon), 17));
-		}
-		
-		Log.i("Main","Search is called "+selected+" Long="+lon+" "+"Latitude="+lat);
-	}
 	
 	/*
 		Classes for each tab listener
@@ -445,7 +411,5 @@ public class MainActivity extends SherlockFragmentActivity
 		{
 			Log.i("Tabs","On remove called to "+fragment.toString());
 		}
-
-
 	}
 }

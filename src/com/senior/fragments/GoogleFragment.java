@@ -20,32 +20,41 @@
 *
 */
 package com.senior.fragments;
-//Sherlock imports
-import com.actionbarsherlock.app.SherlockFragment;
-//Google Imports
-import com.google.android.gms.maps.CameraUpdateFactory;
-import com.google.android.gms.maps.GoogleMap;
-import com.google.android.gms.maps.SupportMapFragment;
-import com.google.android.gms.maps.model.LatLng;
-//Main activity import
-import com.senior.javnav.R;
-//Android imports
-import android.support.v4.app.FragmentTransaction;
+
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.Collections;
+
 import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.preference.PreferenceManager;
 import android.support.v4.app.Fragment;
+import android.support.v4.app.FragmentTransaction;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.AdapterView;
+import android.widget.AdapterView.OnItemSelectedListener;
+import android.widget.ArrayAdapter;
+import android.widget.Spinner;
+
+import com.actionbarsherlock.app.SherlockFragment;
+import com.google.android.gms.maps.CameraUpdateFactory;
+import com.google.android.gms.maps.GoogleMap;
+import com.google.android.gms.maps.SupportMapFragment;
+import com.google.android.gms.maps.model.LatLng;
+import com.google.android.gms.maps.model.MarkerOptions;
+import com.senior.javnav.R;
 
 public class GoogleFragment extends SherlockFragment 
 {
-	View map;
-	GoogleMap TAMUK;
-	boolean backButton = false;
+	private View map;
+	private GoogleMap TAMUK;
 	public LatLng TAMUKLoc= new LatLng(27.524285,-97.882433);
+	private Spinner buildingList;
+	private ArrayList<String> buildingNames = new ArrayList<String>();
+	private ArrayList<String> buildingCoord = new ArrayList<String>();
 	
 	@Override
 	public View onCreateView(LayoutInflater inflate, ViewGroup container, Bundle savedInstanceState)
@@ -53,16 +62,83 @@ public class GoogleFragment extends SherlockFragment
 		Log.i("Google","Oncreate view called");
 		try
 		{
-		map=inflate.inflate(R.layout.google_fragment, container, false);
-		setUpMap();
+			map = inflate.inflate(R.layout.google_fragment, container, false);
+			buildingList = (Spinner)map.findViewById(R.id.buildings);
+			
+			buildingNames.clear();
+			buildingCoord.clear();
+			
+			//Adds and organizes the buildings alphabetically
+			buildingNames.addAll(Arrays.asList(getResources().getStringArray(R.array.listOfBuildings)));
+			Collections.sort(buildingNames,String.CASE_INSENSITIVE_ORDER);
+			
+			buildingCoord.addAll(Arrays.asList(getResources().getStringArray(R.array.listOfBuildings)));
+			Collections.sort(buildingCoord,String.CASE_INSENSITIVE_ORDER);
+			
+			for(int index = 0; index < buildingNames.size(); index++)
+			{
+				buildingNames.set(index, buildingNames.get(index).substring(0, buildingNames.get(index).indexOf(',')));
+				Log.i("Google",buildingNames.get(index));
+			}
+			
+			buildingNames.add(0,"Select one");
+			
+			ArrayAdapter<String> array = new ArrayAdapter<String>(getActivity(),android.R.layout.simple_dropdown_item_1line,buildingNames);
+			Log.i("Google","Index ");
+			buildingList.setAdapter(array);
+			
+			//Places point on building when building is selected
+			buildingList.setOnItemSelectedListener(new OnItemSelectedListener()
+			{
+				private double lat=0;
+				private double lon=0;
+				private String latString;
+				private String longString;
+				
+				@Override
+				public void onItemSelected(AdapterView<?> arg0, View arg1,
+						int arg2, long arg3) {
+					
+					if(TAMUK != null && arg2 != 0)
+					{
+						latString = buildingCoord.get(arg2-1);
+						latString = latString.substring(latString.indexOf(',')+1,latString.lastIndexOf(','));
+						
+						longString = buildingCoord.get(arg2-1);
+						longString = longString.substring(longString.lastIndexOf(',')+1);
+						
+						TAMUK.clear();
+						lat=Double.parseDouble(latString);
+						lon=Double.parseDouble(longString);
+						
+						TAMUK.addMarker(new MarkerOptions().position(new LatLng(lat,lon)).title(buildingNames.get(arg2)));
+						TAMUK.animateCamera(CameraUpdateFactory.newLatLngZoom(new LatLng(lat,lon), 17));
+					}
+				}
+
+				@Override
+				public void onNothingSelected(AdapterView<?> arg0)
+				{ 
+					
+				}
+				
+			});
+			
 		}
 		catch(Exception e)
 		{
 			Log.i("Google","Error on create "+e);
+			e.printStackTrace();
 		}
 		return map;
 	}
 	
+	@Override
+	public void onStart()
+	{
+		super.onStart();
+		setUpMap();
+	}
 	
 	@Override
 	public void onDestroyView()
@@ -84,31 +160,6 @@ public class GoogleFragment extends SherlockFragment
 			Log.i("Google","Error in destroying map "+e);
 		}
 		Log.i("Google","On destroy complete!");
-	}
-	
-	@Override 
-	public void onDetach()
-	{
-		super.onDetach();
-		Log.i("Google","Detach called");
-	}
-	@Override
-	public void onStart()
-	{
-		Log.i("Google","On start called");
-		setUpMap();
-		super.onStart();
-	}
-	@Override
-	public void onResume()
-	{
-		Log.i("Google","On resume called");
-		setUpMap();
-		super.onResume();
-	}
-	public void onAttach()
-	{
-		Log.i("Google", "On attach called");
 	}
 	
 	//Sets up the map when loaded
@@ -151,10 +202,6 @@ public class GoogleFragment extends SherlockFragment
 			Log.i("Google","Map setting set");
 		}
 		
-		
-		
 	}
 	
-	
-
 }
