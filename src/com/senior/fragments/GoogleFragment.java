@@ -178,7 +178,6 @@ public class GoogleFragment extends SherlockFragment
 		}
 		if(TAMUK!=null)
 		{
-			
 			TAMUK=((SupportMapFragment)getFragmentManager().findFragmentById(R.id.google_map)).getMap();
 			
 			//Sets the options for the user to show their current location
@@ -192,13 +191,17 @@ public class GoogleFragment extends SherlockFragment
 				TAMUK.setMapType(GoogleMap.MAP_TYPE_HYBRID);
 			}
 			else if(mapSel.contains("2"))
-			{	TAMUK.setMapType(GoogleMap.MAP_TYPE_NORMAL);
+			{	
+				TAMUK.setMapType(GoogleMap.MAP_TYPE_NORMAL);
 			}
 			else if(mapSel.contains("3"))
 			{	
 				TAMUK.setMapType(GoogleMap.MAP_TYPE_TERRAIN);
 			}
-			
+			else if(mapSel.contains("4"))
+			{
+				TAMUK.setMapType(GoogleMap.MAP_TYPE_SATELLITE);
+			}
 			Log.i("Google","Map setting set");
 		}
 		
