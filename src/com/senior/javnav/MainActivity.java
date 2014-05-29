@@ -28,7 +28,6 @@ import android.app.PendingIntent;
 import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
-import android.content.res.Configuration;
 import android.net.ConnectivityManager;
 import android.net.NetworkInfo;
 import android.os.Bundle;
@@ -99,14 +98,6 @@ public class MainActivity extends SherlockFragmentActivity
 		
 	}
 	
-	//Intercepts the configuration being being changed.
-	@Override
-	public void onConfigurationChanged(Configuration newConfig)
-	{
-		Log.i("Main Activity","onConfigChanged");
-		super.onConfigurationChanged(newConfig);
-	}
-	
 	/*
 	 * Methods that are called to handle the activity lifecycle
 	*/
@@ -170,7 +161,6 @@ public class MainActivity extends SherlockFragmentActivity
 	
 	public void onStart()
 	{
-			
 		Log.i("Main","On start called");
 		super.onStart();
 		
@@ -374,7 +364,6 @@ public class MainActivity extends SherlockFragmentActivity
 			
 		}
 	}
-	
 	
 	//Class for the fragments to be attached to the action bar
     protected class TabListener extends SherlockFragmentActivity implements ActionBar.TabListener
