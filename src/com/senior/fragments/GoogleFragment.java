@@ -78,7 +78,6 @@ public class GoogleFragment extends SherlockFragment
 			for(int index = 0; index < buildingNames.size(); index++)
 			{
 				buildingNames.set(index, buildingNames.get(index).substring(0, buildingNames.get(index).indexOf(',')));
-				Log.i("Google",buildingNames.get(index));
 			}
 			
 			buildingNames.add(0,"Select one");
