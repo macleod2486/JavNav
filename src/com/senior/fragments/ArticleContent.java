@@ -29,9 +29,6 @@ import org.jsoup.nodes.Document;
 import org.jsoup.nodes.Element;
 import org.jsoup.select.Elements;
 
-//Actionbar sherlock imports
-import com.actionbarsherlock.app.SherlockFragment;
-
 //Project imports
 import com.senior.javnav.R;
 
@@ -39,6 +36,7 @@ import com.senior.javnav.R;
 import android.graphics.Color;
 import android.os.AsyncTask;
 import android.os.Bundle;
+import android.support.v4.app.Fragment;
 import android.text.SpannableString;
 import android.text.style.UnderlineSpan;
 import android.util.Log;
@@ -48,7 +46,7 @@ import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.TextView;
 
-public class ArticleContent extends SherlockFragment
+public class ArticleContent extends Fragment
 {
 	
 	View articleView;

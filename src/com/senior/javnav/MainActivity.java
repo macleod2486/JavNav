@@ -21,6 +21,9 @@
 */
 package com.senior.javnav;
 
+import com.senior.fragments.GoogleFragment;
+import com.senior.fragments.HomeFragment;
+import com.senior.fragments.WebViewFrag;
 
 import android.app.AlarmManager;
 import android.app.AlertDialog;
@@ -32,24 +35,20 @@ import android.net.ConnectivityManager;
 import android.net.NetworkInfo;
 import android.os.Bundle;
 import android.preference.PreferenceManager;
+import android.support.v4.app.Fragment;
+import android.support.v4.app.FragmentActivity;
 import android.support.v4.app.FragmentTransaction;
+import android.support.v4.app.ListFragment;
+import android.support.v7.app.ActionBar;
+import android.support.v7.app.ActionBar.Tab;
+import android.support.v7.app.ActionBarActivity;
 import android.util.Log;
+import android.view.Menu;
+import android.view.MenuItem;
 import android.view.View;
 import android.webkit.WebView;
 
-import com.actionbarsherlock.app.ActionBar;
-import com.actionbarsherlock.app.ActionBar.Tab;
-import com.actionbarsherlock.app.SherlockFragment;
-import com.actionbarsherlock.app.SherlockFragmentActivity;
-import com.actionbarsherlock.app.SherlockListFragment;
-import com.actionbarsherlock.view.Menu;
-import com.actionbarsherlock.view.MenuItem;
-import com.senior.fragments.GoogleFragment;
-import com.senior.fragments.HomeFragment;
-import com.senior.fragments.WebViewFrag;
-
-
-public class MainActivity extends SherlockFragmentActivity 
+public class MainActivity extends ActionBarActivity
 {		
 	HomeFragment Home =  new HomeFragment();
 	//Google map fragment
@@ -91,7 +90,7 @@ public class MainActivity extends SherlockFragmentActivity
 			}
 			else
 			{
-				getSupportActionBar().removeAllTabs();
+				getActionBar().removeAllTabs();
 				finish();
 			}
 		}
@@ -252,7 +251,7 @@ public class MainActivity extends SherlockFragmentActivity
 	public boolean onCreateOptionsMenu(Menu menu) 
 	{
 		// Inflate the menu; this adds items to the action bar if it is present.
-		getSupportMenuInflater().inflate(R.menu.main, menu);
+		getMenuInflater().inflate(R.menu.main, menu);
 		return true;
 	}
 	
@@ -316,11 +315,11 @@ public class MainActivity extends SherlockFragmentActivity
 	*/
 	
 	//Special class for the list fragment
-	protected class ListTabListener extends SherlockFragmentActivity implements ActionBar.TabListener
+	protected class ListTabListener extends FragmentActivity implements ActionBar.TabListener
 	{
-		public SherlockListFragment fragment;
+		public ListFragment fragment;
 	   	 
-		public ListTabListener(SherlockListFragment fragment) 
+		public ListTabListener(ListFragment fragment) 
 		{
 			Log.i("Tabs","Fragment being reassigned");
 			this.fragment = fragment;
@@ -366,12 +365,12 @@ public class MainActivity extends SherlockFragmentActivity
 	}
 	
 	//Class for the fragments to be attached to the action bar
-    protected class TabListener extends SherlockFragmentActivity implements ActionBar.TabListener
+    protected class TabListener extends FragmentActivity implements ActionBar.TabListener
     {
     	
-   	 	public SherlockFragment fragment;
+   	 	public Fragment fragment;
    	 
-		public TabListener(SherlockFragment fragment) 
+		public TabListener(Fragment fragment) 
 		{
 			Log.i("Tabs","Fragment being reassigned");
 			this.fragment = fragment;

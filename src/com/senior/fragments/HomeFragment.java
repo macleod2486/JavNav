@@ -21,19 +21,18 @@
 */
 package com.senior.fragments;
 import java.util.ArrayList;
+
 import org.jsoup.Jsoup;
 import org.jsoup.nodes.Document;
 import org.jsoup.select.Elements;
 
-import com.actionbarsherlock.app.SherlockListFragment;
 import com.senior.javnav.R;
 
-
-//import android.support.v4.app.FragmentActivity;
-import android.support.v4.app.FragmentTransaction;
 import android.graphics.Color;
 import android.os.AsyncTask;
 import android.os.Bundle;
+import android.support.v4.app.FragmentTransaction;
+import android.support.v4.app.ListFragment;
 import android.text.SpannableString;
 import android.text.style.UnderlineSpan;
 import android.util.Log;
@@ -44,7 +43,7 @@ import android.widget.Button;
 import android.widget.ListView;
 import android.widget.TextView;
 
-public class HomeFragment extends SherlockListFragment
+public class HomeFragment extends ListFragment
 {
 	ListView mListView;
 	View view;
