@@ -11,4 +11,4 @@ two essentials websites.
 
 - JSoup 1.7.3+
 - Google Play Services
-- ActionBarSherlock 4.3.1+
+- AppCompat
