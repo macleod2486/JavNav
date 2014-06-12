@@ -3,6 +3,7 @@
     	android:id="@+id/center"
     	android:layout_width="fill_parent"
     	android:layout_height="fill_parent"
+    	android:background="#000000"
     	xmlns:android="http://schemas.android.com/apk/res/android">
 	<TextView android:layout_width="fill_parent"
 	    	  android:id="@+id/calenderevents"
@@ -10,16 +11,16 @@
 	    	  android:textColor="#FFFF00"
 	    	  android:textSize="25sp"
 	    	  android:gravity="center"
+	    	  android:background="#003399"
 	    	  android:layout_height="wrap_content"
-	    	  android:layout_below="@+id/imgIcon"
-	    	  android:text="@string/blank"/>
+	    	  android:layout_below="@+id/imgIcon"/>
 	<ListView
 	    	  android:id="@id/android:list" 
-	    	  android:layout_width="match_parent"
-	    	  android:layout_height="match_parent"
-	    	  android:footerDividersEnabled="true"
+	    	  android:layout_width="wrap_content"
+	    	  android:layout_height="fill_parent"
 	    	  android:divider="#0000FF"
-	    	  android:dividerHeight="1dp"
+	    	  android:textColor="#FFFF00"
+	    	  android:background="#003399"
 	    	  android:layout_below="@+id/calenderevents"
 	    	  />
 	<Button

@@ -26,14 +26,11 @@ import java.util.ArrayList;
 //JSoup imports
 import org.jsoup.Jsoup;
 import org.jsoup.nodes.Document;
-import org.jsoup.nodes.Element;
 import org.jsoup.select.Elements;
 
 //Project imports
 import com.senior.javnav.R;
 
-//Android imports
-import android.graphics.Color;
 import android.os.AsyncTask;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
@@ -45,6 +42,7 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.TextView;
+//Android imports
 
 public class ArticleContent extends Fragment
 {
@@ -52,36 +50,31 @@ public class ArticleContent extends Fragment
 	View articleView;
 	Button reloadButton;
 	
-	int index=HomeFragment.linkIndex;
-	String eventstring;
-	String eventlink;
-	ArrayList<String> events = HomeFragment.eventtitles;
-	ArrayList<String> links = HomeFragment.eventlinks;
-	ArrayList<String> eventcontent;
-	String PassedTitle = HomeFragment.TitleChosen;
+	private String url;
+	private String articleTitle;
 	
 	@Override
-	 public void onActivityCreated(Bundle savedInstanceState)
-	 {
-		 super.onActivityCreated(savedInstanceState);
-		 new getArticles().execute();
-	 }
+	public void onActivityCreated(Bundle savedInstanceState)
+	{
+		super.onActivityCreated(savedInstanceState);
+		new getArticles().execute();
+	}
+	
 	@Override
-	 public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState)
-	 {
+	public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState)
+	{
 		 //Obtains each 
-		 articleView=inflater.inflate(R.layout.articles_fragment,container,false);
-		 TextView title = (TextView)articleView.findViewById(R.id.title);
-		 SpannableString NewTitle = new SpannableString(PassedTitle);
+		articleView=inflater.inflate(R.layout.articles_fragment,container,false);
+		TextView title = (TextView)articleView.findViewById(R.id.title);
+		SpannableString NewTitle = new SpannableString(articleTitle);
 		 
 		 //Sets the options for display
-		 NewTitle.setSpan(new UnderlineSpan(), 0, NewTitle.length(), 0);
-		 title.setText(NewTitle);
-		 title.setBackgroundColor(Color.BLACK);
+		NewTitle.setSpan(new UnderlineSpan(), 0, NewTitle.length(), 0);
+		title.setText(NewTitle);
 		 
-		 reloadButton = (Button)articleView.findViewById(R.id.refresh);
+		reloadButton = (Button)articleView.findViewById(R.id.refresh);
 		 
-		 return articleView;
+		return articleView;
 	}
 	
 	public void reloadArticle()
@@ -89,63 +82,52 @@ public class ArticleContent extends Fragment
 		reloadButton.setVisibility(View.INVISIBLE);
 		new getArticles().execute();
 	}
+	
+	public void loadArticleInfo(String url, String title)
+	{
+		this.url = url;
+		this.articleTitle = title;
+	}
 
 	//Class that obtains the articles.
 	private class getArticles extends AsyncTask<String, Void, ArrayList<String>>
 	{
-			private boolean completed = false;
-			
-			protected ArrayList<String> doInBackground(String...params)
+		private boolean completed = false;
+		private String article;
+		protected ArrayList<String> doInBackground(String...params)
+		{
+			Log.i("Article","do in background");
+			try
 			{
-				Log.i("Article","do in background");
-				eventcontent= new ArrayList<String>();
-				String connection = links.get(index);
-				try
-				{
-						Document document = Jsoup.connect(connection).get();
-						Elements news=document.select("div#newsbody");
-						Elements newsContent = news.select("div#newscontent");
-						
-						for(Element Division :newsContent)
-						{
-							if(isCancelled())
-								break;
-							eventcontent.add(Division.text());
-							
-						}
-						completed = true;
-				}
-				catch(Exception e)
-				{
-					completed = false;
-					Log.i("Article","Error "+e);
-				}
-				Log.e("Article","Results: "+eventcontent.size());
-				return eventcontent;
+				Document document = Jsoup.connect(url).get();
+				Elements newsContent = document.select("div#newscontent");
+				article = newsContent.text();
+				Log.i("Article",newsContent.text());
+				
+				completed = true;
 			}
-			//When the article is post executed
-			@Override
-			protected void onPostExecute(ArrayList<String> strings)
+			catch(Exception e)
 			{
-				Log.i("Article","on post execute");
-				TextView tv = (TextView)articleView.findViewById(R.id.text);
-				for(int limit=0; limit<eventcontent.size(); limit++)
-				{
-					if(isCancelled())
-						break;
-					eventstring = "\n"+eventcontent.get(limit)+"\n";
-					tv.setBackgroundColor(Color.BLACK);
-					tv.setText(eventstring);
-				}	
-				if(completed)
-				{
-					reloadButton.setVisibility(View.INVISIBLE);
-				}
-				else
-				{
-					reloadButton.setVisibility(View.VISIBLE);
-				}
+				completed = false;
+				Log.i("Article","Error "+e);
 			}
-			
+			return null;
 		}
+		//When the article is post executed
+		@Override
+		protected void onPostExecute(ArrayList<String> strings)
+		{
+			Log.i("Article","on post execute");
+			TextView text = (TextView)articleView.findViewById(R.id.text);
+			text.setText(article);
+			if(completed)
+			{
+				reloadButton.setVisibility(View.INVISIBLE);
+			}
+			else
+			{
+				reloadButton.setVisibility(View.VISIBLE);
+			}
+		}
+	}
 }

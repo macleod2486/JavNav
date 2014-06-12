@@ -28,10 +28,8 @@ import org.jsoup.select.Elements;
 
 import com.senior.javnav.R;
 
-import android.graphics.Color;
 import android.os.AsyncTask;
 import android.os.Bundle;
-import android.support.v4.app.FragmentTransaction;
 import android.support.v4.app.ListFragment;
 import android.text.SpannableString;
 import android.text.style.UnderlineSpan;
@@ -39,32 +37,31 @@ import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.ArrayAdapter;
 import android.widget.Button;
 import android.widget.ListView;
 import android.widget.TextView;
 
 public class HomeFragment extends ListFragment
 {
-	ListView mListView;
-	View view;
-	TextView titletext;
-	Button reloadButton;
-		
-	String[] titles;
-	static int linkIndex;
-	static ArrayList<String> eventtitles;
-	public static ArrayList<String> eventlinks = new ArrayList<String>();
-	static String TitleChosen;
+	private ListView mListView;
+	private View view;
+	private TextView titletext;
+	private Button reloadButton;
 	
-	ArticleContent articles = new ArticleContent();
+	public static int linkIndex;
+	public static ArrayList<String> eventtitles;
+	public static ArrayList<String> eventlinks = new ArrayList<String>();
+	public static String TitleChosen;
+	
+	ArticleContent articles;
 
 	@Override
 	public void onActivityCreated(Bundle savedInstanceState)
 	{
 		Log.i("HomeFrag","Activity Created");
-		 super.onActivityCreated(savedInstanceState);
-		 mListView.setBackgroundColor(Color.BLACK);
-		 new getDivs().execute();
+		super.onActivityCreated(savedInstanceState);
+		new getDivs().execute();
 	}
 	 
 	@Override
@@ -81,7 +78,6 @@ public class HomeFragment extends ListFragment
 		NewTitle.setSpan(new UnderlineSpan(), 0, NewTitle.length(), 0);
 		
 		titletext.setText(NewTitle);
-		titletext.setBackgroundColor(Color.BLACK);
 		
 		mListView=(ListView)view.findViewById(android.R.id.list);
 		
@@ -103,89 +99,64 @@ public class HomeFragment extends ListFragment
 	
 	private class getDivs extends AsyncTask<String, Void, ArrayList<String>>
 	{
-			boolean completed = false;
-			protected ArrayList<String> doInBackground(String...params)
+		boolean completed = false;
+		protected ArrayList<String> doInBackground(String...params)
+		{
+			eventtitles= new ArrayList<String>();
+			try
 			{
-				eventtitles= new ArrayList<String>();
-				try
+				Document document = Jsoup.connect("http://www.tamuk.edu/").get();
+				Elements calendar=document.select("div#calendar");
+				Elements titles=calendar.select("a");
+				Elements links = titles.select("[href]");
+				
+				for(int index = 0; index < titles.size()&&index < links.size(); index++)
 				{
-					Document document = Jsoup.connect("http://www.tamuk.edu/").get();
-					Elements calendar=document.select("div#calendar");
-					Elements titles=calendar.select("a");
-					Elements links = titles.select("[href]");
-					
-					for(int index = 0; index < titles.size()&&index < links.size(); index++)
-					{
-						if(links.get(index).toString().contains(".html"))
-						{
-							if(isCancelled())
-								break;
-							eventtitles.add(titles.get(index).text());
-							eventlinks.add(links.get(index).attr("abs:href").toString());
-						}
-						
-					}
-					completed = true;
-				}
-				catch(Exception e)
-				{
-					completed = false;
-					e.printStackTrace();
-				}
-				return eventtitles;
-			}
-			@Override
-			protected void onPostExecute(ArrayList<String> strings)
-			{
-				try
-				{
-					int eventtitlesize=eventtitles.size();
-					titles = new String[eventtitlesize];
-					for(int index=0; index<eventtitlesize; index++)
+					if(links.get(index).toString().contains(".html"))
 					{
 						if(isCancelled())
 							break;
-						String titleDetail = eventtitles.get(index);
-						titles[index]= titleDetail.toString();
-						
+						eventtitles.add(titles.get(index).text());
+						eventlinks.add(links.get(index).attr("abs:href").toString());
 					}
-					Log.i("home frag","Results: "+eventtitles.size());
-					mListView.setAdapter(new MyPerformanceArrayAdapter(getActivity(),titles));
 					
-					//If the information was not complete downloaded then it will bring back the
-					//reload button
-					if(completed)
-						reloadButton.setVisibility(View.INVISIBLE);
-					else
-						reloadButton.setVisibility(View.VISIBLE);
 				}
-				catch(Exception e)
-				{
-					Log.i("Home","Error on post execute");
-				}
+				completed = true;
 			}
-			
+			catch(Exception e)
+			{
+				completed = false;
+				e.printStackTrace();
+			}
+			return eventtitles;
+		}
+		@Override
+		protected void onPostExecute(ArrayList<String> strings)
+		{
+			try
+			{
+				Log.i("home frag","Results: "+eventtitles.size());
+				mListView.setAdapter(new ArrayAdapter(getActivity(),android.R.layout.simple_list_item_1,eventtitles));
 				
+				//If the information was not complete downloaded then it will bring back the
+				//reload button
+				if(completed)
+					reloadButton.setVisibility(View.INVISIBLE);
+				else
+					reloadButton.setVisibility(View.VISIBLE);
+			}
+			catch(Exception e)
+			{
+				Log.i("Home","Error on post execute");
+			}
+		}
 	}
 
 	public void onListItemClick(ListView mListView, View view, int position, long id)
 	{
-		
-	    String chosen = titles[position];
-	    for(int index = 0; index<titles.length; index++)
-	    {
-			if(chosen.equals(titles[index]))
-			{
-				linkIndex=index;
-				TitleChosen = chosen;
-				articles = new ArticleContent();
-				FragmentTransaction ft = getFragmentManager().beginTransaction();
-				ft.replace(R.id.container, articles);
-				ft.addToBackStack(null);
-				ft.commit();
-			}
-		}
-		
+		ArticleContent articles = new ArticleContent();
+	    articles.loadArticleInfo(eventlinks.get(position), eventtitles.get(position));
+	    getFragmentManager().beginTransaction().addToBackStack(null).replace(R.id.container, articles).commit();
 	}
 
 }
