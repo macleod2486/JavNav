@@ -30,8 +30,15 @@
 	        android:layout_height="wrap_content"
 	        android:layout_centerHorizontal="true"
 	        android:layout_centerVertical="true"
-	        android:onClick="reloadHome"
 	        android:visibility="invisible"
 	        android:text="Reload" />
+
+	<ProgressBar
+	    android:id="@+id/progress"
+	    android:layout_width="wrap_content"
+	    android:layout_height="wrap_content"
+	    android:layout_centerHorizontal="true"
+	    android:layout_centerVertical="true"
+	    android:visibility="invisible" />
 
 </RelativeLayout>

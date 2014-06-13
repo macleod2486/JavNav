@@ -22,9 +22,9 @@
 	        android:layout_width="fill_parent"
 	    	android:layout_height="fill_parent"
 	    	android:id="@+id/text"
-	    	android:textColor="#000000"
+	    	android:textColor="#FFFFFF"
 	    	android:textSize="14sp"
-	    	android:background="#003399"
+	    	android:background="#000000"
    		/>
    	</ScrollView>
 	
@@ -35,7 +35,15 @@
         android:layout_height="wrap_content"
         android:layout_centerHorizontal="true"
         android:layout_centerVertical="true"
-        android:onClick="reloadArticle"
         android:visibility="invisible"
         android:text="Reload" />
+
+	<ProgressBar
+	    android:id="@+id/progress"
+	    android:layout_width="wrap_content"
+	    android:layout_height="wrap_content"
+	    android:visibility="invisible"
+	    android:layout_centerHorizontal="true"
+        android:layout_centerVertical="true" />
+
 </RelativeLayout>

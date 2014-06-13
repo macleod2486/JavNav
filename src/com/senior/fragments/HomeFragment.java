@@ -28,6 +28,7 @@ import org.jsoup.select.Elements;
 
 import com.senior.javnav.R;
 
+import android.graphics.Color;
 import android.os.AsyncTask;
 import android.os.Bundle;
 import android.support.v4.app.ListFragment;
@@ -36,10 +37,12 @@ import android.text.style.UnderlineSpan;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
+import android.view.View.OnClickListener;
 import android.view.ViewGroup;
 import android.widget.ArrayAdapter;
 import android.widget.Button;
 import android.widget.ListView;
+import android.widget.ProgressBar;
 import android.widget.TextView;
 
 public class HomeFragment extends ListFragment
@@ -48,6 +51,7 @@ public class HomeFragment extends ListFragment
 	private View view;
 	private TextView titletext;
 	private Button reloadButton;
+	private ProgressBar progress;
 	
 	public static int linkIndex;
 	public static ArrayList<String> eventtitles;
@@ -61,7 +65,7 @@ public class HomeFragment extends ListFragment
 	{
 		Log.i("HomeFrag","Activity Created");
 		super.onActivityCreated(savedInstanceState);
-		new getDivs().execute();
+		getArticles();
 	}
 	 
 	@Override
@@ -82,19 +86,26 @@ public class HomeFragment extends ListFragment
 		mListView=(ListView)view.findViewById(android.R.id.list);
 		
 		reloadButton = (Button)view.findViewById(R.id.refresh);
+		reloadButton.setOnClickListener(new OnClickListener()
+		{
+			@Override
+			public void onClick(View arg0) 
+			{
+				getArticles();
+			}
+			
+		});
+		
+		progress = (ProgressBar)view.findViewById(R.id.progress);
 		
 		return view;
 	}
 	
-	public void reloadHome(View view)
+	private void getArticles()
 	{
 		reloadButton.setVisibility(View.INVISIBLE);
+		progress.setVisibility(View.VISIBLE);
 		new getDivs().execute();
-	}
-	
-	public void reloadArticle()
-	{
-		articles.reloadArticle();
 	}
 	
 	private class getDivs extends AsyncTask<String, Void, ArrayList<String>>
@@ -136,14 +147,33 @@ public class HomeFragment extends ListFragment
 			try
 			{
 				Log.i("home frag","Results: "+eventtitles.size());
-				mListView.setAdapter(new ArrayAdapter(getActivity(),android.R.layout.simple_list_item_1,eventtitles));
+				mListView.setAdapter(new ArrayAdapter(getActivity(),android.R.layout.simple_list_item_1,eventtitles)
+				{
+					//Styling the items within the listview
+					@Override
+					public View getView(int position, View convertView, ViewGroup parent)
+					{
+						View view = super.getView(position,convertView,parent);
+						TextView listItem = (TextView)view.findViewById(android.R.id.text1);
+						listItem.setBackgroundColor(Color.BLACK);
+						listItem.setTextColor(Color.WHITE);
+						return view;
+					}
+				});
 				
 				//If the information was not complete downloaded then it will bring back the
 				//reload button
 				if(completed)
+				{
 					reloadButton.setVisibility(View.INVISIBLE);
+					progress.setVisibility(View.INVISIBLE);
+				}
 				else
+				{
 					reloadButton.setVisibility(View.VISIBLE);
+					progress.setVisibility(View.INVISIBLE);
+				}
+					
 			}
 			catch(Exception e)
 			{
@@ -151,7 +181,7 @@ public class HomeFragment extends ListFragment
 			}
 		}
 	}
-
+	
 	public void onListItemClick(ListView mListView, View view, int position, long id)
 	{
 		ArticleContent articles = new ArticleContent();

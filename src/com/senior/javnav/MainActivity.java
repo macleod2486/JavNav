@@ -278,17 +278,6 @@ public class MainActivity extends ActionBarActivity
 		else
 			return false;
 	}
-		
-	//Handles the home fragments requests for a refresh
-	public void reloadHome(View view)
-	{
-		Home.reloadHome(view);
-	}
-	
-	public void reloadArticle(View view)
-	{
-		Home.reloadArticle();
-	}
 	
 	//Handles the webviews buttons
 	public void website(View view)

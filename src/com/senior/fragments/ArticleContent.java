@@ -39,16 +39,19 @@ import android.text.style.UnderlineSpan;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
+import android.view.View.OnClickListener;
 import android.view.ViewGroup;
 import android.widget.Button;
+import android.widget.ProgressBar;
 import android.widget.TextView;
 //Android imports
 
 public class ArticleContent extends Fragment
 {
 	
-	View articleView;
-	Button reloadButton;
+	private View articleView;
+	private Button reloadButton;
+	private ProgressBar progress;
 	
 	private String url;
 	private String articleTitle;
@@ -57,7 +60,7 @@ public class ArticleContent extends Fragment
 	public void onActivityCreated(Bundle savedInstanceState)
 	{
 		super.onActivityCreated(savedInstanceState);
-		new getArticles().execute();
+		refreshArticle();
 	}
 	
 	@Override
@@ -66,6 +69,7 @@ public class ArticleContent extends Fragment
 		 //Obtains each 
 		articleView=inflater.inflate(R.layout.articles_fragment,container,false);
 		TextView title = (TextView)articleView.findViewById(R.id.title);
+		progress = (ProgressBar)articleView.findViewById(R.id.progress);
 		SpannableString NewTitle = new SpannableString(articleTitle);
 		 
 		 //Sets the options for display
@@ -73,20 +77,28 @@ public class ArticleContent extends Fragment
 		title.setText(NewTitle);
 		 
 		reloadButton = (Button)articleView.findViewById(R.id.refresh);
-		 
+		reloadButton.setOnClickListener(new OnClickListener()
+		{
+			@Override
+			public void onClick(View v) 
+			{
+				refreshArticle();
+			}
+		}); 
 		return articleView;
-	}
-	
-	public void reloadArticle()
-	{
-		reloadButton.setVisibility(View.INVISIBLE);
-		new getArticles().execute();
 	}
 	
 	public void loadArticleInfo(String url, String title)
 	{
 		this.url = url;
 		this.articleTitle = title;
+	}
+	
+	private void refreshArticle()
+	{
+		reloadButton.setVisibility(View.INVISIBLE);
+		progress.setVisibility(View.VISIBLE);
+		new getArticles().execute();
 	}
 
 	//Class that obtains the articles.
@@ -98,7 +110,7 @@ public class ArticleContent extends Fragment
 		{
 			Log.i("Article","do in background");
 			try
-			{
+			{				
 				Document document = Jsoup.connect(url).get();
 				Elements newsContent = document.select("div#newscontent");
 				article = newsContent.text();
@@ -123,6 +135,7 @@ public class ArticleContent extends Fragment
 			if(completed)
 			{
 				reloadButton.setVisibility(View.INVISIBLE);
+				progress.setVisibility(View.INVISIBLE);
 			}
 			else
 			{
