@@ -45,8 +45,6 @@ import android.support.v7.app.ActionBarActivity;
 import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
-import android.view.View;
-import android.webkit.WebView;
 
 public class MainActivity extends ActionBarActivity
 {		
@@ -255,19 +253,8 @@ public class MainActivity extends ActionBarActivity
 		return true;
 	}
 	
-	/*
-	 	*
-	 	*
-	 	*
-	 	*Various methods that are called on by the specified fragments.
-	 	*
-	 	*
-	 	*
-	 	*
-	*/
-	
 	//Checks if the device is online
-	public boolean online()
+	private boolean online()
 	{
 		ConnectivityManager cm = (ConnectivityManager) getApplicationContext().getSystemService(Context.CONNECTIVITY_SERVICE);
 		NetworkInfo info = cm.getActiveNetworkInfo();
@@ -278,27 +265,7 @@ public class MainActivity extends ActionBarActivity
 		else
 			return false;
 	}
-	
-	//Handles the webviews buttons
-	public void website(View view)
-	{
-		WebView webFrag = (WebView)findViewById(R.id.webFrag);
-		if(view.getId() == R.id.webBack)
-		{
-			if(webFrag.canGoBack())
-				webFrag.goBack();
-		}
-		else if(view.getId() == R.id.webForw)
-		{
-			if(webFrag.canGoForward())
-				webFrag.goForward();
-		}
-		else if(view.getId() ==  R.id.webRefr)
-		{
-			webFrag.reload();
-		}
-	}
-	
+		
 	/*
 		Classes for each tab listener
 	*/

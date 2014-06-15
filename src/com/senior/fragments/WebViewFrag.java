@@ -30,19 +30,25 @@ import android.support.v4.app.Fragment;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
+import android.view.View.OnClickListener;
 import android.view.ViewGroup;
 import android.webkit.WebChromeClient;
 import android.webkit.WebView;
 import android.webkit.WebViewClient;
+import android.widget.Button;
 import android.widget.ProgressBar;
 
 public class WebViewFrag extends Fragment 
 {
-	View webFrag;
-	WebView webFragView;
-	String url = "https://www.google.com";
-	Bundle saveState;
-	boolean restart = false;
+	private View webFrag;
+	private WebView webFragView;
+	private Button reload;
+	private Button forward;
+	private Button back;
+	
+	private String url = "https://www.google.com";
+	private Bundle saveState;
+	private boolean restart = false;
 	
 	@Override
 	public View onCreateView(LayoutInflater inflate, ViewGroup container, Bundle savedInstanceState)
@@ -69,7 +75,43 @@ public class WebViewFrag extends Fragment
 			webFragView.restoreState(saveState);
 		}
 		
-		Log.i("webFrag","webFrag fragment finished");
+		reload = (Button)webFrag.findViewById(R.id.webRefr);
+		reload.setOnClickListener(new OnClickListener()
+		{
+			@Override
+			public void onClick(View arg0) 
+			{
+				webFragView.reload();
+			}
+			
+		});
+		
+		back = (Button)webFrag.findViewById(R.id.webBack);
+		back.setOnClickListener(new OnClickListener()
+		{
+			@Override
+			public void onClick(View arg0)
+			{
+				if(webFragView.canGoBack())
+				{
+					webFragView.goBack();
+				}
+			}
+		});
+		
+		forward = (Button)webFrag.findViewById(R.id.webForw);
+		forward.setOnClickListener(new OnClickListener()
+		{
+			@Override
+			public void onClick(View arg0)
+			{
+				if(webFragView.canGoForward())
+				{
+					webFragView.goForward();
+				}
+			}
+		});
+		
 		return webFrag;
 	}
 	
@@ -126,8 +168,8 @@ public class WebViewFrag extends Fragment
 		}
 
 	}
+	
 	//WebViewClient
-
 	public class Client extends WebViewClient
 	{
 	
@@ -146,8 +188,6 @@ public class WebViewFrag extends Fragment
 			return true;
 		}
 		
-		
 	}
-
 	
 }
