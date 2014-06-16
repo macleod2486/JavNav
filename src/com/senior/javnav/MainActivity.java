@@ -31,6 +31,8 @@ import android.app.PendingIntent;
 import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
+import android.graphics.Color;
+import android.graphics.drawable.ColorDrawable;
 import android.net.ConnectivityManager;
 import android.net.NetworkInfo;
 import android.os.Bundle;
@@ -88,7 +90,7 @@ public class MainActivity extends ActionBarActivity
 			}
 			else
 			{
-				getActionBar().removeAllTabs();
+				getSupportActionBar().removeAllTabs();
 				finish();
 			}
 		}
@@ -128,8 +130,8 @@ public class MainActivity extends ActionBarActivity
 		ActionBar action = getSupportActionBar();
 	
 		action.setNavigationMode(ActionBar.NAVIGATION_MODE_TABS);
-		action.setDisplayShowTitleEnabled(false);
 		action.setDisplayUseLogoEnabled(false);
+		action.setBackgroundDrawable(new ColorDrawable(Color.parseColor("#003399")));
 			
 		homeTab = action.newTab();
 		homeTab.setText("Home");
