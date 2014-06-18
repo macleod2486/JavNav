@@ -8,7 +8,7 @@
 	<TextView android:layout_width="fill_parent"
 	    	  android:id="@+id/calenderevents"
 	    	  android:textStyle="bold"
-	    	  android:textColor="#FFFF00"
+	    	  android:textColor="#FFC324"
 	    	  android:textSize="25sp"
 	    	  android:gravity="center"
 	    	  android:background="#003399"
