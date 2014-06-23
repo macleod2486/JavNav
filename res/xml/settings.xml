@@ -4,7 +4,7 @@
         <ListPreference
             android:entries="@array/MapType"
             android:entryValues="@array/selection"
-            android:defaultValue="1"
+            android:defaultValue="4"
             android:title="Map Type"
             android:key="mapSelect" >
             

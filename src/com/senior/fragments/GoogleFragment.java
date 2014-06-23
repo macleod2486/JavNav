@@ -51,10 +51,14 @@ public class GoogleFragment extends Fragment
 {
 	private View map;
 	private GoogleMap TAMUK;
+	
 	public LatLng TAMUKLoc= new LatLng(27.524285,-97.882433);
+	
 	private Spinner buildingList;
 	private ArrayList<String> buildingNames = new ArrayList<String>();
 	private ArrayList<String> buildingCoord = new ArrayList<String>();
+	
+	private int currentMode;
 	
 	@Override
 	public View onCreateView(LayoutInflater inflate, ViewGroup container, Bundle savedInstanceState)
@@ -123,6 +127,8 @@ public class GoogleFragment extends Fragment
 				
 			});
 			
+		setUpMap();
+		
 		}
 		catch(Exception e)
 		{
@@ -136,7 +142,16 @@ public class GoogleFragment extends Fragment
 	public void onStart()
 	{
 		super.onStart();
-		setUpMap();
+		
+		SharedPreferences shared = PreferenceManager.getDefaultSharedPreferences(getActivity());
+		
+		String mapSel = shared.getString("mapSelect", "4");
+		
+		if(this.currentMode != Integer.parseInt(mapSel))
+		{
+			this.currentMode = Integer.parseInt(mapSel);
+			TAMUK.setMapType(currentMode);
+		}
 	}
 	
 	@Override
@@ -168,7 +183,7 @@ public class GoogleFragment extends Fragment
 		
 		SharedPreferences shared = PreferenceManager.getDefaultSharedPreferences(getActivity());
 		
-		String mapSel = shared.getString("mapSelect", "1");
+		String mapSel = shared.getString("mapSelect", "4");
 		
 		if(TAMUK==null)
 		{
@@ -185,22 +200,9 @@ public class GoogleFragment extends Fragment
 			TAMUK.animateCamera(CameraUpdateFactory.newLatLngZoom(TAMUKLoc, 16));
 			
 			//Sets the camera view as determined by the users settings
-			if(mapSel.contains("1"))
-			{	
-				TAMUK.setMapType(GoogleMap.MAP_TYPE_HYBRID);
-			}
-			else if(mapSel.contains("2"))
-			{	
-				TAMUK.setMapType(GoogleMap.MAP_TYPE_NORMAL);
-			}
-			else if(mapSel.contains("3"))
-			{	
-				TAMUK.setMapType(GoogleMap.MAP_TYPE_TERRAIN);
-			}
-			else if(mapSel.contains("4"))
-			{
-				TAMUK.setMapType(GoogleMap.MAP_TYPE_SATELLITE);
-			}
+			this.currentMode = Integer.parseInt(mapSel);
+			TAMUK.setMapType(currentMode);
+			
 			Log.i("Google","Map setting set");
 		}
 		
