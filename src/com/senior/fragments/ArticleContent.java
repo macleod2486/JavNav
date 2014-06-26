@@ -140,6 +140,7 @@ public class ArticleContent extends Fragment
 			else
 			{
 				reloadButton.setVisibility(View.VISIBLE);
+				progress.setVisibility(View.INVISIBLE);
 			}
 		}
 	}
