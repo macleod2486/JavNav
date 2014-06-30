@@ -27,13 +27,17 @@ import java.util.Collections;
 
 import com.google.android.gms.maps.CameraUpdateFactory;
 import com.google.android.gms.maps.GoogleMap;
+import com.google.android.gms.maps.GoogleMap.OnMarkerClickListener;
 import com.google.android.gms.maps.SupportMapFragment;
 import com.google.android.gms.maps.model.LatLng;
+import com.google.android.gms.maps.model.Marker;
 import com.google.android.gms.maps.model.MarkerOptions;
 
 import com.senior.javnav.R;
 
+import android.content.Intent;
 import android.content.SharedPreferences;
+import android.net.Uri;
 import android.os.Bundle;
 import android.preference.PreferenceManager;
 import android.support.v4.app.Fragment;
@@ -55,86 +59,100 @@ public class GoogleFragment extends Fragment
 	public LatLng TAMUKLoc= new LatLng(27.524285,-97.882433);
 	
 	private Spinner buildingList;
+	
 	private ArrayList<String> buildingNames = new ArrayList<String>();
 	private ArrayList<String> buildingCoord = new ArrayList<String>();
 	
 	private int currentMode;
+	private int navigate;
 	
 	@Override
 	public View onCreateView(LayoutInflater inflate, ViewGroup container, Bundle savedInstanceState)
 	{
 		Log.i("Google","Oncreate view called");
-		try
+		
+		map = inflate.inflate(R.layout.google_fragment, container, false);
+		buildingList = (Spinner)map.findViewById(R.id.buildings);
+		
+		buildingNames.clear();
+		buildingCoord.clear();
+		
+		//Adds and organizes the buildings alphabetically
+		buildingNames.addAll(Arrays.asList(getResources().getStringArray(R.array.listOfBuildings)));
+		Collections.sort(buildingNames,String.CASE_INSENSITIVE_ORDER);
+		
+		buildingCoord.addAll(Arrays.asList(getResources().getStringArray(R.array.listOfBuildings)));
+		Collections.sort(buildingCoord,String.CASE_INSENSITIVE_ORDER);
+		
+		for(int index = 0; index < buildingNames.size(); index++)
 		{
-			map = inflate.inflate(R.layout.google_fragment, container, false);
-			buildingList = (Spinner)map.findViewById(R.id.buildings);
+			buildingNames.set(index, buildingNames.get(index).substring(0, buildingNames.get(index).indexOf(',')));
+		}
+		
+		buildingNames.add(0,"Select one");
+		
+		ArrayAdapter<String> array = new ArrayAdapter<String>(getActivity(),android.R.layout.simple_dropdown_item_1line,buildingNames);
+		buildingList.setAdapter(array);
+		
+		//Places point on building when building is selected
+		buildingList.setOnItemSelectedListener(new OnItemSelectedListener()
+		{
+			private double lat = 0;
+			private double lon = 0;
+			private String latString;
+			private String longString;
 			
-			buildingNames.clear();
-			buildingCoord.clear();
-			
-			//Adds and organizes the buildings alphabetically
-			buildingNames.addAll(Arrays.asList(getResources().getStringArray(R.array.listOfBuildings)));
-			Collections.sort(buildingNames,String.CASE_INSENSITIVE_ORDER);
-			
-			buildingCoord.addAll(Arrays.asList(getResources().getStringArray(R.array.listOfBuildings)));
-			Collections.sort(buildingCoord,String.CASE_INSENSITIVE_ORDER);
-			
-			for(int index = 0; index < buildingNames.size(); index++)
-			{
-				buildingNames.set(index, buildingNames.get(index).substring(0, buildingNames.get(index).indexOf(',')));
+			@Override
+			public void onItemSelected(AdapterView<?> arg0, View arg1,
+					int arg2, long arg3) {
+				
+				if(TAMUK != null && arg2 != 0)
+				{
+					navigate = 0;
+					
+					latString = buildingCoord.get(arg2-1);
+					latString = latString.substring(latString.indexOf(',')+1,latString.lastIndexOf(','));
+					
+					longString = buildingCoord.get(arg2-1);
+					longString = longString.substring(longString.lastIndexOf(',')+1);
+					
+					lat=Double.parseDouble(latString);
+					lon=Double.parseDouble(longString);
+					
+					TAMUK.clear();
+					TAMUK.addMarker(new MarkerOptions().position(new LatLng(lat,lon)).title(buildingNames.get(arg2)));
+					TAMUK.setOnMarkerClickListener(new OnMarkerClickListener()
+					{
+						@Override
+						public boolean onMarkerClick(Marker marker) 
+						{
+							navigate++;
+							
+							if(navigate == 2)
+							{
+								navigate = 0;
+								String url = "http://maps.google.com/maps?f=d&daddr="+lat+","+lon+"&dirflg=d";
+								Intent intent = new Intent(android.content.Intent.ACTION_VIEW, Uri.parse(url)); 
+								intent.setClassName("com.google.android.apps.maps", "com.google.android.maps.MapsActivity");
+								startActivity(intent);
+							}
+							return false;
+						}
+					});
+					TAMUK.animateCamera(CameraUpdateFactory.newLatLngZoom(new LatLng(lat,lon), 17));
+				}
+			}
+
+			@Override
+			public void onNothingSelected(AdapterView<?> arg0)
+			{ 
+				
 			}
 			
-			buildingNames.add(0,"Select one");
-			
-			ArrayAdapter<String> array = new ArrayAdapter<String>(getActivity(),android.R.layout.simple_dropdown_item_1line,buildingNames);
-			Log.i("Google","Index ");
-			buildingList.setAdapter(array);
-			
-			//Places point on building when building is selected
-			buildingList.setOnItemSelectedListener(new OnItemSelectedListener()
-			{
-				private double lat=0;
-				private double lon=0;
-				private String latString;
-				private String longString;
-				
-				@Override
-				public void onItemSelected(AdapterView<?> arg0, View arg1,
-						int arg2, long arg3) {
-					
-					if(TAMUK != null && arg2 != 0)
-					{
-						latString = buildingCoord.get(arg2-1);
-						latString = latString.substring(latString.indexOf(',')+1,latString.lastIndexOf(','));
-						
-						longString = buildingCoord.get(arg2-1);
-						longString = longString.substring(longString.lastIndexOf(',')+1);
-						
-						TAMUK.clear();
-						lat=Double.parseDouble(latString);
-						lon=Double.parseDouble(longString);
-						
-						TAMUK.addMarker(new MarkerOptions().position(new LatLng(lat,lon)).title(buildingNames.get(arg2)));
-						TAMUK.animateCamera(CameraUpdateFactory.newLatLngZoom(new LatLng(lat,lon), 17));
-					}
-				}
-
-				@Override
-				public void onNothingSelected(AdapterView<?> arg0)
-				{ 
-					
-				}
-				
-			});
-			
+		});
+		
 		setUpMap();
 		
-		}
-		catch(Exception e)
-		{
-			Log.i("Google","Error on create "+e);
-			e.printStackTrace();
-		}
 		return map;
 	}
 	
