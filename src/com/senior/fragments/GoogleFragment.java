@@ -120,7 +120,7 @@ public class GoogleFragment extends Fragment
 					lon=Double.parseDouble(longString);
 					
 					TAMUK.clear();
-					TAMUK.addMarker(new MarkerOptions().position(new LatLng(lat,lon)).title(buildingNames.get(arg2)));
+					TAMUK.addMarker(new MarkerOptions().position(new LatLng(lat,lon)).title(buildingNames.get(arg2)).snippet("Touch marker twice to start navigation"));
 					TAMUK.setOnMarkerClickListener(new OnMarkerClickListener()
 					{
 						@Override
