@@ -20,16 +20,15 @@
 *
 */
 package com.senior.javnav;
-//Java Imports
+
 import java.io.File;
 import java.io.FileWriter;
 import java.util.Scanner;
-//JSoup imports
+
 import org.jsoup.Jsoup;
 import org.jsoup.nodes.Document;
-import org.jsoup.nodes.Element;
 import org.jsoup.select.Elements;
-//Android imports
+
 import android.app.IntentService;
 import android.app.Notification;
 import android.app.NotificationManager;
@@ -52,61 +51,51 @@ public class NewsUpdate extends IntentService
 	protected void onHandleIntent(Intent intent) 
 	{
 		Update checkNew = new Update();
-		checkNew.execute(1);
+		checkNew.execute();
 		
-		Log.i("Service","It works!");
+		Log.i("JavService","Started");
 	}
 
 	//Async task that checks for the update
-	private class Update extends AsyncTask<Integer, Void, Void>
+	private class Update extends AsyncTask<Void, Void, Void>
 	{
-		int pointer = 0;
 		boolean different;
-		String Sync[]=new String[30];
 		
-		//Two 
 		Notification notifi;
 		NotificationManager notifiManage = (NotificationManager)getSystemService(Context.NOTIFICATION_SERVICE);
 		
-		//Will read from the file that is created
-		File filePath = getBaseContext().getCacheDir();
-		String path = filePath.toString();
-		File data = new File(path+"/news.txt");
+		File data = new File(getBaseContext().getCacheDir().toString()+"/news.txt");
 		
 		boolean updated = false;
 		
-		
 		//Executes the following in the background
 		@Override
-		protected Void doInBackground(Integer...go)
+		protected Void doInBackground(Void...go)
 		{
-			Log.i("Service","Checking for updates");
+			Log.i("JavService","Checking for updates");
+			
 			//checks to see if the temp file needs to be created
 			boolean isFileEmpty;
 			
 			//Checks to see if the file is there
-			isFileEmpty=isFileNull();
+			isFileEmpty = isFileNull();
 			
-			Log.i("String","File path "+path);
-			
-			if(isFileEmpty)
+			if(!isFileEmpty)
 			{
-				Log.i("Service","File was empty");
+				Log.i("JavService","File was empty");
 				createFile();
 			}
 			else
 			{
-				Log.i("Service","File exists");
+				Log.i("JavService","File exists");
 				getUpdate();
 			}
 		
 			return null;
 		}
 		
-		
 		@SuppressWarnings("deprecation")
 		
-		//After the async task completes the execution 
 		@Override
 		protected void onPostExecute(Void go)
 		{
@@ -129,20 +118,18 @@ public class NewsUpdate extends IntentService
 			{
 				FileWriter fw = new FileWriter(data);
 				Document document = Jsoup.connect("http://www.tamuk.edu/").get();
-				Elements newsDiv =document.select("div#calendar");
+				Elements newsDiv = document.select("div#calendar");
 				Elements newsLinks = newsDiv.select("a[href]");
+				
 				fw.write("");
-				for(Element Division :newsLinks)
-				{
-					fw.append(Division.toString()+"\n");
-					Log.i("Service","Found "+Division.toString());
-				}
+				fw.write(newsLinks.toString());
 				fw.close();
-				Log.i("Service","Completed creating file");
+				
+				Log.i("JavService","Completed creating file");
 			}
 			catch(Exception e)
 			{
-				Log.i("Service","Error "+e);
+				Log.i("JavService","Error "+e);
 			}
 		}
 		
@@ -151,23 +138,22 @@ public class NewsUpdate extends IntentService
 		{
 			Document document;
 			Elements newsDiv;
-			Elements newContent;
+			Elements newsLinks;
 			Scanner updateScan;
 			FileWriter fw;
+			
 			try
 			{
 				updateScan = new Scanner(data);
+				updateScan.useDelimiter("\\A");
 				
 				document = Jsoup.connect("http://www.tamuk.edu/").get();
-				newsDiv =document.select("div#calendar");
-				newContent = newsDiv.select("a[href]");
+				newsDiv = document.select("div#calendar");
+				newsLinks = newsDiv.select("a[href]");
 				
-				for(Element Division :newContent)
+				if(!newsLinks.toString().equals(updateScan.next()))
 				{
-					if(!updateScan.nextLine().contains(Division.toString()))
-						different=true;
-					Sync[pointer]=Division.toString();
-					pointer++;
+					different = true;
 				}
 				
 				//Closes the scanner
@@ -176,28 +162,25 @@ public class NewsUpdate extends IntentService
 				//If there is a difference then the file is updated
 				if(different)
 				{
-					fw=new FileWriter(data);
-					fw.write("");
-					for(int start=0; start<pointer; start++)
-					{
-						fw.append(Sync[start]+"\n");
-					}
+					fw = new FileWriter(data);
 					
-					//Closes file
-					
+					fw.write("");					
+					fw.write(newsLinks.toString());
 					fw.close();
-					Log.i("Service","New updates found!");
-					updated=true;
+					
+					Log.i("JavService","New updates found!");
+					
+					updated = true;
 				}
 				else
 				{
-					Log.i("Service","No new updates");
+					Log.i("JavService","No new updates");
 				}
 					
 			}
 			catch(Exception e)
 			{
-				Log.i("Service","Error "+e);
+				Log.i("JavService","Error "+e);
 			}
 		
 		}
@@ -206,29 +189,24 @@ public class NewsUpdate extends IntentService
 		private boolean isFileNull()
 		{
 			boolean checkNull;
+			
 			try
 			{	
 				Scanner temp = new Scanner(data);
-				Log.i("Service","Checking the file");
 				
-				checkNull=temp.hasNext();
+				checkNull = temp.hasNext();
 				
-				if(temp.hasNext())
-					checkNull=false;
-				else
-					checkNull=true;
+				Log.i("JavService","Checking the file "+checkNull);
+				
 				temp.close();
 			}
 			catch(Exception e)
 			{
-				Log.i("Service","IsFileNull error "+e);
-				checkNull=true;
+				Log.i("JavService","IsFileNull error "+e);
+				checkNull = false;
 			}
 			
 			return checkNull;
 		}
-			
 	}
-
-	
 }
