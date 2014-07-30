@@ -102,8 +102,11 @@ public class NewsUpdate extends IntentService
 			if(updated)
 			{
 				Intent homeIntent = new Intent(getBaseContext(),MainActivity.class);
-				PendingIntent homePending = PendingIntent.getActivity(getBaseContext(), 0,homeIntent, 0);
-				notifi= new Notification(R.drawable.ic_launcher,"JavNav",System.currentTimeMillis());
+				homeIntent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK);
+				
+				PendingIntent homePending = PendingIntent.getActivity(getBaseContext(), 0,homeIntent,0);
+				
+				notifi = new Notification(R.drawable.ic_launcher,"JavNav",System.currentTimeMillis());
 				notifi.setLatestEventInfo(getApplicationContext(), "JavNav", "New Events!", homePending);
 				notifi.flags = Notification.FLAG_AUTO_CANCEL;
 				notifiManage.notify(0,notifi);				
