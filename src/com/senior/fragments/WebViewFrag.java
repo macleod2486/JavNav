@@ -22,8 +22,6 @@
 package com.senior.fragments;
 
 
-import com.senior.javnav.R;
-
 import android.graphics.Bitmap;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
@@ -37,6 +35,8 @@ import android.webkit.WebView;
 import android.webkit.WebViewClient;
 import android.widget.Button;
 import android.widget.ProgressBar;
+
+import com.senior.javnav.R;
 
 public class WebViewFrag extends Fragment 
 {
@@ -145,8 +145,10 @@ public class WebViewFrag extends Fragment
 	public void onStop()
 	{
 		saveState = new Bundle();
+		
 		if(webFragView.saveState(saveState) != null)
 			Log.i("WebFrag","State Saved");
+		
 		super.onStop();
 	}
 	
@@ -157,14 +159,20 @@ public class WebViewFrag extends Fragment
 		public void onProgressChanged(WebView view, int progres)
 		{
 			ProgressBar progress;
+			
 			Log.i("Client","Current "+progres);
+			
 			progress  = (ProgressBar)webFrag.findViewById(R.id.webProgress);
-			if(progres<100&&progress!=null)
+			
+			if(progres<100 && progress!=null)
 			{
-					progress.setProgress(progres);
+				progress.setProgress(progres);
 			}
-			if(progres==100&&progress!=null)
+			
+			if(progres==100 && progress!=null)
+			{
 				progress.setVisibility(View.GONE);
+			}
 		}
 
 	}
@@ -176,16 +184,24 @@ public class WebViewFrag extends Fragment
 		@Override
 		public void onPageStarted(WebView view, String url, Bitmap favicon)
 		{
-			Log.i("Client","Page started");
+			Log.i("Client","Page started "+url);
 			ProgressBar progress = (ProgressBar)webFrag.findViewById(R.id.webProgress);
 			progress.setVisibility(View.VISIBLE);
 			super.onPageStarted(view, url, favicon);
 		}
+		
 		@Override
 		public boolean shouldOverrideUrlLoading(WebView view, String url)
 		{
 			view.loadUrl(url);
 			return true;
+		}
+		
+		@Override
+		public void onReceivedError(WebView view, int errorVode, String description, String failingUrl)
+		{
+			ProgressBar progress = (ProgressBar)webFrag.findViewById(R.id.webProgress);
+			progress.setVisibility(View.INVISIBLE);
 		}
 		
 	}
