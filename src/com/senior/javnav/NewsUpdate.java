@@ -45,7 +45,6 @@ public class NewsUpdate extends IntentService
 	{
 		super("NewsUpdate");
 	}
-
 	
 	@Override
 	protected void onHandleIntent(Intent intent) 
@@ -116,7 +115,6 @@ public class NewsUpdate extends IntentService
 		//Creates the file if the file is found to be empty
 		private void createFile()
 		{
-			
 			try
 			{
 				FileWriter fw = new FileWriter(data);

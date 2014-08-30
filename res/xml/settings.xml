@@ -26,7 +26,7 @@
     <PreferenceCategory android:title="Notifications">
         <CheckBoxPreference 
             android:title="TAMUK News"
-            android:key="notif"
+            android:key="notifi"
             android:defaultValue="true"
          />
     </PreferenceCategory>

@@ -21,10 +21,6 @@
 */
 package com.senior.javnav;
 
-import com.senior.fragments.GoogleFragment;
-import com.senior.fragments.HomeFragment;
-import com.senior.fragments.WebViewFrag;
-
 import android.app.AlarmManager;
 import android.app.AlertDialog;
 import android.app.PendingIntent;
@@ -45,6 +41,10 @@ import android.support.v7.app.ActionBarActivity;
 import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
+
+import com.senior.fragments.GoogleFragment;
+import com.senior.fragments.HomeFragment;
+import com.senior.fragments.WebViewFrag;
 
 public class MainActivity extends ActionBarActivity
 {		
@@ -215,7 +215,7 @@ public class MainActivity extends ActionBarActivity
 	{
 		//Start the service in a timely interval
 		SharedPreferences shared = PreferenceManager.getDefaultSharedPreferences(this);
-		if(shared.getBoolean("notifi", false)&&shared.getBoolean("notifiCancelled", true))
+		if(shared.getBoolean("notifi", false) && shared.getBoolean("notifiCancelled", true))
 		{
 			//one second * 60 seconds in a minute * 5
 			int fiveMinutes = 1000*60*5;

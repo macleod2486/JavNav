@@ -40,7 +40,6 @@ public class BroadcastNews extends BroadcastReceiver
 		
 		if(arg1.toString().contains(Intent.ACTION_BOOT_COMPLETED) && shared.getBoolean("notifi", false))
 		{
-			
 			//one second * 60 seconds in a minute * 5
 			long fiveMinutes = 1000*60*5;
 			
