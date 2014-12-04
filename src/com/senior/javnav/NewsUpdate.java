@@ -41,9 +41,9 @@ import android.util.Log;
 public class NewsUpdate extends IntentService 
 {
 	
-	public NewsUpdate() 
+	public NewsUpdate()
 	{
-		super("NewsUpdate");
+        super("NewsUpdate");
 	}
 	
 	@Override
@@ -58,38 +58,38 @@ public class NewsUpdate extends IntentService
 	//Async task that checks for the update
 	private class Update extends AsyncTask<Void, Void, Void>
 	{
-		boolean different;
-		
-		Notification notifi;
-		NotificationManager notifiManage = (NotificationManager)getSystemService(Context.NOTIFICATION_SERVICE);
-		
-		File data = new File(getBaseContext().getCacheDir().toString()+"/news.txt");
-		
-		boolean updated = false;
+        JavSQL sql = new JavSQL(getBaseContext(), "JavSql", null, 1);
+
+        boolean newLink = false;
 		
 		//Executes the following in the background
 		@Override
 		protected Void doInBackground(Void...go)
 		{
-			Log.i("JavService","Checking for updates");
+			Log.i("JavService","Starting");
 			
-			//checks to see if the temp file needs to be created
-			boolean isFileEmpty;
+            try
+            {
+                int numberOfSaved = sql.getSaved();
+
+                Log.i("JavService","Number of entries "+numberOfSaved);
+
+                if(numberOfSaved == 0)
+                {
+                    fillTable();
+                }
+
+                else
+                {
+                    check();
+                }
+
+            }
+            catch(Exception e)
+            {
+                Log.e("JavService","Error "+e);
+            }
 			
-			//Checks to see if the file is there
-			isFileEmpty = isFileNull();
-			
-			if(!isFileEmpty)
-			{
-				Log.i("JavService","File was empty");
-				createFile();
-			}
-			else
-			{
-				Log.i("JavService","File exists");
-				getUpdate();
-			}
-		
 			return null;
 		}
 		
@@ -98,8 +98,11 @@ public class NewsUpdate extends IntentService
 		@Override
 		protected void onPostExecute(Void go)
 		{
-			if(updated)
+			if(newLink)
 			{
+                Notification notifi;
+                NotificationManager notifiManage = (NotificationManager)getSystemService(Context.NOTIFICATION_SERVICE);
+
 				Intent homeIntent = new Intent(getBaseContext(),MainActivity.class);
 				homeIntent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK);
 				
@@ -110,104 +113,85 @@ public class NewsUpdate extends IntentService
 				notifi.flags = Notification.FLAG_AUTO_CANCEL;
 				notifiManage.notify(0,notifi);				
 			}
+
+            sql.closeDb();
+            sql.close();
 		}
-		
-		//Creates the file if the file is found to be empty
-		private void createFile()
-		{
-			try
-			{
-				FileWriter fw = new FileWriter(data);
-				Document document = Jsoup.connect("http://www.tamuk.edu/").get();
-				Elements newsDiv = document.select("div#calendar");
-				Elements newsLinks = newsDiv.select("a[href]");
-				
-				fw.write("");
-				fw.write(newsLinks.toString());
-				fw.close();
-				
-				Log.i("JavService","Completed creating file");
-			}
-			catch(Exception e)
-			{
-				Log.i("JavService","Error "+e);
-			}
-		}
-		
-		//If the file is not empty then it will grab and check updates
-		private void getUpdate()
-		{
-			Document document;
-			Elements newsDiv;
-			Elements newsLinks;
-			Scanner updateScan;
-			FileWriter fw;
-			
-			try
-			{
-				updateScan = new Scanner(data);
-				updateScan.useDelimiter("\\A");
-				
-				document = Jsoup.connect("http://www.tamuk.edu/").get();
-				newsDiv = document.select("div#calendar");
-				newsLinks = newsDiv.select("a[href]");
-				
-				if(!newsLinks.toString().equals(updateScan.next()))
-				{
-					different = true;
-				}
-				
-				//Closes the scanner
-				updateScan.close();
-				
-				//If there is a difference then the file is updated
-				if(different)
-				{
-					fw = new FileWriter(data);
-					
-					fw.write("");					
-					fw.write(newsLinks.toString());
-					fw.close();
-					
-					Log.i("JavService","New updates found!");
-					
-					updated = true;
-				}
-				else
-				{
-					Log.i("JavService","No new updates");
-				}
-					
-			}
-			catch(Exception e)
-			{
-				Log.i("JavService","Error "+e);
-			}
-		
-		}
-		
-		//Checks to see if the file is new or is empty
-		private boolean isFileNull()
-		{
-			boolean checkNull;
-			
-			try
-			{	
-				Scanner temp = new Scanner(data);
-				
-				checkNull = temp.hasNext();
-				
-				Log.i("JavService","Checking the file "+checkNull);
-				
-				temp.close();
-			}
-			catch(Exception e)
-			{
-				Log.i("JavService","IsFileNull error "+e);
-				checkNull = false;
-			}
-			
-			return checkNull;
-		}
+
+        private void fillTable()
+        {
+            Log.i("JavService","Filling the table with the links");
+
+            Document document;
+            Elements newsDiv;
+            Elements newsTitles;
+            Elements newsLinks;
+
+            try
+            {
+                document = Jsoup.connect("http://www.tamuk.edu/").get();
+                newsDiv = document.select("div#calendar");
+                newsTitles = newsDiv.select("a");
+                newsLinks = newsTitles.select("[href]");
+
+                for(int index = 0; index < newsLinks.size(); index++)
+                {
+                    sql.insertInTable(newsLinks.get(index).toString());
+                }
+            }
+            catch (Exception e)
+            {
+                Log.e("JavService","Error "+e);
+            }
+        }
+
+        //Checks for any changes
+		private void check()
+        {
+            Document document;
+            Elements newsDiv;
+            Elements newsTitles;
+            Elements newsLinks;
+
+            Log.i("JavService","Checking for new links");
+
+            try
+            {
+                document = Jsoup.connect("http://www.tamuk.edu/").get();
+                newsDiv = document.select("div#calendar");
+                newsTitles = newsDiv.select("a");
+                newsLinks = newsTitles.select("[href]");
+
+                boolean exists;
+
+                //Removes any links in the database that no longer exist.
+                for(int index = 0; index < newsLinks.size(); index++)
+                {
+                    sql.clearOld(newsLinks.get(index).toString());
+                }
+
+                //Inserts any links that are new.
+                for(int index = 0; index < newsLinks.size(); index++)
+                {
+                    exists = sql.existInTable(newsLinks.get(index).toString());
+
+                    if(exists)
+                    {
+                        Log.i("JavService","Exists in table");
+                    }
+
+                    else
+                    {
+                        sql.insertInTable(newsLinks.get(index).toString());
+                        newLink = true;
+                        Log.i("JavService","New link inserted");
+                    }
+                }
+            }
+            catch(Exception e)
+            {
+                Log.e("JavService","Error "+e);
+            }
+        }
 	}
 }
