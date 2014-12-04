@@ -115,6 +115,8 @@ public class JavSQL extends SQLiteOpenHelper
         {
             Log.i("JavSQL","Url not deleted from database");
         }
+
+        cursor.close();
 	}
 
     public boolean existInTable(String urltext)
