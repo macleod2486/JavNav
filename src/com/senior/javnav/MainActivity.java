@@ -215,7 +215,7 @@ public class MainActivity extends ActionBarActivity
 	{
 		//Start the service in a timely interval
 		SharedPreferences shared = PreferenceManager.getDefaultSharedPreferences(this);
-		if(shared.getBoolean("notif", false) && shared.getBoolean("notifiCancelled", true))
+		if(shared.getBoolean("notif", true) && shared.getBoolean("notifiCancelled", true))
 		{
 			//one second * 60 seconds in a minute * 5
 			int fiveMinutes = 1000*60*5;
