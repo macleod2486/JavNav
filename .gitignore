@@ -4,8 +4,11 @@ bin/
 gen/
 .classpath
 .project
-.gradle/
-build/
 
 #Ignore changes to libraries being assigned
 project.properties
+
+#Ignore gradle
+.gradle/
+build/
+.idea/
