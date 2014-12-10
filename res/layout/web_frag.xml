@@ -33,7 +33,6 @@
         android:id="@+id/webForw"
         android:layout_width="100dp"
         android:layout_height="wrap_content"
-        android:layout_above="@+id/custom"
         android:onClick="website"
         android:layout_alignParentRight="true"
         android:text="@string/forward" />
