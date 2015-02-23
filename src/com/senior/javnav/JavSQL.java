@@ -107,7 +107,7 @@ public class JavSQL extends SQLiteOpenHelper
 
         if(!save)
         {
-            db.delete("News","newsurl = "+url,null);
+            db.delete("News","newsurl = '"+url+"'",null);
             Log.i("JavSQL","Url deleted in database");
         }
 
