@@ -21,10 +21,6 @@
 */
 package com.senior.javnav;
 
-import java.io.File;
-import java.io.FileWriter;
-import java.util.Scanner;
-
 import org.jsoup.Jsoup;
 import org.jsoup.nodes.Document;
 import org.jsoup.select.Elements;
