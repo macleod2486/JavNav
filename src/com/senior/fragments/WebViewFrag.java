@@ -22,8 +22,14 @@
 package com.senior.fragments;
 
 
+import android.app.DownloadManager;
+import android.content.Context;
+import android.content.Intent;
 import android.graphics.Bitmap;
+import android.net.Uri;
+import android.os.Build;
 import android.os.Bundle;
+import android.os.Environment;
 import android.support.v4.app.Fragment;
 import android.util.Log;
 import android.view.LayoutInflater;
@@ -193,7 +199,53 @@ public class WebViewFrag extends Fragment
 		@Override
 		public boolean shouldOverrideUrlLoading(WebView view, String url)
 		{
-			view.loadUrl(url);
+            String[] businessDocs = {"pdf", "docx", "doc", "pptx", "ppt", "xls", "xlsx", "zip", "gz", "7z", "777"};
+
+            boolean  isWebPage = true;
+
+            if(url.startsWith("mailto:"))
+            {
+                isWebPage = false;
+
+                Intent mailIntent = new Intent(Intent.ACTION_SENDTO, Uri.parse(url));
+                startActivity(mailIntent);
+            }
+
+            //Checks each extension to see if it is a eligible file.
+            for(int index = 0; index < businessDocs.length; index++)
+            {
+                if(url.endsWith(businessDocs[index]))
+                {
+                    isWebPage = false;
+
+                    Uri source = Uri.parse(url);
+                    String fileName = url.split("/")[url.split("/").length-1];
+
+                    DownloadManager.Request request = new DownloadManager.Request(source);
+
+                    request.setDescription("Downloading");
+                    request.setTitle(fileName);
+
+                    if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.HONEYCOMB)
+                    {
+                        request.allowScanningByMediaScanner();
+                        request.setNotificationVisibility(DownloadManager.Request.VISIBILITY_VISIBLE_NOTIFY_COMPLETED);
+                    }
+
+                    // Save the file in the "Downloads" folder of SDCARD
+                    request.setDestinationInExternalPublicDir(Environment.DIRECTORY_DOWNLOADS, fileName);
+
+                    // get download service and enqueue file
+                    DownloadManager manager = (DownloadManager) getActivity().getSystemService(Context.DOWNLOAD_SERVICE);
+                    manager.enqueue(request);
+                }
+            }
+
+            if(isWebPage)
+            {
+                view.loadUrl(url);
+            }
+
 			return true;
 		}
 		
