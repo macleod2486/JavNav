@@ -118,6 +118,7 @@ public class HomeFragment extends ListFragment
         //Checking to see if this is a new installation
         if(sql.getSaved() == 0)
         {
+            Log.i("Home","Database empty, gathering links");
             new getDivs().execute();
         }
 
@@ -206,10 +207,17 @@ public class HomeFragment extends ListFragment
 				}
 
 				completed = true;
+
+                sql.closeDb();
+                sql.close();
 			}
 			catch(Exception e)
 			{
 				completed = false;
+
+                sql.closeDb();
+                sql.close();
+
 				e.printStackTrace();
 			}
 
@@ -220,20 +228,24 @@ public class HomeFragment extends ListFragment
 		{
 			try
 			{
+
 				Log.i("HomeFrag","Results: "+eventtitles.size());
-				mListView.setAdapter(new ArrayAdapter(getActivity(),android.R.layout.simple_list_item_1,eventtitles)
+
+                mListView.setAdapter(new ArrayAdapter(getActivity(),android.R.layout.simple_list_item_1,eventtitles)
 				{
 					//Styling the items within the listview
 					@Override
 					public View getView(int position, View convertView, ViewGroup parent)
 					{
-						View view = super.getView(position,convertView,parent);
-						TextView listItem = (TextView)view.findViewById(android.R.id.text1);
+                        View view = super.getView(position, convertView, parent);
+                        TextView listItem = (TextView) view.findViewById(android.R.id.text1);
 
-                        boolean hasBeenSeen = sql.seen(eventlinks.get(position));
+                        sql = new JavSQL(getActivity().getBaseContext(), "JavSql", null, 1);
 
-                        listItem.setBackgroundColor(Color.BLACK);
+                        boolean hasBeenSeen = sql.seen(eventtitles.get(position));
+
                         listItem.setTextColor(Color.WHITE);
+                        listItem.setBackgroundColor(Color.BLACK);
 
                         if(!hasBeenSeen)
                         {
@@ -248,6 +260,9 @@ public class HomeFragment extends ListFragment
 
                             listItem.setBackgroundDrawable(shape);
                         }
+
+                        sql.closeDb();
+                        sql.close();
 
 						return view;
 					}
@@ -272,8 +287,6 @@ public class HomeFragment extends ListFragment
 				Log.i("HomeFrag","Error on post execute");
 			}
 
-            sql.closeDb();
-            sql.close();
 		}
 	}
 	
