@@ -182,6 +182,7 @@ public class HomeFragment extends ListFragment
 		protected ArrayList<String> doInBackground(String...params)
 		{
             sql = new JavSQL(getActivity().getBaseContext(), "JavSql", null, 1);
+
 			eventtitles= new ArrayList<String>();
 
 			try
@@ -208,18 +209,16 @@ public class HomeFragment extends ListFragment
 
 				completed = true;
 
-                sql.closeDb();
-                sql.close();
 			}
 			catch(Exception e)
 			{
 				completed = false;
 
-                sql.closeDb();
-                sql.close();
-
 				e.printStackTrace();
 			}
+
+            sql.closeDb();
+            sql.close();
 
 			return eventtitles;
 		}

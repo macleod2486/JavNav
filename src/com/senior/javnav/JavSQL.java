@@ -223,6 +223,7 @@ public class JavSQL extends SQLiteOpenHelper
 
     public void closeDb()
     {
+        Log.i("JavSQL","Closing database");
         db.close();
     }
 
