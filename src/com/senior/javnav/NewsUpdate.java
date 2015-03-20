@@ -107,7 +107,7 @@ public class NewsUpdate extends IntentService
 				notifi = new Notification(R.drawable.ic_notification,"JavNav",System.currentTimeMillis());
 				notifi.setLatestEventInfo(getApplicationContext(), "JavNav", "New Events!", homePending);
 				notifi.flags = Notification.FLAG_AUTO_CANCEL;
-				notifiManage.notify(0,notifi);				
+				notifiManage.notify(0,notifi);
 			}
 
             sql.closeDb();
@@ -132,7 +132,7 @@ public class NewsUpdate extends IntentService
 
                 for(int index = 0; index < newsLinks.size(); index++)
                 {
-                    sql.insertInTable(newsLinks.get(index).toString());
+                    sql.insertInTable(newsLinks.get(index).attr("abs:href").toString(),newsTitles.get(index).text());
                 }
             }
             catch (Exception e)
@@ -158,18 +158,21 @@ public class NewsUpdate extends IntentService
                 newsTitles = newsDiv.select("a");
                 newsLinks = newsTitles.select("[href]");
 
-                boolean exists;
+                boolean exists = true;
 
                 //Removes any links in the database that no longer exist.
                 for(int index = 0; index < newsLinks.size(); index++)
                 {
-                    sql.clearOld(newsLinks.get(index).toString());
+                    sql.clearOld(newsLinks.get(index).attr("abs:href").toString());
                 }
 
                 //Inserts any links that are new.
                 for(int index = 0; index < newsLinks.size(); index++)
                 {
-                    exists = sql.existInTable(newsLinks.get(index).toString());
+                    if(newsLinks.get(index).toString().contains(".html"))
+                    {
+                        exists = sql.existInTable(newsLinks.get(index).attr("abs:href").toString());
+                    }
 
                     if(exists)
                     {
@@ -178,7 +181,7 @@ public class NewsUpdate extends IntentService
 
                     else
                     {
-                        sql.insertInTable(newsLinks.get(index).toString());
+                        sql.insertInTable(newsLinks.get(index).attr("abs:href").toString(),newsTitles.get(index).text());
                         newLink = true;
                         Log.i("JavService","New link inserted");
                     }

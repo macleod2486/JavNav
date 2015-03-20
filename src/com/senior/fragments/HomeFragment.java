@@ -26,9 +26,15 @@ import org.jsoup.Jsoup;
 import org.jsoup.nodes.Document;
 import org.jsoup.select.Elements;
 
+import com.senior.javnav.JavSQL;
 import com.senior.javnav.R;
 
 import android.graphics.Color;
+import android.graphics.Paint;
+import android.graphics.drawable.Drawable;
+import android.graphics.drawable.GradientDrawable;
+import android.graphics.drawable.ShapeDrawable;
+import android.graphics.drawable.shapes.RectShape;
 import android.os.AsyncTask;
 import android.os.Bundle;
 import android.support.v4.app.ListFragment;
@@ -57,6 +63,7 @@ public class HomeFragment extends ListFragment
 	public static ArrayList<String> eventtitles;
 	public static ArrayList<String> eventlinks = new ArrayList<String>();
 	public static String TitleChosen;
+    private static JavSQL sql;
 	
 	ArticleContent articles;
 
@@ -71,7 +78,7 @@ public class HomeFragment extends ListFragment
 	@Override
 	public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState)
 	{
-		Log.i("HomeFrag","View Created"); 
+		Log.i("HomeFrag","View Created");
 		
 		view=inflater.inflate(R.layout.home_fragment,container,false);
 		
@@ -105,7 +112,67 @@ public class HomeFragment extends ListFragment
 	{
 		reloadButton.setVisibility(View.INVISIBLE);
 		progress.setVisibility(View.VISIBLE);
-		new getDivs().execute();
+
+        sql = new JavSQL(getActivity().getBaseContext(), "JavSql", null, 1);
+
+        //Checking to see if this is a new installation
+        if(sql.getSaved() == 0)
+        {
+            new getDivs().execute();
+        }
+
+        else
+        {
+            eventlinks = sql.returnLinks();
+            eventtitles = sql.returnTitles();
+
+            //Since the sql database should be available for usage there should be no need for
+            //the reload button or progressbar.
+            reloadButton.setVisibility(View.INVISIBLE);
+            progress.setVisibility(View.INVISIBLE);
+
+            mListView.setAdapter(new ArrayAdapter(getActivity(), android.R.layout.simple_list_item_1, eventtitles)
+            {
+                //Styling the items within the listview
+                @Override
+                public View getView(int position, View convertView, ViewGroup parent)
+                {
+                    View view = super.getView(position, convertView, parent);
+                    TextView listItem = (TextView) view.findViewById(android.R.id.text1);
+
+                    sql = new JavSQL(getActivity().getBaseContext(), "JavSql", null, 1);
+
+                    boolean hasBeenSeen = sql.seen(eventtitles.get(position));
+
+                    listItem.setTextColor(Color.WHITE);
+                    listItem.setBackgroundColor(Color.BLACK);
+
+                    if(!hasBeenSeen)
+                    {
+                        RectShape rectangle = new RectShape();
+
+                        ShapeDrawable shape = new ShapeDrawable(rectangle);
+
+                        Paint paint = shape.getPaint();
+                        paint.setColor(Color.parseColor("#FFC324"));
+                        paint.setStyle(Paint.Style.STROKE);
+                        paint.setStrokeWidth(10);
+
+                        listItem.setBackgroundDrawable(shape);
+                    }
+
+                    sql.closeDb();
+                    sql.close();
+
+                    return view;
+                }
+            });
+
+        }
+
+        sql.closeDb();
+        sql.close();
+
 	}
 	
 	private class getDivs extends AsyncTask<String, Void, ArrayList<String>>
@@ -113,25 +180,31 @@ public class HomeFragment extends ListFragment
 		boolean completed = false;
 		protected ArrayList<String> doInBackground(String...params)
 		{
+            sql = new JavSQL(getActivity().getBaseContext(), "JavSql", null, 1);
 			eventtitles= new ArrayList<String>();
+
 			try
 			{
 				Document document = Jsoup.connect("http://www.tamuk.edu/").get();
 				Elements calendar=document.select("div#calendar");
 				Elements titles=calendar.select("a");
 				Elements links = titles.select("[href]");
-				
+
 				for(int index = 0; index < titles.size()&&index < links.size(); index++)
 				{
 					if(links.get(index).toString().contains(".html"))
 					{
 						if(isCancelled())
 							break;
+
 						eventtitles.add(titles.get(index).text());
 						eventlinks.add(links.get(index).attr("abs:href").toString());
+
+                        sql.insertInTable(links.get(index).attr("abs:href").toString(),titles.get(index).text());
 					}
-					
+
 				}
+
 				completed = true;
 			}
 			catch(Exception e)
@@ -139,6 +212,7 @@ public class HomeFragment extends ListFragment
 				completed = false;
 				e.printStackTrace();
 			}
+
 			return eventtitles;
 		}
 		@Override
@@ -146,7 +220,7 @@ public class HomeFragment extends ListFragment
 		{
 			try
 			{
-				Log.i("home frag","Results: "+eventtitles.size());
+				Log.i("HomeFrag","Results: "+eventtitles.size());
 				mListView.setAdapter(new ArrayAdapter(getActivity(),android.R.layout.simple_list_item_1,eventtitles)
 				{
 					//Styling the items within the listview
@@ -155,8 +229,26 @@ public class HomeFragment extends ListFragment
 					{
 						View view = super.getView(position,convertView,parent);
 						TextView listItem = (TextView)view.findViewById(android.R.id.text1);
-						listItem.setBackgroundColor(Color.BLACK);
-						listItem.setTextColor(Color.WHITE);
+
+                        boolean hasBeenSeen = sql.seen(eventlinks.get(position));
+
+                        listItem.setBackgroundColor(Color.BLACK);
+                        listItem.setTextColor(Color.WHITE);
+
+                        if(!hasBeenSeen)
+                        {
+                            RectShape rectangle = new RectShape();
+
+                            ShapeDrawable shape = new ShapeDrawable(rectangle);
+
+                            Paint paint = shape.getPaint();
+                            paint.setColor(Color.parseColor("#FFC324"));
+                            paint.setStyle(Paint.Style.STROKE);
+                            paint.setStrokeWidth(10);
+
+                            listItem.setBackgroundDrawable(shape);
+                        }
+
 						return view;
 					}
 				});
@@ -177,16 +269,25 @@ public class HomeFragment extends ListFragment
 			}
 			catch(Exception e)
 			{
-				Log.i("Home","Error on post execute");
+				Log.i("HomeFrag","Error on post execute");
 			}
+
+            sql.closeDb();
+            sql.close();
 		}
 	}
 	
 	public void onListItemClick(ListView mListView, View view, int position, long id)
 	{
+        sql = new JavSQL(getActivity().getBaseContext(), "JavSql", null, 1);
+        sql.setSeen(eventtitles.get(position).toString());
+        sql.closeDb();
+        sql.close();
+
 		ArticleContent articles = new ArticleContent();
 	    articles.loadArticleInfo(eventlinks.get(position), eventtitles.get(position));
 	    getFragmentManager().beginTransaction().addToBackStack(null).replace(R.id.container, articles).commit();
+
 	}
 
 }

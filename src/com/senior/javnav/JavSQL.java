@@ -31,6 +31,7 @@ import android.database.sqlite.SQLiteOpenHelper;
 import android.util.Log;
 
 import java.lang.reflect.Array;
+import java.util.ArrayList;
 
 public class JavSQL extends SQLiteOpenHelper
 {
@@ -50,13 +51,14 @@ public class JavSQL extends SQLiteOpenHelper
 	public void onCreate(SQLiteDatabase db)
 	{
         Log.i("JavSQL","On create called");
-        db.execSQL("Create table if not exists News (id int(10), newsurl string(500), primary key(id))");
+        db.execSQL("Create table if not exists News (id int(10), newstitle string(300), newsurl string(500), seen int(2), primary key(id))");
 	}
 
 	@Override
 	public void onUpgrade(SQLiteDatabase db, int oldVersion, int newVersion)
 	{
 		Log.i("JavSQL","Upgrade called");
+        db.execSQL("Create table if not exists News (id int(10), newstitle string(300), newsurl string(500), seen int(2), primary key(id))");
 	}
 
     //Sees how many values are in the table
@@ -66,19 +68,22 @@ public class JavSQL extends SQLiteOpenHelper
         Cursor cursor;
         cursor = db.rawQuery("select * from News",null);
         count = cursor.getCount();
+        cursor.close();
 
         return count;
     }
 
     //Insert values in table
-	public void insertInTable(String text)
+	public void insertInTable(String newsurl, String newstitle)
 	{
         Cursor cursor;
         cursor = db.rawQuery("select * from News",null);
 
         ContentValues insert = new ContentValues();
         insert.put("id",cursor.getCount() + 1);
-        insert.put("newsurl",text);
+        insert.put("newsurl",newsurl);
+        insert.put("newstitle",newstitle);
+        insert.put("seen",0);
 
         db.insert("News",null,insert);
         cursor.close();
@@ -136,6 +141,84 @@ public class JavSQL extends SQLiteOpenHelper
         cursor.close();
 
         return exists;
+    }
+
+
+    //Returns all links in database
+    public ArrayList<String> returnLinks()
+    {
+        ArrayList<String> links = new ArrayList<String>();
+
+        Cursor cursor;
+        cursor = db.rawQuery("select newsurl from News",null);
+        cursor.moveToFirst();
+
+        for(int index = 0; index < cursor.getCount(); index++)
+        {
+            links.add(index,cursor.getString(0));
+
+            cursor.moveToNext();
+        }
+
+        cursor.close();
+
+        return links;
+    }
+
+    //Returns all titles in database
+    public ArrayList<String> returnTitles()
+    {
+        ArrayList<String> titles = new ArrayList<String>();
+
+        Cursor cursor;
+        cursor = db.rawQuery("select newstitle from News",null);
+        cursor.moveToFirst();
+
+        for(int index = 0; index < cursor.getCount(); index++)
+        {
+            titles.add(index,cursor.getString(0));
+
+            cursor.moveToNext();
+        }
+
+        cursor.close();
+
+        return titles;
+    }
+
+    //Checks to see if a link has been seen or not
+    public boolean seen(String title)
+    {
+        boolean hasBeenScene = false;
+
+        String query = "select seen from News where newstitle = ?;";
+
+        Cursor cursor;
+        cursor = db.rawQuery(query, new String[]{title});
+        cursor.moveToFirst();
+
+        if (cursor.getInt(0) == 1)
+        {
+            hasBeenScene = true;
+            Log.i("JavSQL","Link has been seen");
+        }
+
+        cursor.close();
+
+        return hasBeenScene;
+    }
+
+    //Sets a selected link to be seen
+    public void setSeen(String title)
+    {
+        String clause = "newstitle = ?;";
+
+        ContentValues insert = new ContentValues();
+        insert.put("seen", "1");
+
+        db.update("News",insert,clause,new String[]{title});
+
+        Log.i("JavSQL","Link is now seen");
     }
 
     public void closeDb()
