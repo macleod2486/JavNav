@@ -91,6 +91,7 @@ public class ArticleContent extends Fragment
 	public void loadArticleInfo(String url, String title)
 	{
 		this.url = url;
+        this.url = this.url.replaceAll(" ","%20");
 		this.articleTitle = title;
 	}
 	
