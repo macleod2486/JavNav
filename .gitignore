@@ -12,3 +12,4 @@ project.properties
 .gradle/
 build/
 .idea/
+local.properties
