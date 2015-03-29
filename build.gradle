@@ -29,7 +29,7 @@ dependencies {
 //define some config four our apps (minimum android version, tools version, etc ...)
 android {
     compileSdkVersion 21
-    buildToolsVersion '20.0.0'
+    buildToolsVersion '21.1.2'
 
     sourceSets {
         main {
