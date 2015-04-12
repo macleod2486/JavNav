@@ -91,37 +91,27 @@ public class JavSQL extends SQLiteOpenHelper
 		Log.i("JavSQL","Url inserted in database");
 	}
 
-	public void clearOld(String url)
+	public void clearOld(ArrayList<String> urls)
 	{
-        Cursor cursor;
-        cursor = db.rawQuery("select newsurl from News",null);
-        cursor.moveToFirst();
 
-        String compared;
-        boolean save = false;
+        String deleteOld = "(select newsurl from News where newsurl = '"+urls.get(0)+"'";
+        String finalQuery;
 
-        for(int index = 0; index < cursor.getCount(); index++)
+        for(int index = 1; index < urls.size(); index++)
         {
-            compared = cursor.getString(0);
-
-            if(url.equals(compared))
-                save = true;
-
-            cursor.moveToNext();
+            deleteOld += " or newsurl = '"+urls.get(index)+"' ";
         }
 
-        if(!save)
-        {
-            db.delete("News","newsurl = '"+url+"'",null);
-            Log.i("JavSQL","Url deleted in database");
-        }
+        deleteOld += ") as x";
 
-        else
-        {
-            Log.i("JavSQL","Url not deleted from database");
-        }
+        finalQuery = " ( select newsurl from "+deleteOld+" )";
 
-        cursor.close();
+        finalQuery = "delete from News where newsurl not in "+finalQuery;
+
+        db.execSQL(finalQuery);
+
+        Log.i("JavSQL","Deleted old entries.");
+
 	}
 
     public boolean existInTable(String urltext)

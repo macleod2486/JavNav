@@ -23,6 +23,7 @@ package com.senior.javnav;
 
 import org.jsoup.Jsoup;
 import org.jsoup.nodes.Document;
+import org.jsoup.nodes.Element;
 import org.jsoup.select.Elements;
 
 import android.app.IntentService;
@@ -33,6 +34,8 @@ import android.content.Context;
 import android.content.Intent;
 import android.os.AsyncTask;
 import android.util.Log;
+
+import java.util.ArrayList;
 
 public class NewsUpdate extends IntentService 
 {
@@ -160,18 +163,22 @@ public class NewsUpdate extends IntentService
 
                 boolean exists = true;
 
-                //Removes any links in the database that no longer exist.
+                ArrayList<String> allLinks = new ArrayList<String>();
+
+                //Removes any links in the database that are no longer on the webpage.
                 for(int index = 0; index < newsLinks.size(); index++)
                 {
-                    sql.clearOld(newsLinks.get(index).attr("abs:href").toString());
+                    allLinks.add(newsLinks.get(index).attr("abs:href"));
                 }
+
+                sql.clearOld(allLinks);
 
                 //Inserts any links that are new.
                 for(int index = 0; index < newsLinks.size(); index++)
                 {
                     if(newsLinks.get(index).toString().contains(".html"))
                     {
-                        exists = sql.existInTable(newsLinks.get(index).attr("abs:href").toString());
+                        exists = sql.existInTable(newsLinks.get(index).attr("abs:href"));
                     }
 
                     if(exists)
