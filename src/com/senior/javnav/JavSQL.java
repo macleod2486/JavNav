@@ -51,14 +51,14 @@ public class JavSQL extends SQLiteOpenHelper
 	public void onCreate(SQLiteDatabase db)
 	{
         Log.i("JavSQL","On create called");
-        db.execSQL("Create table if not exists News (id int(10), newstitle string(300), newsurl string(500), seen int(2), primary key(id))");
+        db.execSQL("Create table if not exists News (id int not null, newstitle string(300), newsurl string(500), seen int(2), primary key(id))");
 	}
 
 	@Override
 	public void onUpgrade(SQLiteDatabase db, int oldVersion, int newVersion)
 	{
 		Log.i("JavSQL","Upgrade called");
-        db.execSQL("Create table if not exists News (id int(10), newstitle string(300), newsurl string(500), seen int(2), primary key(id))");
+        db.execSQL("Create table if not exists News (id int not null, newstitle string(300), newsurl string(500), seen int(2), primary key(id))");
 	}
 
     //Sees how many values are in the table
@@ -77,10 +77,11 @@ public class JavSQL extends SQLiteOpenHelper
 	public void insertInTable(String newsurl, String newstitle)
 	{
         Cursor cursor;
-        cursor = db.rawQuery("select * from News",null);
+        cursor = db.rawQuery("select max(id) from News",null);
+        cursor.moveToFirst();
 
         ContentValues insert = new ContentValues();
-        insert.put("id",cursor.getCount() + 1);
+        insert.put("id",cursor.getInt(0)+1);
         insert.put("newsurl",newsurl);
         insert.put("newstitle",newstitle);
         insert.put("seen",0);
@@ -93,6 +94,7 @@ public class JavSQL extends SQLiteOpenHelper
 
 	public void clearOld(ArrayList<String> urls)
 	{
+        //TODO: Clean up this and make it more readable.
 
         String deleteOld = "(select newsurl from News where newsurl = '"+urls.get(0)+"'";
         String finalQuery;
