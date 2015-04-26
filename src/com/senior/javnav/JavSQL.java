@@ -37,6 +37,8 @@ public class JavSQL extends SQLiteOpenHelper
 {
     private SQLiteDatabase db;
 
+    private ArrayList<String> listOfNewEvents = new ArrayList<String>();
+
 	public JavSQL(Context context, String name, CursorFactory factory,
 			int version)
 	{
@@ -88,6 +90,8 @@ public class JavSQL extends SQLiteOpenHelper
 
         db.insert("News",null,insert);
         cursor.close();
+
+        listOfNewEvents.add(newstitle);
 
 		Log.i("JavSQL","Url inserted in database");
 	}
@@ -176,6 +180,11 @@ public class JavSQL extends SQLiteOpenHelper
         cursor.close();
 
         return titles;
+    }
+
+    public ArrayList<String> newEventsList()
+    {
+        return listOfNewEvents;
     }
 
     //Checks to see if a link has been seen or not

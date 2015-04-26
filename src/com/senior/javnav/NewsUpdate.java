@@ -33,6 +33,8 @@ import android.app.PendingIntent;
 import android.content.Context;
 import android.content.Intent;
 import android.os.AsyncTask;
+import android.support.v4.app.NotificationCompat;
+import android.support.v4.app.TaskStackBuilder;
 import android.util.Log;
 
 import java.util.ArrayList;
@@ -99,18 +101,39 @@ public class NewsUpdate extends IntentService
 		{
 			if(newLink)
 			{
-                Notification notifi;
                 NotificationManager notifiManage = (NotificationManager)getSystemService(Context.NOTIFICATION_SERVICE);
+                NotificationCompat.Builder buildNotification;
+                NotificationCompat.InboxStyle notificationStyle;
+                PendingIntent homePending;
 
 				Intent homeIntent = new Intent(getBaseContext(),MainActivity.class);
 				homeIntent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK);
-				
-				PendingIntent homePending = PendingIntent.getActivity(getBaseContext(), 0, homeIntent,  PendingIntent.FLAG_UPDATE_CURRENT);
-				
-				notifi = new Notification(R.drawable.ic_notification,"JavNav",System.currentTimeMillis());
-				notifi.setLatestEventInfo(getApplicationContext(), "JavNav", "New Events!", homePending);
-				notifi.flags = Notification.FLAG_AUTO_CANCEL;
-				notifiManage.notify(0,notifi);
+
+                TaskStackBuilder stackBuilder = TaskStackBuilder.create(getBaseContext());
+                stackBuilder.addParentStack(MainActivity.class);
+                stackBuilder.addNextIntent(homeIntent);
+
+                homePending = stackBuilder.getPendingIntent(0, PendingIntent.FLAG_UPDATE_CURRENT);
+
+                notificationStyle = new NotificationCompat.InboxStyle();
+                notificationStyle.setBigContentTitle("Events received");
+
+                ArrayList<String> listOfLinks = sql.newEventsList();
+
+                for(int index = 0; index < listOfLinks.size(); index++)
+                {
+                    notificationStyle.addLine(listOfLinks.get(index));
+                }
+
+                buildNotification = new NotificationCompat.Builder(getBaseContext());
+                buildNotification.setSmallIcon(R.drawable.ic_notification);
+                buildNotification.setContentTitle("JavNav");
+                buildNotification.setContentText("New Events!");
+                buildNotification.setContentIntent(homePending);
+                buildNotification.setAutoCancel(true);
+                buildNotification.setStyle(notificationStyle);
+
+				notifiManage.notify(0, buildNotification.build());
 			}
 
             sql.closeDb();
