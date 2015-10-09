@@ -113,7 +113,7 @@ public class ArticleContent extends Fragment
 			try
 			{				
 				Document document = Jsoup.connect(url).get();
-				Elements newsContent = document.select("div#newscontent");
+				Elements newsContent = document.select("div#content");
 				article = newsContent.text();
 				Log.i("Article",newsContent.text());
 				
