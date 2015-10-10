@@ -26,6 +26,7 @@ import java.util.ArrayList;
 //JSoup imports
 import org.jsoup.Jsoup;
 import org.jsoup.nodes.Document;
+import org.jsoup.nodes.Element;
 import org.jsoup.select.Elements;
 
 //Project imports
@@ -111,10 +112,18 @@ public class ArticleContent extends Fragment
 		{
 			Log.i("Article","do in background");
 			try
-			{				
+			{
+                String content = "";
 				Document document = Jsoup.connect(url).get();
 				Elements newsContent = document.select("div#content");
-				article = newsContent.text();
+                Elements paragraphs = newsContent.select("p");
+
+                for(Element paragraph : paragraphs)
+                {
+                    content += paragraph.text()+"\n";
+                }
+
+				article = content;
 				Log.i("Article",newsContent.text());
 				
 				completed = true;
