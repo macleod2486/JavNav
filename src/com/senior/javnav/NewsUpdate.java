@@ -23,16 +23,13 @@ package com.senior.javnav;
 
 import org.jsoup.Jsoup;
 import org.jsoup.nodes.Document;
-import org.jsoup.nodes.Element;
 import org.jsoup.select.Elements;
 
 import android.app.IntentService;
-import android.app.Notification;
 import android.app.NotificationManager;
 import android.app.PendingIntent;
 import android.content.Context;
 import android.content.Intent;
-import android.os.AsyncTask;
 import android.support.v4.app.NotificationCompat;
 import android.support.v4.app.TaskStackBuilder;
 import android.util.Log;
@@ -41,7 +38,10 @@ import java.util.ArrayList;
 
 public class NewsUpdate extends IntentService 
 {
-	
+    JavSQL sql = new JavSQL(getBaseContext(), "JavSql", null, 1);
+
+    boolean newLink = false;
+
 	public NewsUpdate()
 	{
         super("NewsUpdate");
@@ -50,177 +50,154 @@ public class NewsUpdate extends IntentService
 	@Override
 	protected void onHandleIntent(Intent intent) 
 	{
-		Update checkNew = new Update();
-		checkNew.execute();
-		
-		Log.i("JavService","Started");
+        Log.i("JavService", "Starting");
+
+        try
+        {
+            int numberOfSaved = sql.getSaved();
+
+            Log.i("JavService","Number of entries "+numberOfSaved);
+
+            if(numberOfSaved == 0)
+            {
+                fillTable();
+            }
+
+            else
+            {
+                check();
+            }
+
+        }
+        catch(Exception e)
+        {
+            Log.e("JavService","Error "+e);
+        }
+
+        if(newLink)
+        {
+            NotificationManager notifiManage = (NotificationManager)getSystemService(Context.NOTIFICATION_SERVICE);
+            NotificationCompat.Builder buildNotification;
+            NotificationCompat.InboxStyle notificationStyle;
+            PendingIntent homePending;
+
+            Intent homeIntent = new Intent(getBaseContext(),MainActivity.class);
+            homeIntent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK);
+
+            TaskStackBuilder stackBuilder = TaskStackBuilder.create(getBaseContext());
+            stackBuilder.addParentStack(MainActivity.class);
+            stackBuilder.addNextIntent(homeIntent);
+
+            homePending = stackBuilder.getPendingIntent(0, PendingIntent.FLAG_UPDATE_CURRENT);
+
+            notificationStyle = new NotificationCompat.InboxStyle();
+            notificationStyle.setBigContentTitle("Events received");
+
+            ArrayList<String> listOfLinks = sql.newEventsList();
+
+            for(int index = 0; index < listOfLinks.size(); index++)
+            {
+                notificationStyle.addLine(listOfLinks.get(index));
+            }
+
+            buildNotification = new NotificationCompat.Builder(getBaseContext());
+            buildNotification.setSmallIcon(R.drawable.ic_notification);
+            buildNotification.setContentTitle("JavNav");
+            buildNotification.setContentText("New Events!");
+            buildNotification.setContentIntent(homePending);
+            buildNotification.setAutoCancel(true);
+            buildNotification.setStyle(notificationStyle);
+
+            notifiManage.notify(0, buildNotification.build());
+        }
+
+        sql.closeDb();
+        sql.close();
+
+
+        Log.i("JavService","Started");
 	}
 
-	//Async task that checks for the update
-	private class Update extends AsyncTask<Void, Void, Void>
-	{
-        JavSQL sql = new JavSQL(getBaseContext(), "JavSql", null, 1);
+    private void fillTable()
+    {
+        Log.i("JavService","Filling the table with the links");
 
-        boolean newLink = false;
-		
-		//Executes the following in the background
-		@Override
-		protected Void doInBackground(Void...go)
-		{
-			Log.i("JavService","Starting");
-			
-            try
+        Document document;
+        Elements newsDiv;
+        Elements newsTitles;
+        Elements newsLinks;
+
+        try
+        {
+            document = Jsoup.connect("http://www.tamuk.edu/").get();
+            newsDiv = document.select("div#calendar");
+            newsTitles = newsDiv.select("a");
+            newsLinks = newsTitles.select("[href]");
+
+            for(int index = 0; index < newsLinks.size(); index++)
             {
-                int numberOfSaved = sql.getSaved();
+                sql.insertInTable(newsLinks.get(index).attr("abs:href").toString(),newsTitles.get(index).text());
+            }
+        }
+        catch (Exception e)
+        {
+            Log.e("JavService","Error "+e);
+        }
+    }
 
-                Log.i("JavService","Number of entries "+numberOfSaved);
+    //Checks for any changes
+    private void check()
+    {
+        Document document;
+        Elements newsDiv;
+        Elements newsTitles;
+        Elements newsLinks;
 
-                if(numberOfSaved == 0)
+        Log.i("JavService","Checking for new links");
+
+        try
+        {
+            document = Jsoup.connect("http://www.tamuk.edu/").get();
+            newsDiv = document.select("div#calendar");
+            newsTitles = newsDiv.select("a");
+            newsLinks = newsTitles.select("[href]");
+
+            boolean exists = true;
+
+            ArrayList<String> allLinks = new ArrayList<String>();
+
+            //Removes any links in the database that are no longer on the webpage.
+            for(int index = 0; index < newsLinks.size(); index++)
+            {
+                allLinks.add(newsLinks.get(index).attr("abs:href"));
+            }
+
+            sql.clearOld(allLinks);
+
+            //Inserts any links that are new.
+            for(int index = 0; index < newsLinks.size(); index++)
+            {
+                if(newsLinks.get(index).toString().contains(".html"))
                 {
-                    fillTable();
+                    exists = sql.existInTable(newsLinks.get(index).attr("abs:href"));
+                }
+
+                if(exists)
+                {
+                    Log.i("JavService","Exists in table");
                 }
 
                 else
                 {
-                    check();
-                }
-
-            }
-            catch(Exception e)
-            {
-                Log.e("JavService","Error "+e);
-            }
-			
-			return null;
-		}
-		
-		@SuppressWarnings("deprecation")
-		
-		@Override
-		protected void onPostExecute(Void go)
-		{
-			if(newLink)
-			{
-                NotificationManager notifiManage = (NotificationManager)getSystemService(Context.NOTIFICATION_SERVICE);
-                NotificationCompat.Builder buildNotification;
-                NotificationCompat.InboxStyle notificationStyle;
-                PendingIntent homePending;
-
-				Intent homeIntent = new Intent(getBaseContext(),MainActivity.class);
-				homeIntent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK);
-
-                TaskStackBuilder stackBuilder = TaskStackBuilder.create(getBaseContext());
-                stackBuilder.addParentStack(MainActivity.class);
-                stackBuilder.addNextIntent(homeIntent);
-
-                homePending = stackBuilder.getPendingIntent(0, PendingIntent.FLAG_UPDATE_CURRENT);
-
-                notificationStyle = new NotificationCompat.InboxStyle();
-                notificationStyle.setBigContentTitle("Events received");
-
-                ArrayList<String> listOfLinks = sql.newEventsList();
-
-                for(int index = 0; index < listOfLinks.size(); index++)
-                {
-                    notificationStyle.addLine(listOfLinks.get(index));
-                }
-
-                buildNotification = new NotificationCompat.Builder(getBaseContext());
-                buildNotification.setSmallIcon(R.drawable.ic_notification);
-                buildNotification.setContentTitle("JavNav");
-                buildNotification.setContentText("New Events!");
-                buildNotification.setContentIntent(homePending);
-                buildNotification.setAutoCancel(true);
-                buildNotification.setStyle(notificationStyle);
-
-				notifiManage.notify(0, buildNotification.build());
-			}
-
-            sql.closeDb();
-            sql.close();
-		}
-
-        private void fillTable()
-        {
-            Log.i("JavService","Filling the table with the links");
-
-            Document document;
-            Elements newsDiv;
-            Elements newsTitles;
-            Elements newsLinks;
-
-            try
-            {
-                document = Jsoup.connect("http://www.tamuk.edu/").get();
-                newsDiv = document.select("div#calendar");
-                newsTitles = newsDiv.select("a");
-                newsLinks = newsTitles.select("[href]");
-
-                for(int index = 0; index < newsLinks.size(); index++)
-                {
                     sql.insertInTable(newsLinks.get(index).attr("abs:href").toString(),newsTitles.get(index).text());
+                    newLink = true;
+                    Log.i("JavService","New link inserted");
                 }
             }
-            catch (Exception e)
-            {
-                Log.e("JavService","Error "+e);
-            }
         }
-
-        //Checks for any changes
-		private void check()
+        catch(Exception e)
         {
-            Document document;
-            Elements newsDiv;
-            Elements newsTitles;
-            Elements newsLinks;
-
-            Log.i("JavService","Checking for new links");
-
-            try
-            {
-                document = Jsoup.connect("http://www.tamuk.edu/").get();
-                newsDiv = document.select("div#calendar");
-                newsTitles = newsDiv.select("a");
-                newsLinks = newsTitles.select("[href]");
-
-                boolean exists = true;
-
-                ArrayList<String> allLinks = new ArrayList<String>();
-
-                //Removes any links in the database that are no longer on the webpage.
-                for(int index = 0; index < newsLinks.size(); index++)
-                {
-                    allLinks.add(newsLinks.get(index).attr("abs:href"));
-                }
-
-                sql.clearOld(allLinks);
-
-                //Inserts any links that are new.
-                for(int index = 0; index < newsLinks.size(); index++)
-                {
-                    if(newsLinks.get(index).toString().contains(".html"))
-                    {
-                        exists = sql.existInTable(newsLinks.get(index).attr("abs:href"));
-                    }
-
-                    if(exists)
-                    {
-                        Log.i("JavService","Exists in table");
-                    }
-
-                    else
-                    {
-                        sql.insertInTable(newsLinks.get(index).attr("abs:href").toString(),newsTitles.get(index).text());
-                        newLink = true;
-                        Log.i("JavService","New link inserted");
-                    }
-                }
-            }
-            catch(Exception e)
-            {
-                Log.e("JavService","Error "+e);
-            }
+            Log.e("JavService","Error "+e);
         }
-	}
+    }
 }

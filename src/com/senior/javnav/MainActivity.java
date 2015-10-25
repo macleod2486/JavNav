@@ -257,12 +257,7 @@ public class MainActivity extends ActionBarActivity
 	{
 		ConnectivityManager cm = (ConnectivityManager) getApplicationContext().getSystemService(Context.CONNECTIVITY_SERVICE);
 		NetworkInfo info = cm.getActiveNetworkInfo();
-		if(info !=null && info.isConnectedOrConnecting())
-		{
-			return true;
-		}
-		else
-			return false;
+		return info != null && info.isConnectedOrConnecting();
 	}
 		
 	/*
