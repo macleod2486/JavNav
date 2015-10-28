@@ -18,6 +18,7 @@
         android:layout_alignParentLeft="true"
         android:layout_alignParentTop="true"
         android:onClick="website"
+        android:background="@android:color/transparent"
         android:text="@string/back" />
 
     <Button
@@ -27,6 +28,7 @@
         android:onClick="website"
         android:layout_alignParentTop="true"
         android:layout_centerHorizontal="true"
+        android:background="@android:color/transparent"
         android:text="@string/refresh" />
 
     <Button
@@ -35,6 +37,7 @@
         android:layout_height="wrap_content"
         android:onClick="website"
         android:layout_alignParentRight="true"
+        android:background="@android:color/transparent"
         android:text="@string/forward" />
 
     <ProgressBar
