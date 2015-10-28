@@ -21,16 +21,6 @@
 */
 package com.senior.fragments;
 //Java imports
-import java.util.ArrayList;
-
-//JSoup imports
-import org.jsoup.Jsoup;
-import org.jsoup.nodes.Document;
-import org.jsoup.nodes.Element;
-import org.jsoup.select.Elements;
-
-//Project imports
-import com.senior.javnav.R;
 
 import android.os.AsyncTask;
 import android.os.Bundle;
@@ -45,6 +35,18 @@ import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.ProgressBar;
 import android.widget.TextView;
+
+import com.senior.javnav.R;
+
+import org.jsoup.Jsoup;
+import org.jsoup.nodes.Document;
+import org.jsoup.nodes.Element;
+import org.jsoup.select.Elements;
+
+import java.util.ArrayList;
+
+//JSoup imports
+//Project imports
 //Android imports
 
 public class ArticleContent extends Fragment

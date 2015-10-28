@@ -21,10 +21,6 @@
 */
 package com.senior.javnav;
 
-import org.jsoup.Jsoup;
-import org.jsoup.nodes.Document;
-import org.jsoup.select.Elements;
-
 import android.app.IntentService;
 import android.app.NotificationManager;
 import android.app.PendingIntent;
