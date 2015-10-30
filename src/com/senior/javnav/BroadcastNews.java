@@ -20,7 +20,7 @@
 *
 */
 package com.senior.javnav;
-//Android imports
+
 import android.app.AlarmManager;
 import android.app.PendingIntent;
 import android.content.BroadcastReceiver;
@@ -37,18 +37,20 @@ public class BroadcastNews extends BroadcastReceiver
 	public void onReceive(Context arg0, Intent arg1) 
 	{
 		SharedPreferences shared = PreferenceManager.getDefaultSharedPreferences(arg0.getApplicationContext());
-		
+
+		Log.i("BroadcastNews", "Broadcast received");
+
 		if(arg1.toString().contains(Intent.ACTION_BOOT_COMPLETED) && shared.getBoolean("notifi", false))
 		{
-			//one second * 60 seconds in a minute * 5
-			long fiveMinutes = 1000*60*5;
+			//one second * 60 seconds in a minute * X
+			long interval = 1000*60*5;
 			
 			Intent service = new Intent(arg0, BroadcastNews.class);
 			PendingIntent pendingService = PendingIntent.getBroadcast(arg0, 0, service, 0);
 			AlarmManager newsUpdate = (AlarmManager)arg0.getSystemService(arg0.ALARM_SERVICE);
-			
-			//Check for the update every 5 minutes
-			newsUpdate.setRepeating(AlarmManager.RTC, System.currentTimeMillis(), fiveMinutes, pendingService);
+
+			//Check for the update based on interval
+			newsUpdate.setInexactRepeating(AlarmManager.RTC, System.currentTimeMillis(), interval, pendingService);
 			
 			SharedPreferences.Editor edit = shared.edit();
 			edit.putBoolean("notifiCancelled", false);

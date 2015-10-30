@@ -30,13 +30,24 @@ import android.support.v4.app.NotificationCompat;
 import android.support.v4.app.TaskStackBuilder;
 import android.util.Log;
 
+import org.jsoup.Jsoup;
+import org.jsoup.nodes.Document;
+import org.jsoup.select.Elements;
+
 import java.util.ArrayList;
 
 public class NewsUpdate extends IntentService 
 {
-    JavSQL sql = new JavSQL(getBaseContext(), "JavSql", null, 1);
+    JavSQL sql;
 
     boolean newLink = false;
+
+    public void onCreate()
+    {
+        super.onCreate();
+
+        sql = new JavSQL(this.getApplicationContext(), "JavSql", null, 1);
+    }
 
 	public NewsUpdate()
 	{
@@ -77,7 +88,7 @@ public class NewsUpdate extends IntentService
             NotificationCompat.InboxStyle notificationStyle;
             PendingIntent homePending;
 
-            Intent homeIntent = new Intent(getBaseContext(),MainActivity.class);
+            Intent homeIntent = new Intent(this, MainActivity.class);
             homeIntent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK);
 
             TaskStackBuilder stackBuilder = TaskStackBuilder.create(getBaseContext());

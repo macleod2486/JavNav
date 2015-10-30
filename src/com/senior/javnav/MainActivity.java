@@ -217,8 +217,8 @@ public class MainActivity extends ActionBarActivity
 		SharedPreferences shared = PreferenceManager.getDefaultSharedPreferences(this);
 		if(shared.getBoolean("notif", true) && shared.getBoolean("notifiCancelled", true))
 		{
-			//one second * 60 seconds in a minute * 5
-			int fiveMinutes = 1000*60*5;
+			//one second * 60 seconds in a minute
+			int interval = 1000*60*5;
 			
 			//Start the alarm manager service
 			SharedPreferences.Editor edit = shared.edit();
@@ -226,8 +226,8 @@ public class MainActivity extends ActionBarActivity
 			PendingIntent pendingService = PendingIntent.getBroadcast(getApplicationContext(),0,service,0);
 			AlarmManager newsUpdate = (AlarmManager)getSystemService(ALARM_SERVICE);
 			
-			//Check for the update every 5 minutes
-			newsUpdate.setRepeating(AlarmManager.RTC, System.currentTimeMillis(), fiveMinutes, pendingService);
+			//Check for the update
+			newsUpdate.setInexactRepeating(AlarmManager.RTC, System.currentTimeMillis(), interval, pendingService);
 			edit.putBoolean("notifiCancelled", false).commit();
 			Log.i("Main","Alarm set "+shared.getBoolean("notifiCancelled", true));
 		}
