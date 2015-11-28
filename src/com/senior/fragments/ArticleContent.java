@@ -20,7 +20,6 @@
 *
 */
 package com.senior.fragments;
-//Java imports
 
 import android.os.AsyncTask;
 import android.os.Bundle;
@@ -44,10 +43,6 @@ import org.jsoup.nodes.Element;
 import org.jsoup.select.Elements;
 
 import java.util.ArrayList;
-
-//JSoup imports
-//Project imports
-//Android imports
 
 public class ArticleContent extends Fragment
 {

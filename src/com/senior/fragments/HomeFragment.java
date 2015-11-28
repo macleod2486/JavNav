@@ -21,12 +21,14 @@
 */
 package com.senior.fragments;
 
+import android.content.SharedPreferences;
 import android.graphics.Color;
 import android.graphics.Paint;
 import android.graphics.drawable.ShapeDrawable;
 import android.graphics.drawable.shapes.RectShape;
 import android.os.AsyncTask;
 import android.os.Bundle;
+import android.preference.PreferenceManager;
 import android.support.v4.app.ListFragment;
 import android.text.SpannableString;
 import android.text.style.UnderlineSpan;
@@ -79,7 +81,7 @@ public class HomeFragment extends ListFragment
 	{
 		Log.i("HomeFrag","View Created");
 		
-		view=inflater.inflate(R.layout.home_fragment,container,false);
+		view = inflater.inflate(R.layout.home_fragment,container,false);
 		
 		titletext = (TextView)view.findViewById(R.id.calenderevents);
 		
@@ -89,17 +91,15 @@ public class HomeFragment extends ListFragment
 		
 		titletext.setText(NewTitle);
 		
-		mListView=(ListView)view.findViewById(android.R.id.list);
+		mListView = (ListView)view.findViewById(android.R.id.list);
 		
 		reloadButton = (Button)view.findViewById(R.id.refresh);
-		reloadButton.setOnClickListener(new OnClickListener()
-		{
+		reloadButton.setOnClickListener(new OnClickListener() {
 			@Override
-			public void onClick(View arg0) 
-			{
+			public void onClick(View arg0) {
 				getArticles();
 			}
-			
+
 		});
 		
 		progress = (ProgressBar)view.findViewById(R.id.progress);
@@ -114,10 +114,11 @@ public class HomeFragment extends ListFragment
 
         sql = new JavSQL(getActivity().getBaseContext(), "JavSql", null, 1);
 
-        //Checking to see if this is a new installation
-        if(sql.getSaved() == 0)
+		SharedPreferences shared = PreferenceManager.getDefaultSharedPreferences(getActivity());
+        //Updates the database manually
+        if(sql.getSaved() == 0 || shared.getBoolean("notifiCancelled", true))
         {
-            Log.i("Home","Database empty, gathering links");
+            Log.i("Home", "Manually updating database");
             new getDivs().execute();
         }
 
@@ -168,7 +169,7 @@ public class HomeFragment extends ListFragment
                 }
             });
 
-        }
+		}
 
         sql.closeDb();
         sql.close();
@@ -182,13 +183,13 @@ public class HomeFragment extends ListFragment
 		{
             sql = new JavSQL(getActivity().getBaseContext(), "JavSql", null, 1);
 
-			eventtitles= new ArrayList<String>();
+			eventtitles = new ArrayList<String>();
 
 			try
 			{
 				Document document = Jsoup.connect("http://www.tamuk.edu/").get();
-				Elements calendar=document.select("div#calendar");
-				Elements titles=calendar.select("a");
+				Elements calendar = document.select("div#calendar");
+				Elements titles = calendar.select("a");
 				Elements links = titles.select("[href]");
 
 				for(int index = 0; index < titles.size()&&index < links.size(); index++)
