@@ -4,15 +4,14 @@ buildscript {
         mavenCentral()
     }
     dependencies {
-        classpath 'com.android.tools.build:gradle:1.0.0'
+        classpath 'com.android.tools.build:gradle:2.1.2'
     }
 
 }
 
-
 //here we tell it to get dependencies from maven central (search.maven.org)
 repositories {
-	mavenCentral()
+    mavenCentral()
 }
 
 //this is an android app
@@ -29,7 +28,7 @@ dependencies {
 //define some config four our apps (minimum android version, tools version, etc ...)
 android {
     compileSdkVersion 23
-    buildToolsVersion '23.0.0'
+    buildToolsVersion '24.0.1'
 
     sourceSets {
         main {
