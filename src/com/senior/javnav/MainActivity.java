@@ -41,6 +41,8 @@ import android.support.v7.app.ActionBarActivity;
 import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
+import android.view.ViewGroup;
+import android.view.WindowManager;
 
 import com.senior.fragments.GoogleFragment;
 import com.senior.fragments.HomeFragment;
@@ -149,6 +151,9 @@ public class MainActivity extends ActionBarActivity
 		blackTab.setText("Blackboard");
 		blackTab.setTabListener(new TabListener(blackboard));
 		action.addTab(blackTab);
+
+		//Sets app to use secure window.
+		getWindow().setFlags(WindowManager.LayoutParams.FLAG_SECURE, WindowManager.LayoutParams.FLAG_SECURE);
 		
 		//Sets the layout to the activity main layout
 		setContentView(R.layout.activity_main);
