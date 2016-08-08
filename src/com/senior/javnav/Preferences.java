@@ -32,6 +32,7 @@ import android.os.Bundle;
 import android.preference.PreferenceActivity;
 import android.preference.PreferenceManager;
 import android.util.Log;
+import android.view.WindowManager;
 
 public class Preferences extends PreferenceActivity
 {
@@ -40,6 +41,9 @@ public class Preferences extends PreferenceActivity
 	@Override
 	public void onCreate(Bundle savedInstanceState)
 	{
+		//Sets app to use secure window.
+		getWindow().setFlags(WindowManager.LayoutParams.FLAG_SECURE, WindowManager.LayoutParams.FLAG_SECURE);
+
 		super.onCreate(savedInstanceState);
 		addPreferencesFromResource(R.xml.settings);
 		
