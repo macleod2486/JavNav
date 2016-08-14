@@ -3,7 +3,7 @@
 *   JavNav 
 *    a simple application for general use of the Texas A&M-Kingsville Campus. 
 *    
-*    Copyright (C) 2014  Manuel Gonzales Jr.
+*    Copyright (C) 2016  Manuel Gonzales Jr.
 *
 *    This program is free software: you can redistribute it and/or modify
 *    it under the terms of the GNU General Public License as published by
@@ -24,6 +24,7 @@ package com.senior.fragments;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.net.Uri;
+import android.os.AsyncTask;
 import android.os.Bundle;
 import android.preference.PreferenceManager;
 import android.support.v4.app.Fragment;
@@ -36,6 +37,7 @@ import android.widget.AdapterView;
 import android.widget.AdapterView.OnItemSelectedListener;
 import android.widget.ArrayAdapter;
 import android.widget.Spinner;
+import android.widget.Toast;
 
 import com.google.android.gms.maps.CameraUpdateFactory;
 import com.google.android.gms.maps.GoogleMap;
@@ -46,9 +48,18 @@ import com.google.android.gms.maps.model.Marker;
 import com.google.android.gms.maps.model.MarkerOptions;
 import com.senior.javnav.R;
 
+import org.w3c.dom.Document;
+import org.w3c.dom.Node;
+import org.w3c.dom.NodeList;
+
+import java.io.InputStream;
+import java.net.URL;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collections;
+
+import javax.xml.parsers.DocumentBuilder;
+import javax.xml.parsers.DocumentBuilderFactory;
 
 public class GoogleFragment extends Fragment 
 {
@@ -58,12 +69,16 @@ public class GoogleFragment extends Fragment
 	public LatLng TAMUKLoc= new LatLng(27.524285,-97.882433);
 	
 	private Spinner buildingList;
+
+	private getBuildings buildingGetter;
 	
 	private ArrayList<String> buildingNames = new ArrayList<String>();
 	private ArrayList<String> buildingCoord = new ArrayList<String>();
 	
 	private int currentMode;
 	private int navigate;
+
+	private boolean getBooleanCompleted = false;
 	
 	@Override
 	public View onCreateView(LayoutInflater inflate, ViewGroup container, Bundle savedInstanceState)
@@ -72,22 +87,37 @@ public class GoogleFragment extends Fragment
 		
 		map = inflate.inflate(R.layout.google_fragment, container, false);
 		buildingList = (Spinner)map.findViewById(R.id.buildings);
+
+		buildingGetter = new getBuildings();
 		
 		buildingNames.clear();
 		buildingCoord.clear();
 		
 		//Adds and organizes the buildings alphabetically
-		buildingNames.addAll(Arrays.asList(getResources().getStringArray(R.array.listOfBuildings)));
-		Collections.sort(buildingNames,String.CASE_INSENSITIVE_ORDER);
-		
-		buildingCoord.addAll(Arrays.asList(getResources().getStringArray(R.array.listOfBuildings)));
-		Collections.sort(buildingCoord,String.CASE_INSENSITIVE_ORDER);
-		
-		for(int index = 0; index < buildingNames.size(); index++)
+		try
 		{
-			buildingNames.set(index, buildingNames.get(index).substring(0, buildingNames.get(index).indexOf(',')));
+			buildingNames.addAll(buildingGetter.execute().get());
+			Collections.sort(buildingNames,String.CASE_INSENSITIVE_ORDER);
+
+			buildingCoord.addAll(buildingNames);
+			Collections.sort(buildingCoord,String.CASE_INSENSITIVE_ORDER);
+
+			for(int index = 0; index < buildingNames.size(); index++)
+			{
+				buildingNames.set(index, buildingNames.get(index).substring(0, buildingNames.get(index).indexOf(',')));
+			}
 		}
-		
+		catch(Exception e)
+		{
+			e.printStackTrace();
+		}
+
+		if(!getBooleanCompleted)
+		{
+			Toast error = Toast.makeText(getActivity().getApplicationContext(),"Error in acquiring building list, please try again", Toast.LENGTH_SHORT);
+			error.show();
+		}
+
 		buildingNames.add(0,"Select one");
 		
 		ArrayAdapter<String> array = new ArrayAdapter<String>(getActivity(),android.R.layout.simple_dropdown_item_1line,buildingNames);
@@ -194,7 +224,7 @@ public class GoogleFragment extends Fragment
 	}
 	
 	//Sets up the map when loaded
-	public void setUpMap()
+	private void setUpMap()
 	{
 		Log.i("Google","oncreate called!");
 		
@@ -224,5 +254,45 @@ public class GoogleFragment extends Fragment
 		}
 		
 	}
-	
+
+	private class getBuildings extends AsyncTask<String, Void, ArrayList<String>>
+	{
+		ArrayList<String> buildingArray= new ArrayList<String>();
+
+		protected ArrayList<String> doInBackground(String...params)
+		{
+			String buildingList = "https://gist.githubusercontent.com/macleod2486/4954b4dac4e2e32bfac856aed116e32f/raw/TAMUKBuildings.xml";
+
+			try
+			{
+				DocumentBuilderFactory dbf = DocumentBuilderFactory.newInstance();
+				DocumentBuilder db = dbf.newDocumentBuilder();
+				URL url = new URL(buildingList);
+				InputStream inputStream = url.openStream();
+				Document document = db.parse(inputStream);
+				inputStream.close();
+
+				NodeList buildings = document.getElementsByTagName("building");
+				Node building = null;
+
+				for(int index = 0; index < buildings.getLength(); index++)
+				{
+					building = buildings.item(index);
+					buildingArray.add(building.getTextContent());
+
+					Log.i("Google","Building "+building.getTextContent());
+				}
+
+				getBooleanCompleted = true;
+			}
+			catch(Exception e)
+			{
+				e.printStackTrace();
+				getBooleanCompleted = false;
+			}
+
+			return buildingArray;
+		}
+
+	}
 }
