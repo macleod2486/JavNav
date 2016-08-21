@@ -94,7 +94,6 @@ public class MainActivity extends ActionBarActivity
 				finish();
 			}
 		}
-		
 	}
 	
 	/*
@@ -105,10 +104,8 @@ public class MainActivity extends ActionBarActivity
 	protected void onCreate(Bundle savedInstanceState) 
 	{	
 		super.onCreate(savedInstanceState);
-		//Add new customizable features
-		Log.i("Main","Main activity called!");
 		
-		//Checks to see if the device is online and alerts user if not
+		//Checks to see if the device has internet access and alerts user if not
 		if(!online())
 		{
 			AlertDialog.Builder connectBuild = new AlertDialog.Builder(this);
@@ -119,8 +116,6 @@ public class MainActivity extends ActionBarActivity
 			AlertDialog connect = connectBuild.create();
 			connect.show();
 		}
-		
-		Log.i("Main","Maintab entered");
 		
 		//Seeds initial webpages.
 		bluegold.loadUrl(bluegoldurl, true);
@@ -157,18 +152,15 @@ public class MainActivity extends ActionBarActivity
 		
 		//Sets the layout to the activity main layout
 		setContentView(R.layout.activity_main);
-		
 	}
 	
 	public void onStart()
 	{
-		Log.i("Main","On start called");
+		Log.i("Main","On start");
 		super.onStart();
 		
 		ActionBar action = getSupportActionBar();
 		SharedPreferences shared = PreferenceManager.getDefaultSharedPreferences(this);
-		
-		Log.i("Main","Current value "+shared.getBoolean("extra", false));
 		
 		//When the custom tab selection is toggled it makes the necessary changes
 		if(shared.getBoolean("extra", false))
@@ -218,22 +210,24 @@ public class MainActivity extends ActionBarActivity
 	@Override
 	protected void onStop()
 	{
-		//Start the service in a timely interval
+		boolean alarmActive = (PendingIntent.getBroadcast(getApplicationContext(), 0,
+				new Intent(getApplicationContext(),BroadcastNews.class),
+				PendingIntent.FLAG_NO_CREATE) != null);
+
+		//Start the service in a timely interval if not initialized
 		SharedPreferences shared = PreferenceManager.getDefaultSharedPreferences(this);
-		if(shared.getBoolean("notif", true) && shared.getBoolean("notifiCancelled", true))
+		if(shared.getBoolean("notifi", true) && !alarmActive)
 		{
-			//one second * 60 seconds in a minute
+			//one second * 60 seconds in a minute * minutes
 			int interval = 1000*60*5;
 			
 			//Start the alarm manager service
-			SharedPreferences.Editor edit = shared.edit();
 			Intent service = new Intent(getApplicationContext(),BroadcastNews.class);
 			PendingIntent pendingService = PendingIntent.getBroadcast(getApplicationContext(),0,service,0);
 			AlarmManager newsUpdate = (AlarmManager)getSystemService(ALARM_SERVICE);
 			
-			//Check for the update
+			//Set alarm to check for news
 			newsUpdate.setInexactRepeating(AlarmManager.RTC, System.currentTimeMillis(), interval, pendingService);
-			edit.putBoolean("notifiCancelled", false).commit();
 			Log.i("Main","Alarm set "+shared.getBoolean("notifiCancelled", true));
 		}
 		
@@ -276,13 +270,11 @@ public class MainActivity extends ActionBarActivity
 	   	 
 		public ListTabListener(ListFragment fragment) 
 		{
-			Log.i("Tabs","Fragment being reassigned");
 			this.fragment = fragment;
 		}
 
 		public void onTabReselected(Tab tab, FragmentTransaction ft) 
 		{
-			Log.i("Tabs","Reselected");
 			
 		}
 
@@ -296,13 +288,12 @@ public class MainActivity extends ActionBarActivity
 			}
 			catch(Exception e)
 			{
-				Log.i("Main","Error in replacing fragment"+e);
+				Log.i("Main","Error in replacing fragment "+e);
 			}
 		}
 
 		public void onTabUnselected(Tab tab, FragmentTransaction ft) 
 		{
-			
 			Log.i("Tabs","On remove called to "+fragment.toString());
 			
 			try
@@ -313,16 +304,14 @@ public class MainActivity extends ActionBarActivity
 			}
 			catch(Exception e)
 			{
-				Log.i("Main","Error in replacing frag"+e);
+				Log.i("Main","Error in replacing frag "+e);
 			}
-			
 		}
 	}
 	
 	//Class for the fragments to be attached to the action bar
     protected class TabListener extends FragmentActivity implements ActionBar.TabListener
     {
-    	
    	 	public Fragment fragment;
    	 
 		public TabListener(Fragment fragment) 
@@ -334,8 +323,6 @@ public class MainActivity extends ActionBarActivity
 		public void onTabReselected(Tab tab, FragmentTransaction ft) 
 		{
 			
-			Log.i("Tabs","Reselected");
-			
 		}
 
 		public void onTabSelected(Tab tab, FragmentTransaction ft) 
@@ -346,13 +333,13 @@ public class MainActivity extends ActionBarActivity
 			}
 			catch(Exception e)
 			{
-				Log.i("Main","Error in replacing fragment"+e);
+				Log.i("Main","Error in replacing fragment "+e);
 			}
 		}
 
 		public void onTabUnselected(Tab tab, FragmentTransaction ft) 
 		{
-			Log.i("Tabs","On remove called to "+fragment.toString());
+
 		}
 	}
 }

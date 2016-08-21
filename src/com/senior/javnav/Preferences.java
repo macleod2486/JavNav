@@ -53,37 +53,38 @@ public class Preferences extends PreferenceActivity
 	public void onStop()
 	{
 		Log.i("Preferences","On stop called.");
-		
-		//Start the service in a timely interval
+
+		boolean alarmActive = (PendingIntent.getBroadcast(getApplicationContext(), 0,
+				new Intent(getApplicationContext(),BroadcastNews.class),
+				PendingIntent.FLAG_NO_CREATE) != null);
+
+		//Start the service if enabled and it hasn't started
 		SharedPreferences shared = PreferenceManager.getDefaultSharedPreferences(this);
-		if(shared.getBoolean("notif", true)&&shared.getBoolean("notifiCancelled", true))
+		if(shared.getBoolean("notifi", true) && !alarmActive)
 		{
 			//one second * 60 seconds in a minute * 5
 			int fiveMinutes = 1000*60*5;
 			
 			//Start the alarm manager service
-			SharedPreferences.Editor edit = shared.edit();
 			Intent service = new Intent(getApplicationContext(),BroadcastNews.class);
 			PendingIntent pendingService = PendingIntent.getBroadcast(getApplicationContext(),0,service,0);
 			AlarmManager newsUpdate = (AlarmManager)getSystemService(ALARM_SERVICE);
 			
 			//Check for the update every 5 minutes
 			newsUpdate.setRepeating(AlarmManager.RTC, System.currentTimeMillis(), fiveMinutes, pendingService);
-			edit.putBoolean("notifiCancelled", false).commit();
-			Log.i("Main","Alarm set "+shared.getBoolean("notifiCancelled", true));
+			Log.i("Preferences","Service started");
 		}
 		
-		//If the service is set to be cancelled then it will cancel the service
-		if(!shared.getBoolean("notif", true)&&!shared.getBoolean("notifiCancelled", false))
+		//Cancel the service if not enabled anymore
+		if(!shared.getBoolean("notifi", true) && alarmActive)
 		{
-			SharedPreferences.Editor edit = shared.edit();
 			//Cancel the alarm manager service
-			Intent service = new Intent(getBaseContext(),BroadcastNews.class);
-			PendingIntent pendingService = PendingIntent.getBroadcast(getBaseContext(),0,service,0);
+			Intent service = new Intent(getApplicationContext(),BroadcastNews.class);
+			PendingIntent pendingService = PendingIntent.getBroadcast(getApplicationContext(),0,service,0);
 			AlarmManager newsUpdate = (AlarmManager)getSystemService(ALARM_SERVICE);
 			newsUpdate.cancel(pendingService);
-			edit.putBoolean("notifiCancelled", true).commit();
-			Log.i("Preferences","Service cancelled "+shared.getBoolean("notifiCancelled", false));	
+			pendingService.cancel();
+			Log.i("Preferences","Service cancelled");
 		}
 		
 		super.onStop();
