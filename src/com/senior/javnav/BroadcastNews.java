@@ -42,7 +42,7 @@ public class BroadcastNews extends BroadcastReceiver
 
 		if(arg1.toString().contains(Intent.ACTION_BOOT_COMPLETED) && shared.getBoolean("notifi", false))
 		{
-			//one second * 60 seconds in a minute * X
+			//one second * 60 seconds in a minute * minutes
 			long interval = 1000*60*5;
 			
 			Intent service = new Intent(arg0, BroadcastNews.class);
@@ -51,10 +51,6 @@ public class BroadcastNews extends BroadcastReceiver
 
 			//Check for the update based on interval
 			newsUpdate.setInexactRepeating(AlarmManager.RTC, System.currentTimeMillis(), interval, pendingService);
-			
-			SharedPreferences.Editor edit = shared.edit();
-			edit.putBoolean("notifiCancelled", false);
-			edit.commit();
 			
 			Log.i("JavBroadcast","JavService started");
 		}
