@@ -31,7 +31,15 @@
             android:title="TAMUK News"
             android:key="notifi"
             android:defaultValue="true"
-         />
+        />
+    </PreferenceCategory>
+
+    <PreferenceCategory android:title="Privacy">
+        <CheckBoxPreference
+            android:title="Security Screen"
+            android:key="secScreen"
+            android:defaultValue="true"
+        />
     </PreferenceCategory>
     
 </PreferenceScreen>

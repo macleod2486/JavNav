@@ -41,12 +41,8 @@ public class Preferences extends PreferenceActivity
 	@Override
 	public void onCreate(Bundle savedInstanceState)
 	{
-		//Sets app to use secure window.
-		getWindow().setFlags(WindowManager.LayoutParams.FLAG_SECURE, WindowManager.LayoutParams.FLAG_SECURE);
-
 		super.onCreate(savedInstanceState);
 		addPreferencesFromResource(R.xml.settings);
-		
 	}
 	
 	@Override
@@ -85,6 +81,15 @@ public class Preferences extends PreferenceActivity
 			newsUpdate.cancel(pendingService);
 			pendingService.cancel();
 			Log.i("Preferences","Service cancelled");
+		}
+
+		if(shared.getBoolean("secScreen",false))
+		{
+			getWindow().setFlags(WindowManager.LayoutParams.FLAG_SECURE, WindowManager.LayoutParams.FLAG_SECURE);
+		}
+		else
+		{
+			getWindow().clearFlags(WindowManager.LayoutParams.FLAG_SECURE);
 		}
 		
 		super.onStop();

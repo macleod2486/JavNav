@@ -147,9 +147,6 @@ public class MainActivity extends ActionBarActivity
 		blackTab.setTabListener(new TabListener(blackboard));
 		action.addTab(blackTab);
 
-		//Sets app to use secure window.
-		getWindow().setFlags(WindowManager.LayoutParams.FLAG_SECURE, WindowManager.LayoutParams.FLAG_SECURE);
-		
 		//Sets the layout to the activity main layout
 		setContentView(R.layout.activity_main);
 	}
@@ -161,7 +158,16 @@ public class MainActivity extends ActionBarActivity
 		
 		ActionBar action = getSupportActionBar();
 		SharedPreferences shared = PreferenceManager.getDefaultSharedPreferences(this);
-		
+
+		if(shared.getBoolean("secScreen",false))
+		{
+			getWindow().setFlags(WindowManager.LayoutParams.FLAG_SECURE, WindowManager.LayoutParams.FLAG_SECURE);
+		}
+		else
+		{
+			getWindow().clearFlags(WindowManager.LayoutParams.FLAG_SECURE);
+		}
+
 		//When the custom tab selection is toggled it makes the necessary changes
 		if(shared.getBoolean("extra", false))
 		{
