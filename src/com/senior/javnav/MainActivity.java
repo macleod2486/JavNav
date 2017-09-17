@@ -44,9 +44,11 @@ import android.view.MenuItem;
 import android.view.ViewGroup;
 import android.view.WindowManager;
 
+import com.crashlytics.android.Crashlytics;
 import com.senior.fragments.GoogleFragment;
 import com.senior.fragments.HomeFragment;
 import com.senior.fragments.WebViewFrag;
+import io.fabric.sdk.android.Fabric;
 
 public class MainActivity extends ActionBarActivity
 {		
@@ -104,6 +106,7 @@ public class MainActivity extends ActionBarActivity
 	protected void onCreate(Bundle savedInstanceState) 
 	{	
 		super.onCreate(savedInstanceState);
+		Fabric.with(this, new Crashlytics());
 		
 		//Checks to see if the device has internet access and alerts user if not
 		if(!online())
