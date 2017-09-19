@@ -21,8 +21,12 @@
 */
 package com.senior.fragments;
 
+import android.app.AlertDialog;
+import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.SharedPreferences;
+import android.content.pm.ApplicationInfo;
+import android.content.pm.PackageManager;
 import android.net.Uri;
 import android.os.AsyncTask;
 import android.os.Bundle;
@@ -55,7 +59,6 @@ import org.w3c.dom.NodeList;
 import java.io.InputStream;
 import java.net.URL;
 import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.Collections;
 
 import javax.xml.parsers.DocumentBuilder;
@@ -240,17 +243,31 @@ public class GoogleFragment extends Fragment
 		if(TAMUK!=null)
 		{
 			TAMUK=((SupportMapFragment)getFragmentManager().findFragmentById(R.id.google_map)).getMap();
-			
-			//Sets the options for the user to show their current location
-			TAMUK.setMyLocationEnabled(true);
-			
-			TAMUK.animateCamera(CameraUpdateFactory.newLatLngZoom(TAMUKLoc, 16));
-			
-			//Sets the camera view as determined by the users settings
-			this.currentMode = Integer.parseInt(mapSel);
-			TAMUK.setMapType(currentMode);
-			
-			Log.i("Google","Map setting set");
+
+			if(isGoogleMapsInstalled())
+			{
+				//Sets the options for the user to show their current location
+
+				TAMUK.setMyLocationEnabled(true);
+
+				TAMUK.animateCamera(CameraUpdateFactory.newLatLngZoom(TAMUKLoc, 16));
+
+				//Sets the camera view as determined by the users settings
+				this.currentMode = Integer.parseInt(mapSel);
+				TAMUK.setMapType(currentMode);
+
+				Log.i("Google", "Map setting set");
+			}
+
+			else
+			{
+				AlertDialog.Builder builder = new AlertDialog.Builder(getActivity());
+				builder.setMessage("Please install Google Maps");
+				builder.setCancelable(false);
+				builder.setPositiveButton("Install", getGoogleMapsListener());
+				AlertDialog dialog = builder.create();
+				dialog.show();
+			}
 		}
 		
 	}
@@ -294,5 +311,31 @@ public class GoogleFragment extends Fragment
 			return buildingArray;
 		}
 
+	}
+
+	private boolean isGoogleMapsInstalled()
+	{
+		try
+		{
+			ApplicationInfo info = getActivity().getPackageManager().getApplicationInfo("com.google.android.apps.maps", 0 );
+			return true;
+		}
+		catch(PackageManager.NameNotFoundException e)
+		{
+			return false;
+		}
+	}
+
+	private DialogInterface.OnClickListener getGoogleMapsListener()
+	{
+		return new DialogInterface.OnClickListener()
+		{
+			@Override
+			public void onClick(DialogInterface dialog, int which)
+			{
+				Intent intent = new Intent(Intent.ACTION_VIEW, Uri.parse("market://details?id=com.google.android.apps.maps"));
+				startActivity(intent);
+			}
+		};
 	}
 }
