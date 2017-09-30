@@ -41,7 +41,6 @@ import android.support.v7.app.ActionBarActivity;
 import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
-import android.view.ViewGroup;
 import android.view.WindowManager;
 
 import com.crashlytics.android.Crashlytics;
@@ -350,5 +349,11 @@ public class MainActivity extends ActionBarActivity
 		{
 
 		}
+	}
+
+	@Override
+	public void onRequestPermissionsResult(int requestCode, String permissions[], int[] grantResults)
+	{
+
 	}
 }

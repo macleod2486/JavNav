@@ -21,6 +21,7 @@
 */
 package com.senior.fragments;
 
+import android.Manifest;
 import android.app.AlertDialog;
 import android.content.DialogInterface;
 import android.content.Intent;
@@ -29,6 +30,7 @@ import android.content.pm.ApplicationInfo;
 import android.content.pm.PackageManager;
 import android.net.Uri;
 import android.os.AsyncTask;
+import android.os.Build;
 import android.os.Bundle;
 import android.preference.PreferenceManager;
 import android.support.v4.app.Fragment;
@@ -201,6 +203,19 @@ public class GoogleFragment extends Fragment
 		{
 			this.currentMode = Integer.parseInt(mapSel);
 			TAMUK.setMapType(currentMode);
+		}
+
+		if(Build.VERSION.SDK_INT >= 23)
+		{
+			int coarseLocation = getActivity().checkSelfPermission(Manifest.permission.ACCESS_COARSE_LOCATION);
+			int fineLocation = getActivity().checkSelfPermission(Manifest.permission.ACCESS_FINE_LOCATION);
+			int granted = PackageManager.PERMISSION_GRANTED;
+
+			if (coarseLocation != granted && fineLocation != granted)
+			{
+				String[] permissions = new String[]{Manifest.permission.ACCESS_FINE_LOCATION, Manifest.permission.ACCESS_COARSE_LOCATION};
+				getActivity().requestPermissions(permissions, 01);
+			}
 		}
 	}
 	

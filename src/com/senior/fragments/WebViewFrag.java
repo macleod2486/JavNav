@@ -22,9 +22,11 @@
 package com.senior.fragments;
 
 
+import android.Manifest;
 import android.app.DownloadManager;
 import android.content.Context;
 import android.content.Intent;
+import android.content.pm.PackageManager;
 import android.graphics.Bitmap;
 import android.net.Uri;
 import android.os.Build;
@@ -41,6 +43,7 @@ import android.webkit.WebView;
 import android.webkit.WebViewClient;
 import android.widget.Button;
 import android.widget.ProgressBar;
+import android.widget.Toast;
 
 import com.senior.javnav.R;
 
@@ -146,6 +149,28 @@ public class WebViewFrag extends Fragment
 		this.restart = restart;
 		Log.i("WebViewFrag", this.url);
 	}
+
+	@Override
+	public void onStart()
+	{
+		super.onStart();
+
+		if(Build.VERSION.SDK_INT >= 23)
+		{
+			int writeExternal = getActivity().checkSelfPermission(Manifest.permission.WRITE_EXTERNAL_STORAGE);
+			int granted = PackageManager.PERMISSION_GRANTED;
+
+			if (writeExternal != granted)
+			{
+				String[] permissions = new String[]{Manifest.permission.WRITE_EXTERNAL_STORAGE};
+				getActivity().requestPermissions(permissions, 00);
+			}
+			else
+			{
+				Log.i("MainActivity", "Write permissions granted");
+			}
+		}
+	}
 	
 	@Override
 	public void onStop()
@@ -216,28 +241,48 @@ public class WebViewFrag extends Fragment
             {
                 if(url.endsWith(businessDocs[index]))
                 {
-                    isWebPage = false;
+					isWebPage = false;
+					boolean permissionGranted = false;
 
-                    Uri source = Uri.parse(url);
-                    String fileName = url.split("/")[url.split("/").length-1];
+					if(Build.VERSION.SDK_INT >= 23)
+					{
+						if(getActivity().getBaseContext().checkSelfPermission(Manifest.permission.WRITE_EXTERNAL_STORAGE) == PackageManager.PERMISSION_GRANTED)
+						{
+							permissionGranted = true;
+						}
+						else
+						{
+							Toast.makeText(getActivity().getBaseContext(), "Please enable write permissions to save file", Toast.LENGTH_SHORT).show();
+						}
+					}
+					else
+					{
+						permissionGranted = true;
+					}
 
-                    DownloadManager.Request request = new DownloadManager.Request(source);
+					if(permissionGranted)
+					{
+						Uri source = Uri.parse(url);
+						String fileName = url.split("/")[url.split("/").length - 1];
 
-                    request.setDescription("Downloading");
-                    request.setTitle(fileName);
+						DownloadManager.Request request = new DownloadManager.Request(source);
 
-                    if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.HONEYCOMB)
-                    {
-                        request.allowScanningByMediaScanner();
-                        request.setNotificationVisibility(DownloadManager.Request.VISIBILITY_VISIBLE_NOTIFY_COMPLETED);
-                    }
+						request.setDescription("Downloading");
+						request.setTitle(fileName);
 
-                    // Save the file in the "Downloads" folder of SDCARD
-                    request.setDestinationInExternalPublicDir(Environment.DIRECTORY_DOWNLOADS, fileName);
+						if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.HONEYCOMB)
+						{
+							request.allowScanningByMediaScanner();
+							request.setNotificationVisibility(DownloadManager.Request.VISIBILITY_VISIBLE_NOTIFY_COMPLETED);
+						}
 
-                    // get download service and enqueue file
-                    DownloadManager manager = (DownloadManager) getActivity().getSystemService(Context.DOWNLOAD_SERVICE);
-                    manager.enqueue(request);
+						// Save the file in the "Downloads" folder of SDCARD
+						request.setDestinationInExternalPublicDir(Environment.DIRECTORY_DOWNLOADS, fileName);
+
+						// get download service and enqueue file
+						DownloadManager manager = (DownloadManager) getActivity().getSystemService(Context.DOWNLOAD_SERVICE);
+						manager.enqueue(request);
+					}
                 }
             }
 
