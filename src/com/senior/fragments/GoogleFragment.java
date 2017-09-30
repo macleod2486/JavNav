@@ -165,9 +165,10 @@ public class GoogleFragment extends Fragment
 							if(navigate == 2)
 							{
 								navigate = 0;
-								String url = "http://maps.google.com/maps?f=d&daddr="+lat+","+lon+"&dirflg=d";
-								Intent intent = new Intent(android.content.Intent.ACTION_VIEW, Uri.parse(url)); 
-								intent.setClassName("com.google.android.apps.maps", "com.google.android.maps.MapsActivity");
+
+								Uri googleURI = Uri.parse("google.navigation:q="+lat+","+lon+"&mode=d");
+								Intent intent = new Intent(Intent.ACTION_VIEW, googleURI);
+								intent.setPackage("com.google.android.apps.maps");
 								startActivity(intent);
 							}
 							return false;
