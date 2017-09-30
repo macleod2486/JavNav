@@ -7,8 +7,20 @@
             android:defaultValue="4"
             android:title="Map Type"
             android:key="mapSelect" >
-            
         </ListPreference>
+        <ListPreference
+            android:entries="@array/NavigationType"
+            android:entryValues="@array/NavigationTypeValues"
+            android:defaultValue="d"
+            android:title="Navigation Mode"
+            android:key="navigationSelect">
+        </ListPreference>
+        <MultiSelectListPreference
+            android:entries="@array/AvoidType"
+            android:entryValues="@array/AvoidTypeValues"
+            android:title="Avoid"
+            android:key="avoidSelect">
+        </MultiSelectListPreference>
     </PreferenceCategory>
     
     <PreferenceCategory android:title="Extra">

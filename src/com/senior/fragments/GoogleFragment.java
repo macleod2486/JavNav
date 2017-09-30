@@ -59,9 +59,11 @@ import org.w3c.dom.Node;
 import org.w3c.dom.NodeList;
 
 import java.io.InputStream;
+import java.lang.reflect.Array;
 import java.net.URL;
 import java.util.ArrayList;
 import java.util.Collections;
+import java.util.Set;
 
 import javax.xml.parsers.DocumentBuilder;
 import javax.xml.parsers.DocumentBuilderFactory;
@@ -166,7 +168,22 @@ public class GoogleFragment extends Fragment
 							{
 								navigate = 0;
 
-								Uri googleURI = Uri.parse("google.navigation:q="+lat+","+lon+"&mode=d");
+                                SharedPreferences shared = PreferenceManager.getDefaultSharedPreferences(getActivity());
+
+                                String mode = shared.getString("navigationSelect","d");
+								Set<String> avoid = shared.getStringSet("avoidSelect", null);
+                                String uri = "google.navigation:q="+lat+","+lon+"&mode="+mode;
+
+								if(avoid != null)
+								{
+									uri += "&avoid=";
+									for(int index = 0; index < avoid.size(); index++)
+									{
+										uri += avoid.toArray()[index];
+									}
+								}
+
+								Uri googleURI = Uri.parse(uri);
 								Intent intent = new Intent(Intent.ACTION_VIEW, googleURI);
 								intent.setPackage("com.google.android.apps.maps");
 								startActivity(intent);

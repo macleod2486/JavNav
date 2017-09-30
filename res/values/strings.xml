@@ -23,5 +23,29 @@
 	    <item>Terrain</item>
 	    <item>Hybrid</item>
 	</string-array>
+
+	<string-array name="NavigationType">
+		<item>Driving</item>
+		<item>Walking</item>
+		<item>Bicycling</item>
+	</string-array>
+
+	<string-array name="NavigationTypeValues">
+		<item>d</item>
+		<item>w</item>
+		<item>b</item>
+	</string-array>
+
+	<array name="AvoidType">
+		<item>Tolls</item>
+		<item>Highways</item>
+		<item>Ferries</item>
+	</array>
+
+	<string-array name="AvoidTypeValues">
+		<item>t</item>
+		<item>h</item>
+		<item>f</item>
+	</string-array>
     
 </resources>
