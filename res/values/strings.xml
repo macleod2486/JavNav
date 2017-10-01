@@ -10,7 +10,7 @@
 	
 	<string name="blank"></string>
 	
-	<string-array name="selection">
+	<string-array name="MapTypeValues">
 	    <item>1</item>
 	    <item>2</item>
 	    <item>3</item>
@@ -23,6 +23,8 @@
 	    <item>Terrain</item>
 	    <item>Hybrid</item>
 	</string-array>
+
+	<string name="NavigationTypeDefault">w</string>
 
 	<string-array name="NavigationType">
 		<item>Driving</item>

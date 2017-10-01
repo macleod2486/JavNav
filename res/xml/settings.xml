@@ -3,7 +3,7 @@
     <PreferenceCategory android:title="map">
         <ListPreference
             android:entries="@array/MapType"
-            android:entryValues="@array/selection"
+            android:entryValues="@array/MapTypeValues"
             android:defaultValue="4"
             android:title="Map Type"
             android:key="mapSelect" >
@@ -11,7 +11,7 @@
         <ListPreference
             android:entries="@array/NavigationType"
             android:entryValues="@array/NavigationTypeValues"
-            android:defaultValue="d"
+            android:defaultValue="@string/NavigationTypeDefault"
             android:title="Navigation Mode"
             android:key="navigationSelect">
         </ListPreference>
