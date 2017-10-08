@@ -217,7 +217,7 @@ public class GoogleFragment extends Fragment
 		
 		String mapSel = shared.getString("mapSelect", "4");
 		
-		if(this.currentMode != Integer.parseInt(mapSel))
+		if(this.currentMode != Integer.parseInt(mapSel) && this.TAMUK != null)
 		{
 			this.currentMode = Integer.parseInt(mapSel);
 			TAMUK.setMapType(currentMode);
