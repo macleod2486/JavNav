@@ -354,6 +354,24 @@ public class MainActivity extends ActionBarActivity
 	@Override
 	public void onRequestPermissionsResult(int requestCode, String permissions[], int[] grantResults)
 	{
+		switch(requestCode)
+		{
+			//Google
+			case 01:
+			{
+				if(grantResults[0] == PackageManager.PERMISSION_GRANTED)
+				{
+					Google.TAMUK.setMyLocationEnabled(true);
+				}
+				else
+				{
+					Toast.makeText(this, "Please allow location to be enabled to view yourself on the map",Toast.LENGTH_SHORT).show();
+				}
 
+				return;
+			}
+			default:
+				super.onRequestPermissionsResult(requestCode, permissions, grantResults);
+		}
 	}
 }
