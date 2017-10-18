@@ -27,6 +27,7 @@ import android.app.PendingIntent;
 import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
+import android.content.pm.PackageManager;
 import android.net.ConnectivityManager;
 import android.net.NetworkInfo;
 import android.os.Bundle;
@@ -37,11 +38,12 @@ import android.support.v4.app.FragmentTransaction;
 import android.support.v4.app.ListFragment;
 import android.support.v7.app.ActionBar;
 import android.support.v7.app.ActionBar.Tab;
-import android.support.v7.app.ActionBarActivity;
+import android.support.v7.app.AppCompatActivity;
 import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.WindowManager;
+import android.widget.Toast;
 
 import com.crashlytics.android.Crashlytics;
 import com.senior.fragments.GoogleFragment;
@@ -49,7 +51,7 @@ import com.senior.fragments.HomeFragment;
 import com.senior.fragments.WebViewFrag;
 import io.fabric.sdk.android.Fabric;
 
-public class MainActivity extends ActionBarActivity
+public class MainActivity extends AppCompatActivity
 {		
 	HomeFragment Home =  new HomeFragment();
 	//Google map fragment
@@ -128,6 +130,8 @@ public class MainActivity extends ActionBarActivity
 	
 		action.setNavigationMode(ActionBar.NAVIGATION_MODE_TABS);
 		action.setDisplayUseLogoEnabled(false);
+		action.setDisplayShowHomeEnabled(true);
+		action.setIcon(R.drawable.ic_launcher);
 			
 		homeTab = action.newTab();
 		homeTab.setText("Home");

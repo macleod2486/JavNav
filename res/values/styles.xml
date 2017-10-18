@@ -1,13 +1,13 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources xmlns:android="http://schemas.android.com/apk/res/android">
     <style name="JavTheme" parent="@style/Theme.AppCompat">
-        <item name="android:colorBackground">#003399</item>
-        <item name="android:actionBarStyle">@style/CustomActionBar</item>
-        <!-- Support library compatibility -->
-        <item name="actionBarStyle">@style/CustomActionBar</item>
+        <item name="android:actionBarStyle">@style/TAMUKActionBar</item>
+        <item name="colorPrimary">@color/TAMUK</item>
+        <item name="android:textColorPrimary">@color/TAMUK_Letter</item>
     </style>
 
-    <style name="CustomActionBar" parent="@style/Widget.AppCompat.ActionBar">
-        <item name="android:background">#003399</item>
+    <style name="TAMUKActionBar" parent="@style/Widget.AppCompat.ActionBar.Solid">
+        <item name="android:background">#000000</item>
+        <item name="android:icon">@drawable/ic_launcher</item>
     </style>
 </resources>

@@ -5,8 +5,8 @@
     android:versionName="1.5.84" >
 
     <uses-sdk
-        android:minSdkVersion="11"
-        android:targetSdkVersion="23" />
+        android:minSdkVersion="14"
+        android:targetSdkVersion="26" />
     
 	   	<uses-permission android:name="android.permission.ACCESS_NETWORK_STATE" />
 		<permission android:name="com.senior.javnav.permission.MAPS_RECEIVE"
