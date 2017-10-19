@@ -28,6 +28,7 @@ import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.content.pm.PackageManager;
+import android.content.res.Configuration;
 import android.net.ConnectivityManager;
 import android.net.NetworkInfo;
 import android.os.Bundle;
@@ -129,7 +130,6 @@ public class MainActivity extends AppCompatActivity
 		ActionBar action = getSupportActionBar();
 	
 		action.setNavigationMode(ActionBar.NAVIGATION_MODE_TABS);
-		action.setDisplayUseLogoEnabled(false);
 		action.setDisplayShowHomeEnabled(true);
 		action.setIcon(R.drawable.ic_launcher);
 			
@@ -155,6 +155,23 @@ public class MainActivity extends AppCompatActivity
 
 		//Sets the layout to the activity main layout
 		setContentView(R.layout.activity_main);
+	}
+
+	@Override
+	public void onConfigurationChanged(Configuration config)
+	{
+		super.onConfigurationChanged(config);
+
+		if (config.orientation == Configuration.ORIENTATION_LANDSCAPE)
+		{
+			ActionBar action = getSupportActionBar();
+			action.hide();
+		}
+		else if (config.orientation == Configuration.ORIENTATION_PORTRAIT)
+		{
+			ActionBar action = getSupportActionBar();
+			action.show();
+		}
 	}
 	
 	public void onStart()
