@@ -283,6 +283,9 @@ public class GoogleFragment extends Fragment implements OnMapReadyCallback
 		this.currentMode = Integer.parseInt(mapSel);
 		TAMUK.setMapType(currentMode);
 
+		boolean trafficEnabled = shared.getBoolean("trafficSelect", false);
+		TAMUK.setTrafficEnabled(trafficEnabled);
+
 		Log.i("Google", "Map setting set");
 	}
 

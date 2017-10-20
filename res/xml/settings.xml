@@ -21,6 +21,11 @@
             android:title="Avoid"
             android:key="avoidSelect">
         </MultiSelectListPreference>
+        <CheckBoxPreference
+            android:defaultValue="false"
+            android:key="trafficSelect"
+            android:title="Show Traffic">
+        </CheckBoxPreference>
     </PreferenceCategory>
     
     <PreferenceCategory android:title="Extra">
