@@ -167,7 +167,7 @@ public class Preferences extends PreferenceActivity implements SharedPreferences
 			SharedPreferences shared = PreferenceManager.getDefaultSharedPreferences(this);
 			Set<String> selections = shared.getStringSet(editTextPref.getKey(), null);
 
-			if(!selections.isEmpty())
+			if(selections != null)
 			{
 				String[] stringSelect = selections.toArray(new String[] {});
 				String summary = "";
