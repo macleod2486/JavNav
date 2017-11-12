@@ -39,8 +39,8 @@ dependencies {
     compile('com.crashlytics.sdk.android:crashlytics:2.6.8@aar') {
         transitive = true;
     }
-    compile 'com.android.support:support-v4:25.2.0'
-    compile 'com.android.support:design:25.2.0'
+    compile 'com.android.support:support-v4:27.0.0'
+    compile 'com.android.support:design:27.0.0'
 }
 
 //define some config for our apps (minimum android version, tools version, etc ...)

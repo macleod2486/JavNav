@@ -54,6 +54,7 @@
             android:label="TAMUKNews"
             android:enabled="true"
             android:exported="false"
+            android:permission="android.permission.BIND_JOB_SERVICE"
         />
             
         <receiver android:name="BroadcastNews">
