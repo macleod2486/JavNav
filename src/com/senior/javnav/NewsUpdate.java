@@ -21,7 +21,7 @@
 */
 package com.senior.javnav;
 
-import android.app.IntentService;
+import android.support.v4.app.JobIntentService;
 import android.app.NotificationManager;
 import android.app.PendingIntent;
 import android.content.Context;
@@ -36,27 +36,22 @@ import org.jsoup.select.Elements;
 
 import java.util.ArrayList;
 
-public class NewsUpdate extends IntentService 
+public class NewsUpdate extends JobIntentService
 {
     JavSQL sql;
 
     boolean newLink = false;
 
-    public void onCreate()
+    static void enqueueWork(Context context, Intent work)
     {
-        super.onCreate();
-
-        sql = new JavSQL(this.getApplicationContext(), "JavSql", null, 1);
+        enqueueWork(context, NewsUpdate.class, 1000, work);
     }
 
-	public NewsUpdate()
-	{
-        super("NewsUpdate");
-	}
-	
-	@Override
-	protected void onHandleIntent(Intent intent) 
-	{
+    @Override
+    protected void onHandleWork(Intent intent)
+    {
+        sql = new JavSQL(this.getApplicationContext(), "JavSql", null, 1);
+
         Log.i("JavService", "Starting");
 
         try
@@ -122,8 +117,8 @@ public class NewsUpdate extends IntentService
         sql.close();
 
 
-        Log.i("JavService","Started");
-	}
+        Log.i("JavService","Finished");
+    }
 
     private void fillTable()
     {

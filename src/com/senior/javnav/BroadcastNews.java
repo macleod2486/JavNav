@@ -28,6 +28,7 @@ import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.preference.PreferenceManager;
+import android.support.v4.app.JobIntentService;
 import android.util.Log;
 
 public class BroadcastNews extends BroadcastReceiver 
@@ -57,9 +58,8 @@ public class BroadcastNews extends BroadcastReceiver
 		else
 		{
 			//Starting the news update class
-			
 			Intent newsUpdate = new Intent(arg0,NewsUpdate.class);
-			arg0.startService(newsUpdate);
+			JobIntentService.enqueueWork(arg0, NewsUpdate.class, 1000, newsUpdate);
 			
 			Log.i("JavBroadcast","Broadcast finished");
 		} 
