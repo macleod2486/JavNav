@@ -28,21 +28,6 @@
         </CheckBoxPreference>
     </PreferenceCategory>
     
-    <PreferenceCategory android:title="Extra">
-        <CheckBoxPreference
-            android:title="Custom web tab"
-            android:key="extra"
-            android:persistent="true"
-            android:defaultValue="false"
-        />
-
-        <EditTextPreference 
-            android:key="webURL"
-            android:dialogTitle="URL of website"
-            android:title="Enter URL of website"
-        />
-    </PreferenceCategory>
-    
     <PreferenceCategory android:title="Notifications">
         <CheckBoxPreference 
             android:title="TAMUK News"

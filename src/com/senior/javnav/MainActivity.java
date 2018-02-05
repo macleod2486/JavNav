@@ -32,18 +32,20 @@ import android.content.res.Configuration;
 import android.net.ConnectivityManager;
 import android.net.NetworkInfo;
 import android.os.Bundle;
+import android.preference.Preference;
 import android.preference.PreferenceManager;
-import android.support.v4.app.Fragment;
-import android.support.v4.app.FragmentActivity;
-import android.support.v4.app.FragmentTransaction;
-import android.support.v4.app.ListFragment;
+import android.support.v4.view.GravityCompat;
+import android.support.v4.widget.DrawerLayout;
+import android.support.v4.app.ActionBarDrawerToggle;
 import android.support.v7.app.ActionBar;
-import android.support.v7.app.ActionBar.Tab;
 import android.support.v7.app.AppCompatActivity;
 import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
-import android.view.WindowManager;
+import android.view.View;
+import android.widget.AdapterView;
+import android.widget.ArrayAdapter;
+import android.widget.ListView;
 import android.widget.Toast;
 
 import com.crashlytics.android.Crashlytics;
@@ -61,42 +63,31 @@ public class MainActivity extends AppCompatActivity
 	WebViewFrag bluegold = new WebViewFrag();
 	//Blackboard fragment
 	WebViewFrag blackboard = new WebViewFrag();
-	//Custom web fragment
-	WebViewFrag custom = new WebViewFrag();
+
+	DrawerLayout drawer;
+	ActionBarDrawerToggle drawerToggle;
+	int index = 0;
 	
 	String bluegoldurl = "https://www.tamuk.edu/bluegold";
 	String blackboardurl = "https://blackboard.tamuk.edu";
-	String customUrl = "";
-	
-	//Tabs that will be added to the actionbar
-	ActionBar.Tab homeTab;
-	ActionBar.Tab javTab;
-	ActionBar.Tab blueTab;
-	ActionBar.Tab blackTab;
-	ActionBar.Tab customTab;
 	
 	//Manually handle the back button being pressed. 
 	@Override
 	public void onBackPressed()
 	{
-		Log.i("Main","Back button pressed");
-		
-		if(getSupportActionBar().getSelectedTab()!=homeTab)
+		if(drawer.isDrawerOpen(GravityCompat.START))
 		{
-				super.onBackPressed();
+			Log.i("Main","Drawer closed");
+			drawer.closeDrawers();
+		}
+
+		if(index == 0 && !Home.isAdded())
+		{
+			getSupportFragmentManager().beginTransaction().replace(R.id.container, Home, "home").commit();
 		}
 		else
 		{
-			Log.i("Main","Backstack count "+getSupportFragmentManager().getBackStackEntryCount());
-			if(getSupportFragmentManager().getBackStackEntryCount()!=0 && !Home.isAdded())
-			{
-				getSupportFragmentManager().popBackStack();
-			}
-			else
-			{
-				getSupportActionBar().removeAllTabs();
-				finish();
-			}
+			super.onBackPressed();
 		}
 	}
 	
@@ -109,6 +100,9 @@ public class MainActivity extends AppCompatActivity
 	{	
 		super.onCreate(savedInstanceState);
 		Fabric.with(this, new Crashlytics());
+
+		//Sets the layout to the activity main layout
+		setContentView(R.layout.activity_main);
 		
 		//Checks to see if the device has internet access and alerts user if not
 		if(!online())
@@ -125,36 +119,69 @@ public class MainActivity extends AppCompatActivity
 		//Seeds initial webpages.
 		bluegold.loadUrl(bluegoldurl, true);
 		blackboard.loadUrl(blackboardurl, true);
-		
-		//Sets up the actionbar
-		ActionBar action = getSupportActionBar();
-	
-		action.setNavigationMode(ActionBar.NAVIGATION_MODE_TABS);
-		action.setDisplayShowHomeEnabled(true);
-		action.setIcon(R.drawable.ic_launcher);
-			
-		homeTab = action.newTab();
-		homeTab.setText("Home");
-		homeTab.setTabListener(new ListTabListener(Home));
-		action.addTab(homeTab);
-		
-		javTab = action.newTab();
-		javTab.setText("Map");
-		javTab.setTabListener(new TabListener(Google));
-		action.addTab(javTab);
-		
-		blueTab = action.newTab();
-		blueTab.setText("Bluegold");
-		blueTab.setTabListener(new TabListener(bluegold));
-		action.addTab(blueTab);
-		
-		blackTab = action.newTab();
-		blackTab.setText("Blackboard");
-		blackTab.setTabListener(new TabListener(blackboard));
-		action.addTab(blackTab);
 
-		//Sets the layout to the activity main layout
-		setContentView(R.layout.activity_main);
+		//Configures the drawer
+		drawer = findViewById(R.id.drawer);
+		//Make the actionbar clickable to bring out the drawer
+		getSupportActionBar().setDisplayHomeAsUpEnabled(true);
+		getSupportActionBar().setHomeButtonEnabled(true);
+		drawerToggle = new ActionBarDrawerToggle(this, drawer, R.drawable.ic_launcher, R.string.drawer_open, R.string.drawer_close)
+		{
+			public void onDrawerClosed(View view)
+			{
+				getSupportActionBar().setTitle(R.string.drawer_close);
+				super.onDrawerClosed(view);
+			}
+
+			public void onDrawerOpened(View drawerView)
+			{
+				getSupportActionBar().setTitle(R.string.drawer_open);
+				super.onDrawerOpened(drawerView);
+			}
+		};
+		drawer.setDrawerListener(drawerToggle);
+		drawer.setDrawerLockMode(drawer.LOCK_MODE_UNLOCKED);
+
+		//Sets up the listview within the drawer
+		String [] menuList = getResources().getStringArray(R.array.list);
+		ListView list = (ListView)findViewById(R.id.optionList);
+		list.setAdapter(new ArrayAdapter<String>(this, android.R.layout.simple_list_item_1, menuList));
+		list.setOnItemClickListener(new AdapterView.OnItemClickListener()
+		{
+			@Override
+			public void onItemClick(AdapterView parent, View view, int position, long id)
+			{
+				Log.i("MainActivity","Position "+position);
+				if(position == 0)
+				{
+					index = 0;
+					getSupportFragmentManager().beginTransaction().replace(R.id.container, Home, "home").commit();
+				}
+				else if(position == 1)
+				{
+					index = 1;
+					getSupportFragmentManager().beginTransaction().replace(R.id.container, Google, "map").commit();
+				}
+				else if(position == 2)
+				{
+					index = 2;
+					getSupportFragmentManager().beginTransaction().replace(R.id.container, bluegold, "bluegold").commit();
+				}
+				else if(position == 3)
+				{
+					index = 3;
+					getSupportFragmentManager().beginTransaction().replace(R.id.container, blackboard, "blackboard").commit();
+				}
+				else if(position == 4)
+				{
+					startActivity(new Intent(MainActivity.this,Preference.class));
+				}
+				drawer.closeDrawers();
+			}
+		});
+
+		//Displays the first fragment
+		getSupportFragmentManager().beginTransaction().replace(R.id.container, Home, "home").commit();
 	}
 
 	@Override
@@ -172,60 +199,6 @@ public class MainActivity extends AppCompatActivity
 			ActionBar action = getSupportActionBar();
 			action.show();
 		}
-	}
-	
-	public void onStart()
-	{
-		Log.i("Main","On start");
-		super.onStart();
-		
-		ActionBar action = getSupportActionBar();
-		SharedPreferences shared = PreferenceManager.getDefaultSharedPreferences(this);
-
-		if(shared.getBoolean("secScreen",false))
-		{
-			getWindow().setFlags(WindowManager.LayoutParams.FLAG_SECURE, WindowManager.LayoutParams.FLAG_SECURE);
-		}
-		else
-		{
-			getWindow().clearFlags(WindowManager.LayoutParams.FLAG_SECURE);
-		}
-
-		//When the custom tab selection is toggled it makes the necessary changes
-		if(shared.getBoolean("extra", false))
-		{
-			if(action.getTabCount()<5)
-			{
-				customTab = action.newTab();
-				customTab.setText("Extra");
-				customTab.setTabListener(new TabListener(custom));
-				action.addTab(customTab);
-				
-				customUrl = shared.getString("webURL","http://www.google.com");
-				custom.loadUrl(customUrl, true);
-				
-				Log.i("CustomUrl",customUrl);
-			}
-		}
-		else
-		{
-			if(action.getTabCount()==5)
-			{
-				action.removeTabAt(4);
-			}
-		}
-		
-		//Loads new url if another one is entered
-		if(action.getTabCount() == 5)
-		{
-			String tempurl = shared.getString("webURL","http://www.google.com");
-			if(!tempurl.equals(customUrl))
-			{
-				customUrl = tempurl;
-				custom.changeUrl(tempurl);
-			}
-		}
-		
 	}
 	
 	//When the activity is destroyed
@@ -286,90 +259,6 @@ public class MainActivity extends AppCompatActivity
 		ConnectivityManager cm = (ConnectivityManager) getApplicationContext().getSystemService(Context.CONNECTIVITY_SERVICE);
 		NetworkInfo info = cm.getActiveNetworkInfo();
 		return info != null && info.isConnectedOrConnecting();
-	}
-		
-	/*
-		Classes for each tab listener
-	*/
-	
-	//Special class for the list fragment
-	protected class ListTabListener extends FragmentActivity implements ActionBar.TabListener
-	{
-		public ListFragment fragment;
-	   	 
-		public ListTabListener(ListFragment fragment) 
-		{
-			this.fragment = fragment;
-		}
-
-		public void onTabReselected(Tab tab, FragmentTransaction ft) 
-		{
-			
-		}
-
-		public void onTabSelected(Tab tab, FragmentTransaction ft) 
-		{
-			try
-			{
-				Log.i("Tabs","Replaced called");
-				ft.replace(R.id.container, fragment);
-				
-			}
-			catch(Exception e)
-			{
-				Log.i("Main","Error in replacing fragment "+e);
-			}
-		}
-
-		public void onTabUnselected(Tab tab, FragmentTransaction ft) 
-		{
-			Log.i("Tabs","On remove called to "+fragment.toString());
-			
-			try
-			{
-				if(fragment.getId()!=R.id.google_map)
-					ft.remove(fragment);
-					
-			}
-			catch(Exception e)
-			{
-				Log.i("Main","Error in replacing frag "+e);
-			}
-		}
-	}
-	
-	//Class for the fragments to be attached to the action bar
-    protected class TabListener extends FragmentActivity implements ActionBar.TabListener
-    {
-   	 	public Fragment fragment;
-   	 
-		public TabListener(Fragment fragment) 
-		{
-			Log.i("Tabs","Fragment being reassigned");
-			this.fragment = fragment;
-		}
-
-		public void onTabReselected(Tab tab, FragmentTransaction ft) 
-		{
-			
-		}
-
-		public void onTabSelected(Tab tab, FragmentTransaction ft) 
-		{
-			try
-			{
-				ft.replace(R.id.container, fragment);
-			}
-			catch(Exception e)
-			{
-				Log.i("Main","Error in replacing fragment "+e);
-			}
-		}
-
-		public void onTabUnselected(Tab tab, FragmentTransaction ft) 
-		{
-
-		}
 	}
 
 	@Override

@@ -7,6 +7,17 @@
 	<string name="back">Back</string>
 	<string name="forward">Forward</string>
 	<string name="refresh">Refresh</string>
+
+	<string-array
+		name = "list">
+		<item>News</item>
+		<item>Maps</item>
+		<item>BlueGold</item>
+		<item>Blackboard</item>
+	</string-array>
+
+	<string name="drawer_open">Menu</string>
+	<string name="drawer_close">JavNav</string>
 	
 	<string name="blank"></string>
 	

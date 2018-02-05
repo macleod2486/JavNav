@@ -2,6 +2,7 @@
 <resources xmlns:android="http://schemas.android.com/apk/res/android">
     <style name="JavTheme" parent="@style/Theme.AppCompat">
         <item name="android:actionBarStyle">@style/TAMUKActionBar</item>
+        <item name="actionBarTheme">@style/TAMUKActionBar</item>
         <item name="colorPrimary">@color/TAMUK</item>
         <item name="android:textColorPrimary">@color/TAMUK_Letter</item>
     </style>
