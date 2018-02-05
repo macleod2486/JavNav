@@ -80,8 +80,7 @@ public class MainActivity extends AppCompatActivity
 			Log.i("Main","Drawer closed");
 			drawer.closeDrawers();
 		}
-
-		if(index == 0 && !Home.isAdded())
+		else if(index != 0 && !Home.isAdded())
 		{
 			getSupportFragmentManager().beginTransaction().replace(R.id.container, Home, "home").commit();
 		}
@@ -115,6 +114,10 @@ public class MainActivity extends AppCompatActivity
 			AlertDialog connect = connectBuild.create();
 			connect.show();
 		}
+
+		//Make the actionbar clickable to bring out the drawer
+		getSupportActionBar().setDisplayHomeAsUpEnabled(true);
+		getSupportActionBar().setHomeButtonEnabled(true);
 		
 		//Seeds initial webpages.
 		bluegold.loadUrl(bluegoldurl, true);
@@ -122,9 +125,6 @@ public class MainActivity extends AppCompatActivity
 
 		//Configures the drawer
 		drawer = findViewById(R.id.drawer);
-		//Make the actionbar clickable to bring out the drawer
-		getSupportActionBar().setDisplayHomeAsUpEnabled(true);
-		getSupportActionBar().setHomeButtonEnabled(true);
 		drawerToggle = new ActionBarDrawerToggle(this, drawer, R.drawable.ic_launcher, R.string.drawer_open, R.string.drawer_close)
 		{
 			public void onDrawerClosed(View view)
