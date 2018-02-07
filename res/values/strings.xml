@@ -19,8 +19,8 @@
 
 	<string name="drawer_open">Menu</string>
 	<string name="drawer_close">JavNav</string>
-	
-	<string name="blank"></string>
+
+	<string name="buildingListUrl">https://gist.githubusercontent.com/macleod2486/4954b4dac4e2e32bfac856aed116e32f/raw/TAMUKBuildings.xml</string>
 	
 	<string-array name="MapTypeValues">
 	    <item>1</item>

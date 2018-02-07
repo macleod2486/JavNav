@@ -295,7 +295,7 @@ public class GoogleFragment extends Fragment implements OnMapReadyCallback
 
 		protected ArrayList<String> doInBackground(String...params)
 		{
-			String buildingList = "https://gist.githubusercontent.com/macleod2486/4954b4dac4e2e32bfac856aed116e32f/raw/TAMUKBuildings.xml";
+			String buildingList = getString(R.string.buildingListUrl);
 
 			try
 			{
