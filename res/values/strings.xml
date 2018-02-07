@@ -14,6 +14,7 @@
 		<item>Maps</item>
 		<item>BlueGold</item>
 		<item>Blackboard</item>
+		<item>Settings</item>
 	</string-array>
 
 	<string name="drawer_open">Menu</string>

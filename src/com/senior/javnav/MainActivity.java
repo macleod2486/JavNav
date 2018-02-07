@@ -32,7 +32,6 @@ import android.content.res.Configuration;
 import android.net.ConnectivityManager;
 import android.net.NetworkInfo;
 import android.os.Bundle;
-import android.preference.Preference;
 import android.preference.PreferenceManager;
 import android.support.v4.view.GravityCompat;
 import android.support.v4.widget.DrawerLayout;
@@ -40,7 +39,7 @@ import android.support.v4.app.ActionBarDrawerToggle;
 import android.support.v7.app.ActionBar;
 import android.support.v7.app.AppCompatActivity;
 import android.util.Log;
-import android.view.Menu;
+import android.view.Gravity;
 import android.view.MenuItem;
 import android.view.View;
 import android.widget.AdapterView;
@@ -174,7 +173,7 @@ public class MainActivity extends AppCompatActivity
 				}
 				else if(position == 4)
 				{
-					startActivity(new Intent(MainActivity.this,Preference.class));
+					startActivity(new Intent(MainActivity.this, Preferences.class));
 				}
 				drawer.closeDrawers();
 			}
@@ -235,21 +234,18 @@ public class MainActivity extends AppCompatActivity
 		
 		super.onStop();
 	}
-	//When the item is selected from the settings list
+	//Toggles open the drawer
 	@Override
 	public boolean onOptionsItemSelected(MenuItem item)
 	{
-		Log.i("Main","Setting option chosen");
-		startActivity(new Intent(this,Preferences.class));
-		return true;
-	}
-	
-	//Creates the setting list
-	@Override
-	public boolean onCreateOptionsMenu(Menu menu) 
-	{
-		// Inflate the menu; this adds items to the action bar if it is present.
-		getMenuInflater().inflate(R.menu.main, menu);
+		if(drawer.isDrawerOpen(Gravity.START))
+		{
+			drawer.closeDrawers();
+		}
+		else
+		{
+			drawer.openDrawer(Gravity.START);
+		}
 		return true;
 	}
 	
