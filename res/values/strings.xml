@@ -11,8 +11,8 @@
 	<string-array
 		name = "list">
 		<item>News</item>
-		<item>Maps</item>
-		<item>BlueGold</item>
+		<item>Map</item>
+		<item>Blue and Gold</item>
 		<item>Blackboard</item>
 		<item>Settings</item>
 	</string-array>

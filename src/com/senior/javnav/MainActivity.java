@@ -69,6 +69,8 @@ public class MainActivity extends AppCompatActivity
 	
 	String bluegoldurl = "https://www.tamuk.edu/bluegold";
 	String blackboardurl = "https://blackboard.tamuk.edu";
+
+	String title = "News";
 	
 	//Manually handle the back button being pressed. 
 	@Override
@@ -128,7 +130,7 @@ public class MainActivity extends AppCompatActivity
 		{
 			public void onDrawerClosed(View view)
 			{
-				getSupportActionBar().setTitle(R.string.drawer_close);
+				getSupportActionBar().setTitle(title);
 				super.onDrawerClosed(view);
 			}
 
@@ -155,21 +157,25 @@ public class MainActivity extends AppCompatActivity
 				{
 					index = 0;
 					getSupportFragmentManager().beginTransaction().replace(R.id.container, Home, "home").commit();
+					title = "News";
 				}
 				else if(position == 1)
 				{
 					index = 1;
 					getSupportFragmentManager().beginTransaction().replace(R.id.container, Google, "map").commit();
+					title = "Map";
 				}
 				else if(position == 2)
 				{
 					index = 2;
 					getSupportFragmentManager().beginTransaction().replace(R.id.container, bluegold, "bluegold").commit();
+					title = "Blue and Gold";
 				}
 				else if(position == 3)
 				{
 					index = 3;
 					getSupportFragmentManager().beginTransaction().replace(R.id.container, blackboard, "blackboard").commit();
+					title = "Blackboard";
 				}
 				else if(position == 4)
 				{
@@ -181,6 +187,7 @@ public class MainActivity extends AppCompatActivity
 
 		//Displays the first fragment
 		getSupportFragmentManager().beginTransaction().replace(R.id.container, Home, "home").commit();
+		getSupportActionBar().setTitle(title);
 	}
 
 	@Override
