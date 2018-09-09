@@ -182,8 +182,8 @@ public class GoogleFragment extends Fragment implements OnMapReadyCallback
 								}
 
 								Uri googleURI = Uri.parse(uri);
-								Intent intent = new Intent(Intent.ACTION_VIEW, googleURI);
-								intent.setPackage("com.google.android.apps.maps");
+								Intent intent = new Intent(Intent.ACTION_VIEW);
+								intent.setData(googleURI);
 								startActivity(intent);
 							}
 							return false;
