@@ -71,8 +71,9 @@ public class GoogleFragment extends Fragment implements OnMapReadyCallback
 	public GoogleMap TAMUK;
 	private SupportMapFragment TAMUKFrag;
 
-	public LatLng TAMUKLoc= new LatLng(27.524285,-97.882433);
-	
+	//Initalized with TAMUK location.
+	public LatLng currentLoc = new LatLng(27.524285,-97.882433);
+
 	private Spinner buildingList;
 
 	private getBuildings buildingGetter;
@@ -189,7 +190,9 @@ public class GoogleFragment extends Fragment implements OnMapReadyCallback
 							return false;
 						}
 					});
-					TAMUK.animateCamera(CameraUpdateFactory.newLatLngZoom(new LatLng(lat,lon), 17));
+					LatLng tempLatLng = new LatLng(lat,lon);
+					currentLoc = tempLatLng;
+					TAMUK.animateCamera(CameraUpdateFactory.newLatLngZoom(tempLatLng, 17));
 				}
 			}
 
@@ -260,7 +263,7 @@ public class GoogleFragment extends Fragment implements OnMapReadyCallback
 
 		String mapSel = shared.getString("mapSelect", "4");
 
-		TAMUK.animateCamera(CameraUpdateFactory.newLatLngZoom(TAMUKLoc, 16));
+		TAMUK.animateCamera(CameraUpdateFactory.newLatLngZoom(currentLoc, 16));
 
 		if(Build.VERSION.SDK_INT >= 23)
 		{
