@@ -1,17 +1,17 @@
 //this is used to define the plugin android
 buildscript {
     repositories {
-        jcenter()
-        mavenCentral()
         google()
         maven { url 'https://maven.fabric.io/public' }
         maven {
             url 'https://maven.google.com/'
             name 'Google'
         }
+        jcenter()
+        mavenCentral()
     }
     dependencies {
-        classpath 'com.android.tools.build:gradle:3.1.4'
+        classpath 'com.android.tools.build:gradle:3.3.0'
         classpath 'io.fabric.tools:gradle:1.+'
     }
 
@@ -19,13 +19,13 @@ buildscript {
 
 //here we tell it to get dependencies from maven central (search.maven.org)
 repositories {
-    jcenter()
-    mavenCentral()
     maven { url 'https://maven.fabric.io/public' }
     maven {
         url 'https://maven.google.com/'
         name 'Google'
     }
+    jcenter()
+    mavenCentral()
 }
 
 //this is an android app
@@ -48,7 +48,7 @@ dependencies {
 //define some config for our apps (minimum android version, tools version, etc ...)
 android {
     compileSdkVersion 28
-    buildToolsVersion '28.0.2'
+    buildToolsVersion '28.0.3'
     sourceSets {
         main {
             manifest.srcFile 'AndroidManifest.xml'
