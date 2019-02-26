@@ -1,0 +1,50 @@
+{
+  "project_info": {
+    "project_number": "182471996321",
+    "firebase_url": "https://api-project-182471996321.firebaseio.com",
+    "project_id": "api-project-182471996321",
+    "storage_bucket": "api-project-182471996321.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:182471996321:android:12f5db9de8525fbe",
+        "android_client_info": {
+          "package_name": "com.senior.javnav"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "182471996321-p92vb0gbti6mh04msflabged5ck68e66.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "com.senior.javnav",
+            "certificate_hash": "319c7e6fe6ec83669cede1e0dffb69fa2fa011f6"
+          }
+        },
+        {
+          "client_id": "182471996321-tj11h6q67k73fvrdn71cdiauav2sq1u2.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyCXuMw175wRv7o9Ghuv1mwFUcB2rU_skI4"
+        }
+      ],
+      "services": {
+        "analytics_service": {
+          "status": 1
+        },
+        "appinvite_service": {
+          "status": 1,
+          "other_platform_oauth_client": []
+        },
+        "ads_service": {
+          "status": 2
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}

@@ -33,11 +33,11 @@ import android.net.ConnectivityManager;
 import android.net.NetworkInfo;
 import android.os.Bundle;
 import android.preference.PreferenceManager;
-import android.support.v4.view.GravityCompat;
-import android.support.v4.widget.DrawerLayout;
-import android.support.v4.app.ActionBarDrawerToggle;
-import android.support.v7.app.ActionBar;
-import android.support.v7.app.AppCompatActivity;
+import androidx.core.view.GravityCompat;
+import androidx.drawerlayout.widget.DrawerLayout;
+import androidx.legacy.app.ActionBarDrawerToggle;
+import androidx.appcompat.app.ActionBar;
+import androidx.appcompat.app.AppCompatActivity;
 import android.util.Log;
 import android.view.Gravity;
 import android.view.MenuItem;
@@ -52,6 +52,7 @@ import com.senior.fragments.GoogleFragment;
 import com.senior.fragments.HomeFragment;
 import com.senior.fragments.WebViewFrag;
 import io.fabric.sdk.android.Fabric;
+import io.fabric.sdk.android.services.common.Crash;
 
 public class MainActivity extends AppCompatActivity
 {		
@@ -99,7 +100,6 @@ public class MainActivity extends AppCompatActivity
 	protected void onCreate(Bundle savedInstanceState) 
 	{	
 		super.onCreate(savedInstanceState);
-		Fabric.with(this, new Crashlytics());
 
 		//Sets the layout to the activity main layout
 		setContentView(R.layout.activity_main);
