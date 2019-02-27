@@ -12,3 +12,5 @@ two essentials websites.
 - JSoup 1.7.3+
 - Google Play Services
 - AppCompat
+
+[![Build Status](https://travis-ci.org/macleod2486/JavNav.svg?branch=master)](https://travis-ci.org/macleod2486/JavNav)
