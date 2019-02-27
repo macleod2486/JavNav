@@ -1,4 +1,11 @@
 language: android
+android:
+        components:
+                - tools
+                - platform-tools
+                - build-tools-28.0.3
+                - android-28
+                - extra
 rvm:
  - 2.2
  - jruby
