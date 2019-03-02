@@ -33,6 +33,8 @@ import android.net.ConnectivityManager;
 import android.net.NetworkInfo;
 import android.os.Bundle;
 import android.preference.PreferenceManager;
+
+import androidx.core.content.ContextCompat;
 import androidx.core.view.GravityCompat;
 import androidx.drawerlayout.widget.DrawerLayout;
 import androidx.legacy.app.ActionBarDrawerToggle;
@@ -47,12 +49,9 @@ import android.widget.ArrayAdapter;
 import android.widget.ListView;
 import android.widget.Toast;
 
-import com.crashlytics.android.Crashlytics;
 import com.senior.fragments.GoogleFragment;
 import com.senior.fragments.HomeFragment;
 import com.senior.fragments.WebViewFrag;
-import io.fabric.sdk.android.Fabric;
-import io.fabric.sdk.android.services.common.Crash;
 
 public class MainActivity extends AppCompatActivity
 {		
@@ -274,7 +273,10 @@ public class MainActivity extends AppCompatActivity
 			{
 				if(grantResults.length > 0 && grantResults[0] == PackageManager.PERMISSION_GRANTED)
 				{
-					Google.TAMUK.setMyLocationEnabled(true);
+					if(ContextCompat.checkSelfPermission( this, android.Manifest.permission.ACCESS_COARSE_LOCATION) == PackageManager.PERMISSION_GRANTED)
+					{
+						Google.TAMUK.setMyLocationEnabled(true);
+					}
 				}
 				else
 				{
