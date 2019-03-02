@@ -244,13 +244,13 @@ public class MainActivity extends AppCompatActivity
 	@Override
 	public boolean onOptionsItemSelected(MenuItem item)
 	{
-		if(drawer.isDrawerOpen(Gravity.START))
+		if(drawer.isDrawerOpen(GravityCompat.START))
 		{
 			drawer.closeDrawers();
 		}
 		else
 		{
-			drawer.openDrawer(Gravity.START);
+			drawer.openDrawer(GravityCompat.START);
 		}
 		return true;
 	}
