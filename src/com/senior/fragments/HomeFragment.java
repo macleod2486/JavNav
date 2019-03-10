@@ -3,7 +3,7 @@
 *   JavNav 
 *    a simple application for general use of the Texas A&M-Kingsville Campus. 
 *    
-*    Copyright (C) 2014  Manuel Gonzales Jr.
+*    Copyright (C) 2019  Manuel Gonzales Jr.
 *
 *    This program is free software: you can redistribute it and/or modify
 *    it under the terms of the GNU General Public License as published by
@@ -62,7 +62,7 @@ public class HomeFragment extends ListFragment
 	
 	public static int linkIndex;
 	public static ArrayList<String> eventtitles;
-	public static ArrayList<String> eventlinks = new ArrayList<String>();
+	public static ArrayList<String> eventlinks = new ArrayList<>();
 	public static String TitleChosen;
     private static JavSQL sql;
 	
@@ -132,7 +132,7 @@ public class HomeFragment extends ListFragment
             reloadButton.setVisibility(View.INVISIBLE);
             progress.setVisibility(View.INVISIBLE);
 
-            mListView.setAdapter(new ArrayAdapter(getActivity(), android.R.layout.simple_list_item_1, eventtitles)
+            mListView.setAdapter(new ArrayAdapter<String>(getActivity(), android.R.layout.simple_list_item_1, eventtitles)
             {
                 //Styling the items within the listview
                 @Override
@@ -183,7 +183,7 @@ public class HomeFragment extends ListFragment
 		{
             sql = new JavSQL(getActivity().getBaseContext(), "JavSql", null, 1);
 
-			eventtitles = new ArrayList<String>();
+			eventtitles = new ArrayList<>();
 
 			try
 			{
@@ -230,7 +230,7 @@ public class HomeFragment extends ListFragment
 
 				Log.i("HomeFrag","Results: "+eventtitles.size());
 
-                mListView.setAdapter(new ArrayAdapter(getActivity(),android.R.layout.simple_list_item_1,eventtitles)
+                mListView.setAdapter(new ArrayAdapter<String>(getActivity(),android.R.layout.simple_list_item_1,eventtitles)
 				{
 					//Styling the items within the listview
 					@Override
