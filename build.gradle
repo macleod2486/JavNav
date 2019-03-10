@@ -2,6 +2,7 @@
 buildscript {
     repositories {
         google()
+        maven { url 'https://maven.fabric.io/public' }
         maven {
             url 'https://maven.google.com/'
             name 'Google'
@@ -10,13 +11,16 @@ buildscript {
         mavenCentral()
     }
     dependencies {
-        classpath 'com.android.tools.build:gradle:3.3.1'
+        classpath 'com.android.tools.build:gradle:3.3.2'
+        classpath 'io.fabric.tools:gradle:1.27.1'
+        classpath 'com.google.gms:google-services:4.2.0'
     }
 
 }
 
 //here we tell it to get dependencies from maven central (search.maven.org)
 repositories {
+    maven { url 'https://maven.fabric.io/public' }
     maven {
         url 'https://maven.google.com/'
         name 'Google'
@@ -32,11 +36,11 @@ apply plugin: 'com.android.application'
 dependencies {
 
     implementation 'com.google.android.gms:play-services-maps:16.1.0'
+    implementation 'com.google.gms:google-services:4.2.0'
     implementation 'org.jsoup:jsoup:1.11.2'
     implementation 'androidx.multidex:multidex:2.0.1'
-    implementation('com.crashlytics.sdk.android:crashlytics:2.6.8@aar') {
-        transitive = true;
-    }
+    implementation 'com.crashlytics.sdk.android:crashlytics:2.9.9'
+    implementation 'com.google.firebase:firebase-core:16.0.7'
     implementation 'androidx.legacy:legacy-support-v4:1.0.0'
     implementation 'com.google.android.material:material:1.0.0'
 }
