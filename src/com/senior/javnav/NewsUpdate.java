@@ -125,6 +125,9 @@ public class NewsUpdate extends JobIntentService
         Log.i("JavService","Filling the table with the links");
 
         Document document;
+        Elements eventDiv;
+        Elements eventTitles;
+        Elements eventLinks;
         Elements newsDiv;
         Elements newsTitles;
         Elements newsLinks;
@@ -132,11 +135,21 @@ public class NewsUpdate extends JobIntentService
         try
         {
             document = Jsoup.connect("http://www.tamuk.edu/").get();
-            newsDiv = document.select("div#calendar");
+
+            eventDiv = document.select("div#calendar");
+            eventTitles = eventDiv.select("a");
+            eventLinks = eventTitles.select("[href]");
+
+            newsDiv = document.select("div#inthenews");
             newsTitles = newsDiv.select("a");
             newsLinks = newsTitles.select("[href]");
 
-            for(int index = 0; index < newsLinks.size(); index++)
+            for(int index = 0; index < eventLinks.size() && index < eventTitles.size(); index++)
+            {
+                sql.insertInTable(eventLinks.get(index).attr("abs:href").toString(),eventTitles.get(index).text());
+            }
+
+            for(int index = 0; index < newsLinks.size() && index < newsTitles.size(); index++)
             {
                 sql.insertInTable(newsLinks.get(index).attr("abs:href").toString(),newsTitles.get(index).text());
             }
@@ -151,24 +164,39 @@ public class NewsUpdate extends JobIntentService
     private void check()
     {
         Document document;
+
         Elements newsDiv;
         Elements newsTitles;
         Elements newsLinks;
+
+        Elements eventDiv;
+        Elements eventTitles;
+        Elements eventLinks;
 
         Log.i("JavService","Checking for new links");
 
         try
         {
             document = Jsoup.connect("http://www.tamuk.edu/").get();
-            newsDiv = document.select("div#calendar");
+
+            newsDiv = document.select("div#inthenews");
             newsTitles = newsDiv.select("a");
             newsLinks = newsTitles.select("[href]");
+
+            eventDiv = document.select("div#calendar");
+            eventTitles = eventDiv.select("a");
+            eventLinks = eventTitles.select("[href]");
 
             boolean exists = true;
 
             ArrayList<String> allLinks = new ArrayList<String>();
 
             //Removes any links in the database that are no longer on the webpage.
+            for(int index = 0; index < eventLinks.size(); index++)
+            {
+                allLinks.add(eventLinks.get(index).attr("abs:href"));
+            }
+
             for(int index = 0; index < newsLinks.size(); index++)
             {
                 allLinks.add(newsLinks.get(index).attr("abs:href"));
@@ -192,6 +220,27 @@ public class NewsUpdate extends JobIntentService
                 else
                 {
                     sql.insertInTable(newsLinks.get(index).attr("abs:href").toString(),newsTitles.get(index).text());
+                    newLink = true;
+                    Log.i("JavService","New link inserted");
+                }
+            }
+
+            //Inserts any links that are new.
+            for(int index = 0; index < eventLinks.size(); index++)
+            {
+                if(eventLinks.get(index).toString().contains(".html"))
+                {
+                    exists = sql.existInTable(eventLinks.get(index).attr("abs:href"));
+                }
+
+                if(exists)
+                {
+                    Log.i("JavService","Exists in table");
+                }
+
+                else
+                {
+                    sql.insertInTable(eventLinks.get(index).attr("abs:href").toString(),eventTitles.get(index).text());
                     newLink = true;
                     Log.i("JavService","New link inserted");
                 }
