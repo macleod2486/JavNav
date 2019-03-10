@@ -188,23 +188,43 @@ public class HomeFragment extends ListFragment
 			try
 			{
 				Document document = Jsoup.connect("http://www.tamuk.edu/").get();
-				Elements calendar = document.select("div#calendar");
-				Elements titles = calendar.select("a");
-				Elements links = titles.select("[href]");
 
-				for(int index = 0; index < titles.size()&&index < links.size(); index++)
+				Elements inTheNews = document.select("div#inthenews");
+				Elements newsTitles = inTheNews.select("a");
+				Elements newsLinks = newsTitles.select("[href]");
+
+				Elements calendar = document.select("div#calendar");
+				Elements calendarTitles = calendar.select("a");
+				Elements calendarLinks = calendarTitles.select("[href]");
+
+				//Events generation
+				for(int index = 0; index < calendarTitles.size()&&index < calendarTitles.size(); index++)
 				{
-					if(links.get(index).toString().contains(".html"))
+					if(calendarLinks.get(index).toString().contains(".html"))
 					{
 						if(isCancelled())
 							break;
 
-						eventtitles.add(titles.get(index).text());
-						eventlinks.add(links.get(index).attr("abs:href").toString());
+						eventtitles.add(calendarTitles.get(index).text());
+						eventlinks.add(calendarLinks.get(index).attr("abs:href").toString());
 
-                        sql.insertInTable(links.get(index).attr("abs:href").toString(),titles.get(index).text());
+                        sql.insertInTable(calendarLinks.get(index).attr("abs:href").toString(),calendarTitles.get(index).text());
 					}
+				}
 
+				//News generation
+				for(int index = 0; index < newsLinks.size()&&index < newsTitles.size(); index++)
+				{
+					if(newsLinks.get(index).toString().contains(".html"))
+					{
+						if(isCancelled())
+							break;
+
+						eventtitles.add(newsTitles.get(index).text());
+						eventlinks.add(newsLinks.get(index).attr("abs:href").toString());
+
+						sql.insertInTable(newsLinks.get(index).attr("abs:href").toString(),newsTitles.get(index).text());
+					}
 				}
 
 				completed = true;
