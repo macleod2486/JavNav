@@ -61,8 +61,8 @@ public class HomeFragment extends ListFragment
 	private ProgressBar progress;
 	
 	public static int linkIndex;
-	public static ArrayList<String> eventtitles;
-	public static ArrayList<String> eventlinks = new ArrayList<>();
+	public static ArrayList<String> titles;
+	public static ArrayList<String> links = new ArrayList<>();
 	public static String TitleChosen;
     private static JavSQL sql;
 	
@@ -124,15 +124,15 @@ public class HomeFragment extends ListFragment
 
         else
         {
-            eventlinks = sql.returnLinks();
-            eventtitles = sql.returnTitles();
+            links = sql.returnLinks();
+            titles = sql.returnTitles();
 
             //Since the sql database should be available for usage there should be no need for
             //the reload button or progressbar.
             reloadButton.setVisibility(View.INVISIBLE);
             progress.setVisibility(View.INVISIBLE);
 
-            mListView.setAdapter(new ArrayAdapter<String>(getActivity(), android.R.layout.simple_list_item_1, eventtitles)
+            mListView.setAdapter(new ArrayAdapter<String>(getActivity(), android.R.layout.simple_list_item_1, titles)
             {
                 //Styling the items within the listview
                 @Override
@@ -143,7 +143,7 @@ public class HomeFragment extends ListFragment
 
                     sql = new JavSQL(getActivity().getBaseContext(), "JavSql", null, 1);
 
-                    boolean hasBeenSeen = sql.seen(eventtitles.get(position));
+                    boolean hasBeenSeen = sql.seen(titles.get(position));
 
                     listItem.setTextColor(Color.WHITE);
                     listItem.setBackgroundColor(Color.BLACK);
@@ -183,7 +183,7 @@ public class HomeFragment extends ListFragment
 		{
             sql = new JavSQL(getActivity().getBaseContext(), "JavSql", null, 1);
 
-			eventtitles = new ArrayList<>();
+			titles = new ArrayList<>();
 
 			try
 			{
@@ -198,15 +198,15 @@ public class HomeFragment extends ListFragment
 				Elements calendarLinks = calendarTitles.select("[href]");
 
 				//Events generation
-				for(int index = 0; index < calendarTitles.size()&&index < calendarTitles.size(); index++)
+				for(int index = 0; index < calendarTitles.size()&&index < calendarLinks.size(); index++)
 				{
 					if(calendarLinks.get(index).toString().contains(".html"))
 					{
 						if(isCancelled())
 							break;
 
-						eventtitles.add(calendarTitles.get(index).text());
-						eventlinks.add(calendarLinks.get(index).attr("abs:href").toString());
+						titles.add(calendarTitles.get(index).text());
+						links.add(calendarLinks.get(index).attr("abs:href").toString());
 
                         sql.insertInTable(calendarLinks.get(index).attr("abs:href").toString(),calendarTitles.get(index).text());
 					}
@@ -220,8 +220,8 @@ public class HomeFragment extends ListFragment
 						if(isCancelled())
 							break;
 
-						eventtitles.add(newsTitles.get(index).text());
-						eventlinks.add(newsLinks.get(index).attr("abs:href").toString());
+						titles.add(newsTitles.get(index).text());
+						links.add(newsLinks.get(index).attr("abs:href").toString());
 
 						sql.insertInTable(newsLinks.get(index).attr("abs:href").toString(),newsTitles.get(index).text());
 					}
@@ -240,7 +240,7 @@ public class HomeFragment extends ListFragment
             sql.closeDb();
             sql.close();
 
-			return eventtitles;
+			return titles;
 		}
 		@Override
 		protected void onPostExecute(ArrayList<String> strings)
@@ -248,9 +248,9 @@ public class HomeFragment extends ListFragment
 			try
 			{
 
-				Log.i("HomeFrag","Results: "+eventtitles.size());
+				Log.i("HomeFrag","Results: "+titles.size());
 
-                mListView.setAdapter(new ArrayAdapter<String>(getActivity(),android.R.layout.simple_list_item_1,eventtitles)
+                mListView.setAdapter(new ArrayAdapter<String>(getActivity(),android.R.layout.simple_list_item_1,titles)
 				{
 					//Styling the items within the listview
 					@Override
@@ -261,7 +261,7 @@ public class HomeFragment extends ListFragment
 
                         sql = new JavSQL(getActivity().getBaseContext(), "JavSql", null, 1);
 
-                        boolean hasBeenSeen = sql.seen(eventtitles.get(position));
+                        boolean hasBeenSeen = sql.seen(titles.get(position));
 
                         listItem.setTextColor(Color.WHITE);
                         listItem.setBackgroundColor(Color.BLACK);
@@ -312,12 +312,12 @@ public class HomeFragment extends ListFragment
 	public void onListItemClick(ListView mListView, View view, int position, long id)
 	{
         sql = new JavSQL(getActivity().getBaseContext(), "JavSql", null, 1);
-        sql.setSeen(eventtitles.get(position).toString());
+        sql.setSeen(titles.get(position).toString());
         sql.closeDb();
         sql.close();
 
 		ArticleContent articles = new ArticleContent();
-	    articles.loadArticleInfo(eventlinks.get(position), eventtitles.get(position));
+	    articles.loadArticleInfo(links.get(position), titles.get(position));
 	    getFragmentManager().beginTransaction().addToBackStack(null).replace(R.id.container, articles).commit();
 
 	}
