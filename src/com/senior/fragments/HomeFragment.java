@@ -312,7 +312,7 @@ public class HomeFragment extends ListFragment
 	public void onListItemClick(ListView mListView, View view, int position, long id)
 	{
         sql = new JavSQL(getActivity().getBaseContext(), "JavSql", null, 1);
-        sql.setSeen(titles.get(position).toString());
+        sql.setSeen(titles.get(position));
         sql.closeDb();
         sql.close();
 

@@ -146,12 +146,12 @@ public class NewsUpdate extends JobIntentService
 
             for(int index = 0; index < eventLinks.size() && index < eventTitles.size(); index++)
             {
-                sql.insertInTable(eventLinks.get(index).attr("abs:href").toString(),eventTitles.get(index).text());
+                sql.insertInTable(eventLinks.get(index).attr("abs:href"),eventTitles.get(index).text());
             }
 
             for(int index = 0; index < newsLinks.size() && index < newsTitles.size(); index++)
             {
-                sql.insertInTable(newsLinks.get(index).attr("abs:href").toString(),newsTitles.get(index).text());
+                sql.insertInTable(newsLinks.get(index).attr("abs:href"),newsTitles.get(index).text());
             }
         }
         catch (Exception e)
@@ -189,7 +189,7 @@ public class NewsUpdate extends JobIntentService
 
             boolean exists = true;
 
-            ArrayList<String> allLinks = new ArrayList<String>();
+            ArrayList<String> allLinks = new ArrayList<>();
 
             //Removes any links in the database that are no longer on the webpage.
             for(int index = 0; index < eventLinks.size(); index++)
