@@ -30,8 +30,6 @@ import android.os.AsyncTask;
 import android.os.Bundle;
 import android.preference.PreferenceManager;
 import androidx.fragment.app.ListFragment;
-import android.text.SpannableString;
-import android.text.style.UnderlineSpan;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -56,14 +54,12 @@ public class HomeFragment extends ListFragment
 {
 	private ListView mListView;
 	private View view;
-	private TextView titletext;
 	private Button reloadButton;
 	private ProgressBar progress;
 	
 	public static int linkIndex;
 	public static ArrayList<String> titles;
 	public static ArrayList<String> links = new ArrayList<>();
-	public static String TitleChosen;
     private static JavSQL sql;
 	
 	ArticleContent articles;
@@ -82,14 +78,6 @@ public class HomeFragment extends ListFragment
 		Log.i("HomeFrag","View Created");
 		
 		view = inflater.inflate(R.layout.home_fragment,container,false);
-		
-		titletext = (TextView)view.findViewById(R.id.calenderevents);
-		
-		SpannableString NewTitle = new SpannableString("Calendar Of Events");
-		
-		NewTitle.setSpan(new UnderlineSpan(), 0, NewTitle.length(), 0);
-		
-		titletext.setText(NewTitle);
 		
 		mListView = (ListView)view.findViewById(android.R.id.list);
 		
