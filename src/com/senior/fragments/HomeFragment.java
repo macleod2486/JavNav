@@ -56,13 +56,10 @@ public class HomeFragment extends ListFragment
 	private View view;
 	private Button reloadButton;
 	private ProgressBar progress;
-	
-	public static int linkIndex;
+
 	public static ArrayList<String> titles;
 	public static ArrayList<String> links = new ArrayList<>();
     private static JavSQL sql;
-	
-	ArticleContent articles;
 
 	@Override
 	public void onActivityCreated(Bundle savedInstanceState)
