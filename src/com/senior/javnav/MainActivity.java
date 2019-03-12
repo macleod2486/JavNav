@@ -3,7 +3,7 @@
 *   JavNav 
 *    a simple application for general use of the Texas A&M-Kingsville Campus. 
 *    
-*    Copyright (C) 2014  Manuel Gonzales Jr.
+*    Copyright (C) 2019  Manuel Gonzales Jr.
 *
 *    This program is free software: you can redistribute it and/or modify
 *    it under the terms of the GNU General Public License as published by
@@ -21,9 +21,7 @@
 */
 package com.senior.javnav;
 
-import android.app.AlarmManager;
 import android.app.AlertDialog;
-import android.app.PendingIntent;
 import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
@@ -40,6 +38,11 @@ import androidx.drawerlayout.widget.DrawerLayout;
 import androidx.legacy.app.ActionBarDrawerToggle;
 import androidx.appcompat.app.ActionBar;
 import androidx.appcompat.app.AppCompatActivity;
+import androidx.work.Constraints;
+import androidx.work.ExistingPeriodicWorkPolicy;
+import androidx.work.NetworkType;
+import androidx.work.PeriodicWorkRequest;
+import androidx.work.WorkManager;
 import io.fabric.sdk.android.Fabric;
 
 import android.util.Log;
@@ -55,6 +58,8 @@ import com.crashlytics.android.core.CrashlyticsCore;
 import com.senior.fragments.GoogleFragment;
 import com.senior.fragments.HomeFragment;
 import com.senior.fragments.WebViewFrag;
+
+import java.util.concurrent.TimeUnit;
 
 public class MainActivity extends AppCompatActivity
 {		
@@ -225,24 +230,18 @@ public class MainActivity extends AppCompatActivity
 	@Override
 	protected void onStop()
 	{
-		boolean alarmActive = (PendingIntent.getBroadcast(getApplicationContext(), 0,
-				new Intent(getApplicationContext(),BroadcastNews.class),
-				PendingIntent.FLAG_NO_CREATE) != null);
-
-		//Start the service in a timely interval if not initialized
+		//Start the service
 		SharedPreferences shared = PreferenceManager.getDefaultSharedPreferences(this);
-		if(shared.getBoolean("notifi", true) && !alarmActive)
+		if(shared.getBoolean("notifi", true))
 		{
-			//one second * 60 seconds in a minute * minutes
-			int interval = 1000*60*5;
-			
-			//Start the alarm manager service
-			Intent service = new Intent(getApplicationContext(),BroadcastNews.class);
-			PendingIntent pendingService = PendingIntent.getBroadcast(getApplicationContext(),0,service,0);
-			AlarmManager newsUpdate = (AlarmManager)getSystemService(ALARM_SERVICE);
-			
-			//Set alarm to check for news
-			newsUpdate.setInexactRepeating(AlarmManager.RTC, System.currentTimeMillis(), interval, pendingService);
+			long minutes = PeriodicWorkRequest.MIN_PERIODIC_INTERVAL_MILLIS;
+
+			PeriodicWorkRequest.Builder scheduledWorkRequestBuild = new PeriodicWorkRequest.Builder(NewsUpdate.class, minutes, TimeUnit.MINUTES);
+			scheduledWorkRequestBuild.addTag("JavServiceUpdater");
+			scheduledWorkRequestBuild.setConstraints(new Constraints.Builder().setRequiredNetworkType(NetworkType.CONNECTED).build());
+			PeriodicWorkRequest scheduledWorkRequest = scheduledWorkRequestBuild.build();
+			WorkManager.getInstance().enqueueUniquePeriodicWork("JavServiceUpdater", ExistingPeriodicWorkPolicy.REPLACE, scheduledWorkRequest);
+
 			Log.i("Main","Alarm set "+shared.getBoolean("notifiCancelled", true));
 		}
 		

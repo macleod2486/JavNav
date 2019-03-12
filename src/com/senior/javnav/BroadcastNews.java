@@ -3,7 +3,7 @@
 *   JavNav 
 *    a simple application for general use of the Texas A&M-Kingsville Campus. 
 *    
-*    Copyright (C) 2014  Manuel Gonzales Jr.
+*    Copyright (C) 2019  Manuel Gonzales Jr.
 *
 *    This program is free software: you can redistribute it and/or modify
 *    it under the terms of the GNU General Public License as published by
@@ -21,15 +21,21 @@
 */
 package com.senior.javnav;
 
-import android.app.AlarmManager;
-import android.app.PendingIntent;
 import android.content.BroadcastReceiver;
 import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.preference.PreferenceManager;
-import androidx.core.app.JobIntentService;
+
+import androidx.work.Constraints;
+import androidx.work.ExistingPeriodicWorkPolicy;
+import androidx.work.NetworkType;
+import androidx.work.PeriodicWorkRequest;
+import androidx.work.WorkManager;
+
 import android.util.Log;
+
+import java.util.concurrent.TimeUnit;
 
 public class BroadcastNews extends BroadcastReceiver 
 {
@@ -43,24 +49,27 @@ public class BroadcastNews extends BroadcastReceiver
 
 		if(arg1.toString().contains(Intent.ACTION_BOOT_COMPLETED) && shared.getBoolean("notifi", false))
 		{
-			//one second * 60 seconds in a minute * minutes
-			long interval = 1000*60*5;
-			
-			Intent service = new Intent(arg0, BroadcastNews.class);
-			PendingIntent pendingService = PendingIntent.getBroadcast(arg0, 0, service, 0);
-			AlarmManager newsUpdate = (AlarmManager)arg0.getSystemService(arg0.ALARM_SERVICE);
+			long minutes = PeriodicWorkRequest.MIN_PERIODIC_INTERVAL_MILLIS;
 
-			//Check for the update based on interval
-			newsUpdate.setInexactRepeating(AlarmManager.RTC, System.currentTimeMillis(), interval, pendingService);
+			PeriodicWorkRequest.Builder scheduledWorkRequestBuild = new PeriodicWorkRequest.Builder(NewsUpdate.class, minutes, TimeUnit.MINUTES);
+			scheduledWorkRequestBuild.addTag("JavServiceUpdater");
+			scheduledWorkRequestBuild.setConstraints(new Constraints.Builder().setRequiredNetworkType(NetworkType.CONNECTED).build());
+			PeriodicWorkRequest scheduledWorkRequest = scheduledWorkRequestBuild.build();
+			WorkManager.getInstance().enqueueUniquePeriodicWork("PackageTrackerUpdater", ExistingPeriodicWorkPolicy.REPLACE, scheduledWorkRequest);
 			
 			Log.i("JavBroadcast","JavService started");
 		}
 		else
 		{
 			//Starting the news update class
-			Intent newsUpdate = new Intent(arg0,NewsUpdate.class);
-			JobIntentService.enqueueWork(arg0, NewsUpdate.class, 1000, newsUpdate);
-			
+			long minutes = PeriodicWorkRequest.MIN_PERIODIC_INTERVAL_MILLIS;
+
+			PeriodicWorkRequest.Builder scheduledWorkRequestBuild = new PeriodicWorkRequest.Builder(NewsUpdate.class, minutes, TimeUnit.MINUTES);
+			scheduledWorkRequestBuild.addTag("JavServiceUpdater");
+			scheduledWorkRequestBuild.setConstraints(new Constraints.Builder().setRequiredNetworkType(NetworkType.CONNECTED).build());
+			PeriodicWorkRequest scheduledWorkRequest = scheduledWorkRequestBuild.build();
+			WorkManager.getInstance().enqueueUniquePeriodicWork("JavServiceUpdater", ExistingPeriodicWorkPolicy.REPLACE, scheduledWorkRequest);
+
 			Log.i("JavBroadcast","Broadcast finished");
 		} 
 	}

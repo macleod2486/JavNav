@@ -3,7 +3,7 @@
 *   JavNav 
 *    a simple application for general use of the Texas A&M-Kingsville Campus. 
 *    
-*    Copyright (C) 2014  Manuel Gonzales Jr.
+*    Copyright (C) 2019  Manuel Gonzales Jr.
 *
 *    This program is free software: you can redistribute it and/or modify
 *    it under the terms of the GNU General Public License as published by
@@ -21,13 +21,16 @@
 */
 package com.senior.javnav;
 
-import androidx.core.app.JobIntentService;
+import androidx.annotation.NonNull;
 import android.app.NotificationManager;
 import android.app.PendingIntent;
 import android.content.Context;
 import android.content.Intent;
 import androidx.core.app.NotificationCompat;
 import androidx.core.app.TaskStackBuilder;
+import androidx.work.Worker;
+import androidx.work.WorkerParameters;
+
 import android.util.Log;
 
 import org.jsoup.Jsoup;
@@ -36,19 +39,19 @@ import org.jsoup.select.Elements;
 
 import java.util.ArrayList;
 
-public class NewsUpdate extends JobIntentService
+public class NewsUpdate extends Worker
 {
     JavSQL sql;
 
     boolean newLink = false;
 
-    static void enqueueWork(Context context, Intent work)
+    public NewsUpdate(@NonNull Context context, @NonNull WorkerParameters params)
     {
-        enqueueWork(context, NewsUpdate.class, 1000, work);
+        super(context, params);
     }
 
     @Override
-    protected void onHandleWork(Intent intent)
+    public Result doWork()
     {
         sql = new JavSQL(this.getApplicationContext(), "JavSql", null, 1);
 
@@ -74,19 +77,20 @@ public class NewsUpdate extends JobIntentService
         catch(Exception e)
         {
             Log.e("JavService","Error "+e);
+            return Result.retry();
         }
 
         if(newLink)
         {
-            NotificationManager notifiManage = (NotificationManager)getSystemService(Context.NOTIFICATION_SERVICE);
+            NotificationManager notifiManage = (NotificationManager)getApplicationContext().getSystemService(Context.NOTIFICATION_SERVICE);
             NotificationCompat.Builder buildNotification;
             NotificationCompat.InboxStyle notificationStyle;
             PendingIntent homePending;
 
-            Intent homeIntent = new Intent(this, MainActivity.class);
+            Intent homeIntent = new Intent(getApplicationContext(), MainActivity.class);
             homeIntent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK);
 
-            TaskStackBuilder stackBuilder = TaskStackBuilder.create(getBaseContext());
+            TaskStackBuilder stackBuilder = TaskStackBuilder.create(getApplicationContext());
             stackBuilder.addParentStack(MainActivity.class);
             stackBuilder.addNextIntent(homeIntent);
 
@@ -102,7 +106,7 @@ public class NewsUpdate extends JobIntentService
                 notificationStyle.addLine(listOfLinks.get(index));
             }
 
-            buildNotification = new NotificationCompat.Builder(getBaseContext());
+            buildNotification = new NotificationCompat.Builder(getApplicationContext());
             buildNotification.setSmallIcon(R.drawable.ic_notification);
             buildNotification.setContentTitle("JavNav");
             buildNotification.setContentText("New Events!");
@@ -118,6 +122,8 @@ public class NewsUpdate extends JobIntentService
 
 
         Log.i("JavService","Finished");
+
+        return Result.success();
     }
 
     private void fillTable()
