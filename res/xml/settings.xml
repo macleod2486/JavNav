@@ -34,6 +34,13 @@
             android:key="notifi"
             android:defaultValue="true"
         />
+        <ListPreference
+            android:entries="@array/NotifInterval"
+            android:entryValues="@array/NotifIntervalValues"
+            android:defaultValue="@string/NotifIntervalDefault"
+            android:title="Update Interval"
+            android:key="notifInterval">
+        </ListPreference>
     </PreferenceCategory>
 
     <PreferenceCategory android:title="Privacy">

@@ -49,7 +49,8 @@ public class BroadcastNews extends BroadcastReceiver
 
 		if(arg1.toString().contains(Intent.ACTION_BOOT_COMPLETED) && shared.getBoolean("notifi", false))
 		{
-			long minutes = PeriodicWorkRequest.MIN_PERIODIC_INTERVAL_MILLIS;
+			int setting = Integer.parseInt(shared.getString("notifInterval","1"));
+			long minutes = PeriodicWorkRequest.MIN_PERIODIC_INTERVAL_MILLIS * setting;
 
 			PeriodicWorkRequest.Builder scheduledWorkRequestBuild = new PeriodicWorkRequest.Builder(NewsUpdate.class, minutes, TimeUnit.MINUTES);
 			scheduledWorkRequestBuild.addTag("JavServiceUpdater");
@@ -62,7 +63,8 @@ public class BroadcastNews extends BroadcastReceiver
 		else
 		{
 			//Starting the news update class
-			long minutes = PeriodicWorkRequest.MIN_PERIODIC_INTERVAL_MILLIS;
+			int setting = Integer.parseInt(shared.getString("notifInterval","1"));
+			long minutes = PeriodicWorkRequest.MIN_PERIODIC_INTERVAL_MILLIS * setting;
 
 			PeriodicWorkRequest.Builder scheduledWorkRequestBuild = new PeriodicWorkRequest.Builder(NewsUpdate.class, minutes, TimeUnit.MINUTES);
 			scheduledWorkRequestBuild.addTag("JavServiceUpdater");

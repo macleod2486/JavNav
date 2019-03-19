@@ -61,5 +61,23 @@
 		<item>h</item>
 		<item>f</item>
 	</string-array>
+
+	<string name="NotifIntervalDefault">1</string>
+
+	<string-array name="NotifInterval">
+		<item>15 min</item>
+		<item>30 min</item>
+		<item>1 hr</item>
+		<item>12 hr</item>
+		<item>1 day</item>
+	</string-array>
+
+	<string-array name="NotifIntervalValues">
+		<item>1</item>
+		<item>2</item>
+		<item>4</item>
+		<item>48</item>
+		<item>96</item>
+	</string-array>
     
 </resources>

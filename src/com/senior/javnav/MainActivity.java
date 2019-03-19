@@ -234,7 +234,8 @@ public class MainActivity extends AppCompatActivity
 		SharedPreferences shared = PreferenceManager.getDefaultSharedPreferences(this);
 		if(shared.getBoolean("notifi", true))
 		{
-			long minutes = PeriodicWorkRequest.MIN_PERIODIC_INTERVAL_MILLIS;
+			int setting = Integer.parseInt(shared.getString("notifInterval","1"));
+			long minutes = PeriodicWorkRequest.MIN_PERIODIC_INTERVAL_MILLIS * setting;
 
 			PeriodicWorkRequest.Builder scheduledWorkRequestBuild = new PeriodicWorkRequest.Builder(NewsUpdate.class, minutes, TimeUnit.MINUTES);
 			scheduledWorkRequestBuild.addTag("JavServiceUpdater");
