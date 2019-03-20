@@ -27,50 +27,29 @@ import android.content.Intent;
 import android.content.SharedPreferences;
 import android.preference.PreferenceManager;
 
-import androidx.work.Constraints;
-import androidx.work.ExistingPeriodicWorkPolicy;
-import androidx.work.NetworkType;
-import androidx.work.PeriodicWorkRequest;
-import androidx.work.WorkManager;
-
 import android.util.Log;
-
-import java.util.concurrent.TimeUnit;
 
 public class BroadcastNews extends BroadcastReceiver 
 {
-
 	@Override
 	public void onReceive(Context arg0, Intent arg1) 
 	{
+		JavServiceScheduler scheduler = new JavServiceScheduler();
 		SharedPreferences shared = PreferenceManager.getDefaultSharedPreferences(arg0.getApplicationContext());
 
 		Log.i("BroadcastNews", "Broadcast received");
 
 		if(arg1.toString().contains(Intent.ACTION_BOOT_COMPLETED) && shared.getBoolean("notifi", false))
 		{
-			int setting = Integer.parseInt(shared.getString("notifInterval","1"));
-			long minutes = PeriodicWorkRequest.MIN_PERIODIC_INTERVAL_MILLIS * setting;
+			String multiplier = shared.getString("notifInterval","1");
+			scheduler.schedule(multiplier);
 
-			PeriodicWorkRequest.Builder scheduledWorkRequestBuild = new PeriodicWorkRequest.Builder(NewsUpdate.class, minutes, TimeUnit.MINUTES);
-			scheduledWorkRequestBuild.addTag("JavServiceUpdater");
-			scheduledWorkRequestBuild.setConstraints(new Constraints.Builder().setRequiredNetworkType(NetworkType.CONNECTED).build());
-			PeriodicWorkRequest scheduledWorkRequest = scheduledWorkRequestBuild.build();
-			WorkManager.getInstance().enqueueUniquePeriodicWork("PackageTrackerUpdater", ExistingPeriodicWorkPolicy.REPLACE, scheduledWorkRequest);
-			
 			Log.i("JavBroadcast","JavService started");
 		}
 		else
 		{
-			//Starting the news update class
-			int setting = Integer.parseInt(shared.getString("notifInterval","1"));
-			long minutes = PeriodicWorkRequest.MIN_PERIODIC_INTERVAL_MILLIS * setting;
-
-			PeriodicWorkRequest.Builder scheduledWorkRequestBuild = new PeriodicWorkRequest.Builder(NewsUpdate.class, minutes, TimeUnit.MINUTES);
-			scheduledWorkRequestBuild.addTag("JavServiceUpdater");
-			scheduledWorkRequestBuild.setConstraints(new Constraints.Builder().setRequiredNetworkType(NetworkType.CONNECTED).build());
-			PeriodicWorkRequest scheduledWorkRequest = scheduledWorkRequestBuild.build();
-			WorkManager.getInstance().enqueueUniquePeriodicWork("JavServiceUpdater", ExistingPeriodicWorkPolicy.REPLACE, scheduledWorkRequest);
+			String multiplier = shared.getString("notifInterval","1");
+			scheduler.schedule(multiplier);
 
 			Log.i("JavBroadcast","Broadcast finished");
 		} 

@@ -80,16 +80,12 @@ public class Preferences extends PreferenceActivity implements SharedPreferences
 		//Start the service if enabled and it hasn't started
 		SharedPreferences shared = PreferenceManager.getDefaultSharedPreferences(this);
 
+		JavServiceScheduler scheduler = new JavServiceScheduler();
+
 		if(shared.getBoolean("notifi", true))
 		{
-			int setting = Integer.parseInt(shared.getString("notifInterval","1"));
-			long minutes = PeriodicWorkRequest.MIN_PERIODIC_INTERVAL_MILLIS * setting;
-
-			PeriodicWorkRequest.Builder scheduledWorkRequestBuild = new PeriodicWorkRequest.Builder(NewsUpdate.class, minutes, TimeUnit.MINUTES);
-			scheduledWorkRequestBuild.addTag("JavServiceUpdater");
-			scheduledWorkRequestBuild.setConstraints(new Constraints.Builder().setRequiredNetworkType(NetworkType.CONNECTED).build());
-			PeriodicWorkRequest scheduledWorkRequest = scheduledWorkRequestBuild.build();
-			WorkManager.getInstance().enqueueUniquePeriodicWork("JavServiceUpdater", ExistingPeriodicWorkPolicy.REPLACE, scheduledWorkRequest);
+			String multiplier = shared.getString("notifInterval","1");
+			scheduler.schedule(multiplier);
 
 			Log.i("Preferences","Service started");
 		}
@@ -97,7 +93,7 @@ public class Preferences extends PreferenceActivity implements SharedPreferences
 		//Cancel the service if not enabled anymore
 		if(!shared.getBoolean("notifi", true))
 		{
-			WorkManager.getInstance().cancelAllWorkByTag("JavServiceUpdater");
+			scheduler.stop();
 			Log.i("Preferences","Service cancelled");
 		}
 

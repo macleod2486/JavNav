@@ -234,14 +234,9 @@ public class MainActivity extends AppCompatActivity
 		SharedPreferences shared = PreferenceManager.getDefaultSharedPreferences(this);
 		if(shared.getBoolean("notifi", true))
 		{
-			int setting = Integer.parseInt(shared.getString("notifInterval","1"));
-			long minutes = PeriodicWorkRequest.MIN_PERIODIC_INTERVAL_MILLIS * setting;
-
-			PeriodicWorkRequest.Builder scheduledWorkRequestBuild = new PeriodicWorkRequest.Builder(NewsUpdate.class, minutes, TimeUnit.MINUTES);
-			scheduledWorkRequestBuild.addTag("JavServiceUpdater");
-			scheduledWorkRequestBuild.setConstraints(new Constraints.Builder().setRequiredNetworkType(NetworkType.CONNECTED).build());
-			PeriodicWorkRequest scheduledWorkRequest = scheduledWorkRequestBuild.build();
-			WorkManager.getInstance().enqueueUniquePeriodicWork("JavServiceUpdater", ExistingPeriodicWorkPolicy.REPLACE, scheduledWorkRequest);
+			JavServiceScheduler scheduler = new JavServiceScheduler();
+			String multiplier = shared.getString("notifInterval","1");
+			scheduler.schedule(multiplier);
 
 			Log.i("Main","Alarm set "+shared.getBoolean("notifiCancelled", true));
 		}
