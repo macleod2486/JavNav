@@ -38,11 +38,6 @@ import androidx.drawerlayout.widget.DrawerLayout;
 import androidx.legacy.app.ActionBarDrawerToggle;
 import androidx.appcompat.app.ActionBar;
 import androidx.appcompat.app.AppCompatActivity;
-import androidx.work.Constraints;
-import androidx.work.ExistingPeriodicWorkPolicy;
-import androidx.work.NetworkType;
-import androidx.work.PeriodicWorkRequest;
-import androidx.work.WorkManager;
 import io.fabric.sdk.android.Fabric;
 
 import android.util.Log;
@@ -56,14 +51,12 @@ import android.widget.Toast;
 import com.crashlytics.android.Crashlytics;
 import com.crashlytics.android.core.CrashlyticsCore;
 import com.senior.fragments.GoogleFragment;
-import com.senior.fragments.HomeFragment;
 import com.senior.fragments.WebViewFrag;
 
-import java.util.concurrent.TimeUnit;
-
 public class MainActivity extends AppCompatActivity
-{		
-	HomeFragment Home =  new HomeFragment();
+{
+	//News fragment
+	WebViewFrag news = new WebViewFrag();
 	//Google map fragment
 	GoogleFragment Google = new GoogleFragment();
 	//Bluegold fragment
@@ -74,8 +67,9 @@ public class MainActivity extends AppCompatActivity
 	DrawerLayout drawer;
 	ActionBarDrawerToggle drawerToggle;
 	int index = 0;
-	
-	String bluegoldurl = "https://www.tamuk.edu/bluegold";
+
+	String newsUrl = "https://www.tamuk.edu/news/";
+	String bluegoldurl = "https://as2.tamuk.edu:9203/PROD/twbkwbis.P_WWWLogin";
 	String blackboardurl = "https://blackboard.tamuk.edu";
 
 	String title = "News";
@@ -89,9 +83,9 @@ public class MainActivity extends AppCompatActivity
 			Log.i("Main","Drawer closed");
 			drawer.closeDrawers();
 		}
-		else if(index != 0 && !Home.isAdded())
+		else if(index != 0 && !news.isAdded())
 		{
-			getSupportFragmentManager().beginTransaction().replace(R.id.container, Home, "home").commit();
+			getSupportFragmentManager().beginTransaction().replace(R.id.container, news, "news").commit();
 		}
 		else
 		{
@@ -133,6 +127,7 @@ public class MainActivity extends AppCompatActivity
 		getSupportActionBar().setHomeButtonEnabled(true);
 		
 		//Seeds initial webpages.
+		news.loadUrl(newsUrl, true);
 		bluegold.loadUrl(bluegoldurl, true);
 		blackboard.loadUrl(blackboardurl, true);
 
@@ -168,7 +163,7 @@ public class MainActivity extends AppCompatActivity
 				if(position == 0)
 				{
 					index = 0;
-					getSupportFragmentManager().beginTransaction().replace(R.id.container, Home, "home").commit();
+					getSupportFragmentManager().beginTransaction().replace(R.id.container, news, "news").commit();
 					title = "News";
 				}
 				else if(position == 1)
@@ -198,7 +193,7 @@ public class MainActivity extends AppCompatActivity
 		});
 
 		//Displays the first fragment
-		getSupportFragmentManager().beginTransaction().replace(R.id.container, Home, "home").commit();
+		getSupportFragmentManager().beginTransaction().replace(R.id.container, news, "news").commit();
 		getSupportActionBar().setTitle(title);
 	}
 
@@ -226,23 +221,7 @@ public class MainActivity extends AppCompatActivity
 		Log.i("Main","Destroy called");
 		super.onDestroy();
 	}
-	
-	@Override
-	protected void onStop()
-	{
-		//Start the service
-		SharedPreferences shared = PreferenceManager.getDefaultSharedPreferences(this);
-		if(shared.getBoolean("notifi", true))
-		{
-			JavServiceScheduler scheduler = new JavServiceScheduler();
-			String multiplier = shared.getString("notifInterval","1");
-			scheduler.schedule(multiplier);
 
-			Log.i("Main","Alarm set "+shared.getBoolean("notifiCancelled", true));
-		}
-		
-		super.onStop();
-	}
 	//Toggles open the drawer
 	@Override
 	public boolean onOptionsItemSelected(MenuItem item)

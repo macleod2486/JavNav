@@ -70,7 +70,6 @@ public class WebViewFrag extends Fragment
 		webFragView.setWebViewClient(new Client());
 		webFragView.getSettings().setBuiltInZoomControls(true);
 		webFragView.getSettings().setJavaScriptEnabled(true);
-		webFragView.setInitialScale(50);
 		
 		if(saveState == null || restart)
 		{

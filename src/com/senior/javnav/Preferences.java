@@ -37,13 +37,6 @@ import android.util.Log;
 import android.view.WindowManager;
 
 import java.util.Set;
-import java.util.concurrent.TimeUnit;
-
-import androidx.work.Constraints;
-import androidx.work.ExistingPeriodicWorkPolicy;
-import androidx.work.NetworkType;
-import androidx.work.PeriodicWorkRequest;
-import androidx.work.WorkManager;
 
 public class Preferences extends PreferenceActivity implements SharedPreferences.OnSharedPreferenceChangeListener
 {
@@ -79,23 +72,6 @@ public class Preferences extends PreferenceActivity implements SharedPreferences
 
 		//Start the service if enabled and it hasn't started
 		SharedPreferences shared = PreferenceManager.getDefaultSharedPreferences(this);
-
-		JavServiceScheduler scheduler = new JavServiceScheduler();
-
-		if(shared.getBoolean("notifi", true))
-		{
-			String multiplier = shared.getString("notifInterval","1");
-			scheduler.schedule(multiplier);
-
-			Log.i("Preferences","Service started");
-		}
-		
-		//Cancel the service if not enabled anymore
-		if(!shared.getBoolean("notifi", true))
-		{
-			scheduler.stop();
-			Log.i("Preferences","Service cancelled");
-		}
 
 		if(shared.getBoolean("secScreen",false))
 		{

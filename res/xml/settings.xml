@@ -27,21 +27,6 @@
             android:title="Show Traffic">
         </CheckBoxPreference>
     </PreferenceCategory>
-    
-    <PreferenceCategory android:title="Notifications">
-        <CheckBoxPreference 
-            android:title="TAMUK News"
-            android:key="notifi"
-            android:defaultValue="true"
-        />
-        <ListPreference
-            android:entries="@array/NotifInterval"
-            android:entryValues="@array/NotifIntervalValues"
-            android:defaultValue="@string/NotifIntervalDefault"
-            android:title="Update Interval"
-            android:key="notifInterval">
-        </ListPreference>
-    </PreferenceCategory>
 
     <PreferenceCategory android:title="Privacy">
         <CheckBoxPreference
