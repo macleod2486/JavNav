@@ -23,6 +23,14 @@
           }
         },
         {
+          "client_id": "182471996321-us0mkbr0rv3pa1fud3ip4rmuhgurg9og.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "com.senior.javnav",
+            "certificate_hash": "dccb6ce5b73ec003bd52d7bdc6dc91331b43e90e"
+          }
+        },
+        {
           "client_id": "182471996321-tj11h6q67k73fvrdn71cdiauav2sq1u2.apps.googleusercontent.com",
           "client_type": 3
         }
@@ -33,15 +41,13 @@
         }
       ],
       "services": {
-        "analytics_service": {
-          "status": 1
-        },
         "appinvite_service": {
-          "status": 1,
-          "other_platform_oauth_client": []
-        },
-        "ads_service": {
-          "status": 2
+          "other_platform_oauth_client": [
+            {
+              "client_id": "182471996321-tj11h6q67k73fvrdn71cdiauav2sq1u2.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
         }
       }
     }

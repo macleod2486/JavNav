@@ -24,13 +24,11 @@ package com.senior.javnav;
 import android.app.AlertDialog;
 import android.content.Context;
 import android.content.Intent;
-import android.content.SharedPreferences;
 import android.content.pm.PackageManager;
 import android.content.res.Configuration;
 import android.net.ConnectivityManager;
 import android.net.NetworkInfo;
 import android.os.Bundle;
-import android.preference.PreferenceManager;
 
 import androidx.core.content.ContextCompat;
 import androidx.core.view.GravityCompat;
@@ -38,7 +36,6 @@ import androidx.drawerlayout.widget.DrawerLayout;
 import androidx.legacy.app.ActionBarDrawerToggle;
 import androidx.appcompat.app.ActionBar;
 import androidx.appcompat.app.AppCompatActivity;
-import io.fabric.sdk.android.Fabric;
 
 import android.util.Log;
 import android.view.MenuItem;
@@ -48,8 +45,6 @@ import android.widget.ArrayAdapter;
 import android.widget.ListView;
 import android.widget.Toast;
 
-import com.crashlytics.android.Crashlytics;
-import com.crashlytics.android.core.CrashlyticsCore;
 import com.senior.fragments.GoogleFragment;
 import com.senior.fragments.WebViewFrag;
 
@@ -101,11 +96,6 @@ public class MainActivity extends AppCompatActivity
 	protected void onCreate(Bundle savedInstanceState) 
 	{	
 		super.onCreate(savedInstanceState);
-
-		Crashlytics crashlyticsKit = new Crashlytics.Builder()
-				.core(new CrashlyticsCore.Builder().disabled(BuildConfig.DEBUG).build())
-				.build();
-		Fabric.with(this, crashlyticsKit);
 
 		//Sets the layout to the activity main layout
 		setContentView(R.layout.activity_main);
