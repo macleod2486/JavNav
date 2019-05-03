@@ -51,7 +51,7 @@ dependencies {
 //define some config for our apps (minimum android version, tools version, etc ...)
 android {
     compileSdkVersion 28
-    buildToolsVersion '29.0.0 rc2'
+    buildToolsVersion '28.0.3'
     sourceSets {
         main {
             manifest.srcFile 'AndroidManifest.xml'
