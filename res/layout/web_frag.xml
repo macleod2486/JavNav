@@ -2,8 +2,9 @@
 <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
     android:background="#003399"
-    android:orientation="vertical" >
+    android:orientation="vertical">
 
     <WebView
         android:id="@+id/webFrag"
@@ -11,31 +12,46 @@
         android:layout_height="fill_parent"
         android:layout_below="@+id/webBack" />
 
-    <Button
+    <com.google.android.material.button.MaterialButton
         android:id="@+id/webBack"
-        android:layout_width="100dp"
+        android:theme="@style/Theme.MaterialComponents.NoActionBar"
+        android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_alignParentLeft="true"
         android:layout_alignParentTop="true"
         android:background="@android:color/transparent"
-        android:text="@string/back" />
+        app:iconGravity="textStart"
+        app:iconPadding="0dp"
+        app:icon="@drawable/ic_arrow_back_black_24dp">
 
-    <Button
+    </com.google.android.material.button.MaterialButton>
+
+    <com.google.android.material.button.MaterialButton
         android:id="@+id/webRefr"
-        android:layout_width="100dp"
+        android:theme="@style/Theme.MaterialComponents.NoActionBar"
+        android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_alignParentTop="true"
         android:layout_centerHorizontal="true"
         android:background="@android:color/transparent"
-        android:text="@string/refresh" />
+        app:icon="@drawable/ic_refresh_black_24dp"
+        app:iconGravity="textStart"
+        app:iconPadding="0dp" >
 
-    <Button
+    </com.google.android.material.button.MaterialButton>
+
+    <com.google.android.material.button.MaterialButton
         android:id="@+id/webForw"
-        android:layout_width="100dp"
+        android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:background="@android:color/transparent"
         android:layout_alignParentRight="true"
-        android:text="@string/forward" />
+        android:background="@android:color/transparent"
+        android:theme="@style/Theme.MaterialComponents.NoActionBar"
+        app:iconGravity="textStart"
+        app:iconPadding="0dp"
+        app:icon="@drawable/ic_arrow_forward_black_24dp">
+
+    </com.google.android.material.button.MaterialButton>
 
     <ProgressBar
         android:id="@+id/webProgress"
