@@ -52,7 +52,7 @@ dependencies {
 
 //define some config for our apps (minimum android version, tools version, etc ...)
 android {
-    compileSdkVersion 29
+
     buildToolsVersion '28.0.3'
     sourceSets {
         main {
@@ -68,6 +68,7 @@ android {
     defaultConfig {
         minSdkVersion 21
         targetSdkVersion 29
+        compileSdkVersion 28
         multiDexEnabled true
     }
     dexOptions {
