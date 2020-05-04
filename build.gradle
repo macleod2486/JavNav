@@ -1,25 +1,22 @@
 apply plugin: 'com.android.application'
-apply plugin: 'io.fabric'
 
 //this is used to define the plugin android
 buildscript {
     repositories {
         google()
-        maven { url 'https://maven.fabric.io/public' }
         jcenter()
         mavenCentral()
     }
     dependencies {
-        classpath 'com.android.tools.build:gradle:3.5.0'
-        classpath 'com.google.gms:google-services:4.3.2'
-        classpath 'io.fabric.tools:gradle:1.31.0'
+        classpath 'com.android.tools.build:gradle:3.6.3'
+        classpath 'com.google.gms:google-services:4.3.3'
+        classpath 'com.google.firebase:firebase-crashlytics-gradle:2.0.0'
     }
 
 }
 
 //here we tell it to get dependencies from maven central (search.maven.org)
 repositories {
-    maven { url 'https://maven.fabric.io/public' }
     maven {
         url 'https://maven.google.com/'
         name 'Google'
@@ -31,23 +28,23 @@ repositories {
 
 //this is an android app
 apply plugin: 'com.android.application'
-apply plugin: 'io.fabric'
+apply plugin: 'com.google.firebase.crashlytics'
 
 //here we list our dependencies
 dependencies {
     implementation 'com.google.android.gms:play-services-maps:17.0.0'
-    implementation 'com.google.gms:google-services:4.3.2'
+    implementation 'com.google.gms:google-services:4.3.3'
 
     implementation 'androidx.multidex:multidex:2.0.1'
 
     implementation 'androidx.legacy:legacy-support-v4:1.0.0'
-    implementation 'com.google.android.material:material:1.0.0'
+    implementation 'com.google.android.material:material:1.1.0'
     implementation 'androidx.constraintlayout:constraintlayout:1.1.3'
     implementation "android.arch.work:work-runtime:1.0.1"
 
-    implementation 'com.google.firebase:firebase-core:17.2.0'
-    implementation 'com.google.firebase:firebase-analytics:17.2.0'
-    implementation 'com.crashlytics.sdk.android:crashlytics:2.10.1'
+    implementation 'com.google.firebase:firebase-core:17.4.0'
+    implementation 'com.google.firebase:firebase-analytics:17.4.0'
+    implementation 'com.google.firebase:firebase-crashlytics:17.0.0'
 }
 
 //define some config for our apps (minimum android version, tools version, etc ...)
