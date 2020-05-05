@@ -25,15 +25,14 @@ package com.senior.javnav
 import android.content.SharedPreferences
 import android.content.SharedPreferences.OnSharedPreferenceChangeListener
 import android.os.Bundle
-import android.preference.*
 import android.util.Log
 import android.view.WindowManager
+import androidx.preference.*
 
-class Preferences : PreferenceActivity(), OnSharedPreferenceChangeListener {
-    public override fun onCreate(savedInstanceState: Bundle) {
-        super.onCreate(savedInstanceState)
+class Preferences : PreferenceFragmentCompat(), OnSharedPreferenceChangeListener {
+    override fun onCreatePreferences(savedInstanceState: Bundle?, rootKey: String?) {
         addPreferencesFromResource(R.xml.settings)
-        PreferenceManager.setDefaultValues(this@Preferences, R.xml.settings, false)
+        PreferenceManager.setDefaultValues(requireContext(), R.xml.settings, false)
         initSummary(preferenceScreen)
     }
 
@@ -51,11 +50,13 @@ class Preferences : PreferenceActivity(), OnSharedPreferenceChangeListener {
         Log.i("Preferences", "On stop called.")
 
         //Start the service if enabled and it hasn't started
-        val shared = PreferenceManager.getDefaultSharedPreferences(this)
+        val shared = PreferenceManager.getDefaultSharedPreferences(requireContext())
         if (shared.getBoolean("secScreen", false)) {
-            window.setFlags(WindowManager.LayoutParams.FLAG_SECURE, WindowManager.LayoutParams.FLAG_SECURE)
+            //window.setFlags(WindowManager.LayoutParams.FLAG_SECURE, WindowManager.LayoutParams.FLAG_SECURE)
+            Log.i("Preferences", "Enable secure screen")
         } else {
-            window.clearFlags(WindowManager.LayoutParams.FLAG_SECURE)
+            //window.clearFlags(WindowManager.LayoutParams.FLAG_SECURE)
+            Log.i("Preferences", "Disable secure screen")
         }
         super.onStop()
     }
@@ -75,7 +76,7 @@ class Preferences : PreferenceActivity(), OnSharedPreferenceChangeListener {
         }
     }
 
-    private fun updatePrefSummary(p: Preference) {
+    private fun updatePrefSummary(p: Preference?) {
         if (p is ListPreference) {
             p.setSummary(p.entry)
         }
@@ -87,7 +88,7 @@ class Preferences : PreferenceActivity(), OnSharedPreferenceChangeListener {
             }
         }
         if (p is MultiSelectListPreference) {
-            val shared = PreferenceManager.getDefaultSharedPreferences(this)
+            val shared = PreferenceManager.getDefaultSharedPreferences(requireContext())
             val selections = shared.getStringSet(p.key, null)
 
             if (selections != null) {

@@ -54,6 +54,9 @@ class MainActivity : AppCompatActivity() {
     //Bluegold fragment
     var bluegold = WebViewFrag()
 
+    //Preferences fragment
+    var preferences = Preferences()
+
     //Blackboard fragment
     var blackboard = WebViewFrag()
     lateinit var drawer: DrawerLayout
@@ -71,6 +74,8 @@ class MainActivity : AppCompatActivity() {
             drawer!!.closeDrawers()
         } else if (index != 0 && !news.isAdded) {
             supportFragmentManager.beginTransaction().replace(R.id.container, news, "news").commit()
+            title = "News"
+            supportActionBar!!.setTitle(title)
         } else {
             super.onBackPressed()
         }
@@ -143,7 +148,10 @@ class MainActivity : AppCompatActivity() {
                 supportFragmentManager.beginTransaction().replace(R.id.container, blackboard, "blackboard").commit()
                 title = "Blackboard"
             } else if (position == 4) {
-                startActivity(Intent(this@MainActivity, Preferences::class.java))
+                //startActivity(Intent(this@MainActivity, Preferences::class.java))
+                index = 4
+                supportFragmentManager.beginTransaction().replace(R.id.container, preferences, "preferences").commit()
+                title = "Preferences"
             }
             drawer.closeDrawers()
         }
