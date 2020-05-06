@@ -3,7 +3,7 @@
 *   JavNav 
 *    a simple application for general use of the Texas A&M-Kingsville Campus. 
 *    
-*    Copyright (C) 2016  Manuel Gonzales Jr.
+*    Copyright (C) 2020  Manuel Gonzales Jr.
 *
 *    This program is free software: you can redistribute it and/or modify
 *    it under the terms of the GNU General Public License as published by
@@ -52,30 +52,28 @@ import java.util.*
 import javax.xml.parsers.DocumentBuilderFactory
 
 class GoogleFragment : Fragment(), OnMapReadyCallback {
-    lateinit private var map: View
+    private lateinit var map: View
     lateinit var TAMUK: GoogleMap
     private var TAMUKFrag: SupportMapFragment? = null
 
     //Initalized with TAMUK location.
-    var currentLoc = LatLng(27.524285, -97.882433)
+    private var currentLoc = LatLng(27.524285, -97.882433)
     private var buildingList: Spinner? = null
-    private var buildingGetter: getBuildings? = null
     private val buildingNames = ArrayList<String?>()
     private val buildingCoord = ArrayList<String?>()
     private var currentMode = 0
     private var navigate = 0
-    private var getBooleanCompleted = false
+
     override fun onCreateView(inflate: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View? {
         Log.i("Google", "Oncreate view called")
         map = inflate.inflate(R.layout.google_fragment, container, false)
         buildingList = map.findViewById<View>(R.id.buildings) as Spinner
-        buildingGetter = getBuildings()
         buildingNames.clear()
         buildingCoord.clear()
 
         //Adds and organizes the buildings alphabetically
         try {
-            buildingNames.addAll(buildingGetter!!.execute().get())
+            buildingNames.addAll(getBuildings().execute().get())
             Collections.sort(buildingNames, java.lang.String.CASE_INSENSITIVE_ORDER)
             buildingCoord.addAll(buildingNames)
             Collections.sort(buildingCoord, java.lang.String.CASE_INSENSITIVE_ORDER)
@@ -85,7 +83,7 @@ class GoogleFragment : Fragment(), OnMapReadyCallback {
         } catch (e: Exception) {
             e.printStackTrace()
         }
-        if (!getBooleanCompleted) {
+        if (buildingNames.isEmpty()) {
             val error = Toast.makeText(requireActivity().applicationContext, "Error in acquiring building list, please try again", Toast.LENGTH_SHORT)
             error.show()
         }
@@ -154,8 +152,7 @@ class GoogleFragment : Fragment(), OnMapReadyCallback {
         super.onDestroyView()
         try {
             Log.i("Google", "Destroy executing")
-            val frag: Fragment?
-            frag = childFragmentManager.findFragmentById(R.id.google_map)
+            val frag = childFragmentManager.findFragmentById(R.id.google_map)
 
             val ft = requireActivity().supportFragmentManager.beginTransaction()
             ft.remove(frag!!)
@@ -192,8 +189,8 @@ class GoogleFragment : Fragment(), OnMapReadyCallback {
     }
 
     private inner class getBuildings : AsyncTask<String?, Void?, ArrayList<String>>() {
-        var buildingArray = ArrayList<String>()
         override fun doInBackground(vararg params: String?): ArrayList<String> {
+            val buildingArray = ArrayList<String>()
             val buildingList = getString(R.string.buildingListUrl)
             try {
                 val dbf = DocumentBuilderFactory.newInstance()
@@ -209,10 +206,8 @@ class GoogleFragment : Fragment(), OnMapReadyCallback {
                     buildingArray.add(building.textContent)
                     Log.i("Google", "Building " + building.textContent)
                 }
-                getBooleanCompleted = true
             } catch (e: Exception) {
                 e.printStackTrace()
-                getBooleanCompleted = false
             }
             return buildingArray
         }
