@@ -74,7 +74,7 @@ class MainActivity : AppCompatActivity() {
         } else if (index != 0 && !news.isAdded) {
             supportFragmentManager.beginTransaction().replace(R.id.container, news, "news").commit()
             title = "News"
-            supportActionBar!!.setTitle(title)
+            supportActionBar!!.title = title
         } else {
             super.onBackPressed()
         }
@@ -157,7 +157,7 @@ class MainActivity : AppCompatActivity() {
 
         //Displays the first fragment
         supportFragmentManager.beginTransaction().replace(R.id.container, news, "news").commit()
-        supportActionBar!!.setTitle(title)
+        supportActionBar!!.title = title
     }
 
     override fun onConfigurationChanged(config: Configuration) {
@@ -197,7 +197,7 @@ class MainActivity : AppCompatActivity() {
     override fun onRequestPermissionsResult(requestCode: Int, permissions: Array<String>, grantResults: IntArray) {
         when (requestCode) {
             1 -> {
-                if (grantResults.size > 0 && grantResults[0] == PackageManager.PERMISSION_GRANTED) {
+                if (grantResults.isNotEmpty() && grantResults[0] == PackageManager.PERMISSION_GRANTED) {
                     if (ContextCompat.checkSelfPermission(this, Manifest.permission.ACCESS_COARSE_LOCATION) == PackageManager.PERMISSION_GRANTED) {
                         Google.TAMUK.isMyLocationEnabled = true
                     }
