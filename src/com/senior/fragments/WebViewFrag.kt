@@ -111,11 +111,11 @@ class WebViewFrag : Fragment() {
     override fun onStart() {
         super.onStart()
         if (Build.VERSION.SDK_INT >= 23) {
-            val writeExternal = activity!!.checkSelfPermission(Manifest.permission.WRITE_EXTERNAL_STORAGE)
+            val writeExternal = requireActivity().checkSelfPermission(Manifest.permission.WRITE_EXTERNAL_STORAGE)
             val granted = PackageManager.PERMISSION_GRANTED
             if (writeExternal != granted) {
                 val permissions = arrayOf(Manifest.permission.WRITE_EXTERNAL_STORAGE)
-                activity!!.requestPermissions(permissions, 0)
+                requireActivity().requestPermissions(permissions, 0)
             } else {
                 Log.i("MainActivity", "Write permissions granted")
             }

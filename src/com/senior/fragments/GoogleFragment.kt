@@ -86,7 +86,7 @@ class GoogleFragment : Fragment(), OnMapReadyCallback {
             e.printStackTrace()
         }
         if (!getBooleanCompleted) {
-            val error = Toast.makeText(activity!!.applicationContext, "Error in acquiring building list, please try again", Toast.LENGTH_SHORT)
+            val error = Toast.makeText(requireActivity().applicationContext, "Error in acquiring building list, please try again", Toast.LENGTH_SHORT)
             error.show()
         }
         buildingNames.add(0, "Select one")
@@ -146,7 +146,7 @@ class GoogleFragment : Fragment(), OnMapReadyCallback {
     override fun onStart() {
         super.onStart()
         TAMUKFrag = if (Build.VERSION.SDK_INT < 21) {
-            fragmentManager!!.findFragmentById(R.id.google_map) as SupportMapFragment?
+            requireFragmentManager().findFragmentById(R.id.google_map) as SupportMapFragment?
         } else {
             childFragmentManager.findFragmentById(R.id.google_map) as SupportMapFragment?
         }
@@ -160,11 +160,11 @@ class GoogleFragment : Fragment(), OnMapReadyCallback {
             Log.i("Google", "Destroy executing")
             val frag: Fragment?
             frag = if (Build.VERSION.SDK_INT < 21) {
-                fragmentManager!!.findFragmentById(R.id.google_map)
+                requireFragmentManager().findFragmentById(R.id.google_map)
             } else {
                 childFragmentManager.findFragmentById(R.id.google_map)
             }
-            val ft = activity!!.supportFragmentManager.beginTransaction()
+            val ft = requireActivity().supportFragmentManager.beginTransaction()
             ft.remove(frag!!)
             ft.commit()
         } catch (e: Exception) {
@@ -179,12 +179,12 @@ class GoogleFragment : Fragment(), OnMapReadyCallback {
         val mapSel = shared.getString("mapSelect", "4")
         TAMUK!!.animateCamera(CameraUpdateFactory.newLatLngZoom(currentLoc, 16f))
         if (Build.VERSION.SDK_INT >= 23) {
-            val coarseLocation = activity!!.checkSelfPermission(Manifest.permission.ACCESS_COARSE_LOCATION)
-            val fineLocation = activity!!.checkSelfPermission(Manifest.permission.ACCESS_FINE_LOCATION)
+            val coarseLocation = requireActivity().checkSelfPermission(Manifest.permission.ACCESS_COARSE_LOCATION)
+            val fineLocation = requireActivity().checkSelfPermission(Manifest.permission.ACCESS_FINE_LOCATION)
             val granted = PackageManager.PERMISSION_GRANTED
             if (coarseLocation != granted && fineLocation != granted) {
                 val permissions = arrayOf(Manifest.permission.ACCESS_FINE_LOCATION, Manifest.permission.ACCESS_COARSE_LOCATION)
-                activity!!.requestPermissions(permissions, 1)
+                requireActivity().requestPermissions(permissions, 1)
             } else {
                 TAMUK!!.isMyLocationEnabled = true
             }
