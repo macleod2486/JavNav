@@ -46,7 +46,7 @@ class Preferences : PreferenceFragmentCompat(), OnSharedPreferenceChangeListener
         preferenceScreen.sharedPreferences.unregisterOnSharedPreferenceChangeListener(this)
     }
 
-    public override fun onStop() {
+    override fun onStop() {
         Log.i("Preferences", "On stop called.")
 
         //Start the service if enabled and it hasn't started

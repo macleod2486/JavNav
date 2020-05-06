@@ -90,7 +90,7 @@ class GoogleFragment : Fragment(), OnMapReadyCallback {
             error.show()
         }
         buildingNames.add(0, "Select one")
-        val array = ArrayAdapter(activity, android.R.layout.simple_dropdown_item_1line, buildingNames)
+        val array = ArrayAdapter(requireContext(), android.R.layout.simple_dropdown_item_1line, buildingNames)
         buildingList!!.adapter = array
 
         //Places point on building when building is selected
@@ -101,7 +101,7 @@ class GoogleFragment : Fragment(), OnMapReadyCallback {
             private var longString: String? = null
             override fun onItemSelected(arg0: AdapterView<*>?, arg1: View,
                                         arg2: Int, arg3: Long) {
-                if (TAMUK != null && arg2 != 0) {
+                if (arg2 != 0) {
                     navigate = 0
                     latString = buildingCoord[arg2 - 1]
                     latString = latString!!.substring(latString!!.indexOf(',') + 1, latString!!.lastIndexOf(','))
@@ -109,9 +109,9 @@ class GoogleFragment : Fragment(), OnMapReadyCallback {
                     longString = longString!!.substring(longString!!.lastIndexOf(',') + 1)
                     lat = latString!!.toDouble()
                     lon = longString!!.toDouble()
-                    TAMUK!!.clear()
-                    TAMUK!!.addMarker(MarkerOptions().position(LatLng(lat, lon)).title(buildingNames[arg2]).snippet("Touch marker twice to start navigation"))
-                    TAMUK!!.setOnMarkerClickListener {
+                    TAMUK.clear()
+                    TAMUK.addMarker(MarkerOptions().position(LatLng(lat, lon)).title(buildingNames[arg2]).snippet("Touch marker twice to start navigation"))
+                    TAMUK.setOnMarkerClickListener {
                         navigate++
                         if (navigate == 2) {
                             navigate = 0
@@ -134,7 +134,7 @@ class GoogleFragment : Fragment(), OnMapReadyCallback {
                     }
                     val tempLatLng = LatLng(lat, lon)
                     currentLoc = tempLatLng
-                    TAMUK!!.animateCamera(CameraUpdateFactory.newLatLngZoom(tempLatLng, 17f))
+                    TAMUK.animateCamera(CameraUpdateFactory.newLatLngZoom(tempLatLng, 17f))
                 }
             }
 
@@ -177,7 +177,7 @@ class GoogleFragment : Fragment(), OnMapReadyCallback {
         TAMUK = map
         val shared = PreferenceManager.getDefaultSharedPreferences(activity)
         val mapSel = shared.getString("mapSelect", "4")
-        TAMUK!!.animateCamera(CameraUpdateFactory.newLatLngZoom(currentLoc, 16f))
+        TAMUK.animateCamera(CameraUpdateFactory.newLatLngZoom(currentLoc, 16f))
         if (Build.VERSION.SDK_INT >= 23) {
             val coarseLocation = requireActivity().checkSelfPermission(Manifest.permission.ACCESS_COARSE_LOCATION)
             val fineLocation = requireActivity().checkSelfPermission(Manifest.permission.ACCESS_FINE_LOCATION)
@@ -186,21 +186,21 @@ class GoogleFragment : Fragment(), OnMapReadyCallback {
                 val permissions = arrayOf(Manifest.permission.ACCESS_FINE_LOCATION, Manifest.permission.ACCESS_COARSE_LOCATION)
                 requireActivity().requestPermissions(permissions, 1)
             } else {
-                TAMUK!!.isMyLocationEnabled = true
+                TAMUK.isMyLocationEnabled = true
             }
         }
 
         //Sets the camera view as determined by the users settings
-        currentMode = mapSel.toInt()
-        TAMUK!!.mapType = currentMode
+        currentMode = mapSel!!.toInt()
+        TAMUK.mapType = currentMode
         val trafficEnabled = shared.getBoolean("trafficSelect", false)
-        TAMUK!!.isTrafficEnabled = trafficEnabled
+        TAMUK.isTrafficEnabled = trafficEnabled
         Log.i("Google", "Map setting set")
     }
 
     private inner class getBuildings : AsyncTask<String?, Void?, ArrayList<String>>() {
         var buildingArray = ArrayList<String>()
-        protected override fun doInBackground(vararg params: String?): ArrayList<String> {
+        override fun doInBackground(vararg params: String?): ArrayList<String> {
             val buildingList = getString(R.string.buildingListUrl)
             try {
                 val dbf = DocumentBuilderFactory.newInstance()
@@ -210,7 +210,7 @@ class GoogleFragment : Fragment(), OnMapReadyCallback {
                 val document = db.parse(inputStream)
                 inputStream.close()
                 val buildings = document.getElementsByTagName("building")
-                var building: Node? = null
+                var building: Node?
                 for (index in 0 until buildings.length) {
                     building = buildings.item(index)
                     buildingArray.add(building.textContent)

@@ -24,7 +24,6 @@ package com.senior.javnav
 import android.Manifest
 import android.app.AlertDialog
 import android.content.Context
-import android.content.Intent
 import android.content.pm.PackageManager
 import android.content.res.Configuration
 import android.net.ConnectivityManager
@@ -69,9 +68,9 @@ class MainActivity : AppCompatActivity() {
 
     //Manually handle the back button being pressed.
     override fun onBackPressed() {
-        if (drawer!!.isDrawerOpen(GravityCompat.START)) {
+        if (drawer.isDrawerOpen(GravityCompat.START)) {
             Log.i("Main", "Drawer closed")
-            drawer!!.closeDrawers()
+            drawer.closeDrawers()
         } else if (index != 0 && !news.isAdded) {
             supportFragmentManager.beginTransaction().replace(R.id.container, news, "news").commit()
             title = "News"
@@ -129,7 +128,7 @@ class MainActivity : AppCompatActivity() {
         val menuList = resources.getStringArray(R.array.list)
         val list = findViewById<View>(R.id.optionList) as ListView
         list.adapter = ArrayAdapter(this, android.R.layout.simple_list_item_1, menuList)
-        list.onItemClickListener = OnItemClickListener { parent, view, position, id ->
+        list.onItemClickListener = OnItemClickListener { _, _, position, _ ->
             Log.i("MainActivity", "Position $position")
             if (position == 0) {
                 index = 0
@@ -180,10 +179,10 @@ class MainActivity : AppCompatActivity() {
 
     //Toggles open the drawer
     override fun onOptionsItemSelected(item: MenuItem): Boolean {
-        if (drawer!!.isDrawerOpen(GravityCompat.START)) {
-            drawer!!.closeDrawers()
+        if (drawer.isDrawerOpen(GravityCompat.START)) {
+            drawer.closeDrawers()
         } else {
-            drawer!!.openDrawer(GravityCompat.START)
+            drawer.openDrawer(GravityCompat.START)
         }
         return true
     }

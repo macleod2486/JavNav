@@ -133,11 +133,11 @@ class WebViewFrag : Fragment() {
         override fun onProgressChanged(view: WebView, progres: Int) {
             val progress: ProgressBar
             Log.i("Client", "Current $progres")
-            progress = webFrag!!.findViewById<View>(R.id.webProgress) as ProgressBar
-            if (progres < 100 && progress != null) {
+            progress = webFrag.findViewById<View>(R.id.webProgress) as ProgressBar
+            if (progres < 100) {
                 progress.progress = progres
             }
-            if (progres == 100 && progress != null) {
+            if (progres == 100) {
                 progress.visibility = View.GONE
             }
         }
@@ -181,10 +181,9 @@ class WebViewFrag : Fragment() {
                         val request = DownloadManager.Request(source)
                         request.setDescription("Downloading")
                         request.setTitle(fileName)
-                        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.HONEYCOMB) {
-                            request.allowScanningByMediaScanner()
-                            request.setNotificationVisibility(DownloadManager.Request.VISIBILITY_VISIBLE_NOTIFY_COMPLETED)
-                        }
+
+                        request.allowScanningByMediaScanner()
+                        request.setNotificationVisibility(DownloadManager.Request.VISIBILITY_VISIBLE_NOTIFY_COMPLETED)
 
                         // Save the file in the "Downloads" folder of SDCARD
                         request.setDestinationInExternalPublicDir(Environment.DIRECTORY_DOWNLOADS, fileName)
@@ -202,7 +201,7 @@ class WebViewFrag : Fragment() {
         }
 
         override fun onReceivedError(view: WebView, errorVode: Int, description: String, failingUrl: String) {
-            val progress = webFrag!!.findViewById<View>(R.id.webProgress) as ProgressBar
+            val progress = webFrag.findViewById<View>(R.id.webProgress) as ProgressBar
             progress.visibility = View.INVISIBLE
         }
     }
