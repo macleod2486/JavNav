@@ -191,7 +191,7 @@ class MainActivity : AppCompatActivity() {
     private fun online(): Boolean {
         val cm = applicationContext.getSystemService(Context.CONNECTIVITY_SERVICE) as ConnectivityManager
         val info = cm.activeNetworkInfo
-        return info != null && info.isConnectedOrConnecting
+        return info != null && info.isConnected
     }
 
     override fun onRequestPermissionsResult(requestCode: Int, permissions: Array<String>, grantResults: IntArray) {
