@@ -22,6 +22,7 @@
 package com.senior.fragments
 
 import android.Manifest
+import android.content.Context
 import android.content.Intent
 import android.content.pm.PackageManager
 import android.net.Uri
@@ -55,6 +56,7 @@ class GoogleFragment : Fragment(), OnMapReadyCallback {
     private lateinit var map: View
     lateinit var TAMUK: GoogleMap
     private var TAMUKFrag: SupportMapFragment? = null
+    private lateinit var buildingGetter : getBuildings
 
     //Initalized with TAMUK location.
     private var currentLoc = LatLng(27.524285, -97.882433)
@@ -73,7 +75,9 @@ class GoogleFragment : Fragment(), OnMapReadyCallback {
 
         //Adds and organizes the buildings alphabetically
         try {
-            buildingNames.addAll(getBuildings().execute().get())
+            buildingGetter = getBuildings();
+            buildingGetter.setContext(requireContext())
+            buildingNames.addAll(buildingGetter.execute().get())
             Collections.sort(buildingNames, java.lang.String.CASE_INSENSITIVE_ORDER)
             buildingCoord.addAll(buildingNames)
             Collections.sort(buildingCoord, java.lang.String.CASE_INSENSITIVE_ORDER)
@@ -188,28 +192,37 @@ class GoogleFragment : Fragment(), OnMapReadyCallback {
         Log.i("Google", "Map setting set")
     }
 
-    private inner class getBuildings : AsyncTask<String?, Void?, ArrayList<String>>() {
-        override fun doInBackground(vararg params: String?): ArrayList<String> {
-            val buildingArray = ArrayList<String>()
-            val buildingList = getString(R.string.buildingListUrl)
-            try {
-                val dbf = DocumentBuilderFactory.newInstance()
-                val db = dbf.newDocumentBuilder()
-                val url = URL(buildingList)
-                val inputStream = url.openStream()
-                val document = db.parse(inputStream)
-                inputStream.close()
-                val buildings = document.getElementsByTagName("building")
-                var building: Node?
-                for (index in 0 until buildings.length) {
-                    building = buildings.item(index)
-                    buildingArray.add(building.textContent)
-                    Log.i("Google", "Building " + building.textContent)
-                }
-            } catch (e: Exception) {
-                e.printStackTrace()
+    companion object {
+        private class getBuildings : AsyncTask<String?, Void?, ArrayList<String>>() {
+            private lateinit var context: Context
+
+            fun setContext(con: Context)
+            {
+                context = con;
             }
-            return buildingArray
+
+            override fun doInBackground(vararg params: String?): ArrayList<String> {
+                val buildingArray = ArrayList<String>()
+                try {
+                    val dbf = DocumentBuilderFactory.newInstance()
+                    val db = dbf.newDocumentBuilder()
+                    val buildingList = context.getString(R.string.buildingListUrl)
+                    val url = URL(buildingList)
+                    val inputStream = url.openStream()
+                    val document = db.parse(inputStream)
+                    inputStream.close()
+                    val buildings = document.getElementsByTagName("building")
+                    var building: Node?
+                    for (index in 0 until buildings.length) {
+                        building = buildings.item(index)
+                        buildingArray.add(building.textContent)
+                        Log.i("Google", "Building " + building.textContent)
+                    }
+                } catch (e: Exception) {
+                    e.printStackTrace()
+                }
+                return buildingArray
+            }
         }
     }
 }
