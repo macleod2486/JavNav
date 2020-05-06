@@ -145,11 +145,7 @@ class GoogleFragment : Fragment(), OnMapReadyCallback {
 
     override fun onStart() {
         super.onStart()
-        TAMUKFrag = if (Build.VERSION.SDK_INT < 21) {
-            requireFragmentManager().findFragmentById(R.id.google_map) as SupportMapFragment?
-        } else {
-            childFragmentManager.findFragmentById(R.id.google_map) as SupportMapFragment?
-        }
+        TAMUKFrag = childFragmentManager.findFragmentById(R.id.google_map) as SupportMapFragment?
         TAMUKFrag!!.getMapAsync(this)
     }
 
@@ -159,11 +155,8 @@ class GoogleFragment : Fragment(), OnMapReadyCallback {
         try {
             Log.i("Google", "Destroy executing")
             val frag: Fragment?
-            frag = if (Build.VERSION.SDK_INT < 21) {
-                requireFragmentManager().findFragmentById(R.id.google_map)
-            } else {
-                childFragmentManager.findFragmentById(R.id.google_map)
-            }
+            frag = childFragmentManager.findFragmentById(R.id.google_map)
+
             val ft = requireActivity().supportFragmentManager.beginTransaction()
             ft.remove(frag!!)
             ft.commit()
