@@ -35,11 +35,11 @@ import android.widget.AdapterView.OnItemClickListener
 import android.widget.ArrayAdapter
 import android.widget.ListView
 import android.widget.Toast
+import androidx.appcompat.app.ActionBarDrawerToggle
 import androidx.appcompat.app.AppCompatActivity
 import androidx.core.content.ContextCompat
 import androidx.core.view.GravityCompat
 import androidx.drawerlayout.widget.DrawerLayout
-import androidx.legacy.app.ActionBarDrawerToggle
 import com.senior.fragments.GoogleFragment
 import com.senior.fragments.WebViewFrag
 
@@ -110,9 +110,9 @@ class MainActivity : AppCompatActivity() {
 
         //Configures the drawer
         drawer = findViewById(R.id.drawer)
-        drawerToggle = object : ActionBarDrawerToggle(this, drawer, R.drawable.ic_launcher, R.string.drawer_open, R.string.drawer_close) {
+        drawerToggle = object : ActionBarDrawerToggle(this, drawer, R.string.drawer_open, R.string.drawer_close) {
             override fun onDrawerClosed(view: View) {
-                supportActionBar!!.setTitle(title)
+                supportActionBar!!.title = title
                 super.onDrawerClosed(view)
             }
 
@@ -121,7 +121,7 @@ class MainActivity : AppCompatActivity() {
                 super.onDrawerOpened(drawerView)
             }
         }
-        drawer.setDrawerListener(drawerToggle)
+        drawer.addDrawerListener(drawerToggle)
         drawer.setDrawerLockMode(DrawerLayout.LOCK_MODE_UNLOCKED)
 
         //Sets up the listview within the drawer
