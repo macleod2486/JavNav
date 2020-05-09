@@ -46,21 +46,6 @@ class Preferences : PreferenceFragmentCompat(), OnSharedPreferenceChangeListener
         preferenceScreen.sharedPreferences.unregisterOnSharedPreferenceChangeListener(this)
     }
 
-    override fun onStop() {
-        Log.i("Preferences", "On stop called.")
-
-        //Start the service if enabled and it hasn't started
-        val shared = PreferenceManager.getDefaultSharedPreferences(requireContext())
-        if (shared.getBoolean("secScreen", false)) {
-            //window.setFlags(WindowManager.LayoutParams.FLAG_SECURE, WindowManager.LayoutParams.FLAG_SECURE)
-            Log.i("Preferences", "Enable secure screen")
-        } else {
-            //window.clearFlags(WindowManager.LayoutParams.FLAG_SECURE)
-            Log.i("Preferences", "Disable secure screen")
-        }
-        super.onStop()
-    }
-
     override fun onSharedPreferenceChanged(sharedPreferences: SharedPreferences, key: String) {
         updatePrefSummary(findPreference(key))
     }
@@ -77,6 +62,22 @@ class Preferences : PreferenceFragmentCompat(), OnSharedPreferenceChangeListener
     }
 
     private fun updatePrefSummary(p: Preference?) {
+
+        if(p is CheckBoxPreference)
+        {
+            if(p.key == "secScreen")
+            {
+                val shared = PreferenceManager.getDefaultSharedPreferences(requireContext())
+                if (shared.getBoolean("secScreen", false)) {
+                    requireActivity().window.setFlags(WindowManager.LayoutParams.FLAG_SECURE, WindowManager.LayoutParams.FLAG_SECURE)
+                    Log.i("Preferences", "Enable secure screen")
+                } else {
+                    requireActivity().window.clearFlags(WindowManager.LayoutParams.FLAG_SECURE)
+                    Log.i("Preferences", "Disable secure screen")
+                }
+            }
+        }
+
         if (p is ListPreference) {
             p.setSummary(p.entry)
         }
